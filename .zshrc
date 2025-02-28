@@ -1,13 +1,14 @@
 alias l='eza -lh --icons auto' # long list
 alias ls='eza -1 --icons auto -a' # short list
+alias sl='ls'
 alias ll='eza -lha --icons auto --sort name --group-directories-first' # long list all
 alias ld='eza -lhD --icons auto' # long list dirs
 alias lt='eza --icons auto --tree' # list folder as tree
 alias nvf='nv $(fzf)'
 alias nvfd='nv $(fzfd)'
 alias nvsh='nvim ~/.zshrc && source ~/.zshrc'
-alias nvhl='nvim ~/.config/hypr/.'
-alias db='distrobox'
+alias nvenv='nvim ~/.zshenv && source ~/.zshenv'
+alias nvhl='nvim ~/.config/hypr/.' alias db='distrobox'
 alias dbr='distrobox enter ros2'
 alias ff='firefox'
 alias lg='lazygit'
@@ -51,7 +52,6 @@ nv() {
 	fi
 }
 
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 bindkey '' autosuggest-accept
 
 # so gazebo works
