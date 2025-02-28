@@ -43,11 +43,12 @@ function load_zsh_plugins {
     )
     for zsh_path in "${zsh_paths[@]}"; do [[ -d $zsh_path ]] && export ZSH=$zsh_path && break; done
     # Load Plugins
-    hyde_plugins=( git zsh-256color zsh-autosuggestions zsh-syntax-highlighting )
-    plugins+=( "${plugins[@]}" "${hyde_plugins[@]}" git zsh-256color zsh-autosuggestions zsh-syntax-highlighting)
+    hyde_plugins=( git zsh-256color zsh-syntax-highlighting )
+    plugins+=( "${plugins[@]}" "${hyde_plugins[@]}" git zsh-256color zsh-syntax-highlighting)
     # Deduplicate plugins
     plugins=("${plugins[@]}")
     plugins=($(printf "%s\n" "${plugins[@]}" | sort -u))
+		echo $plugins
 
     # Loads om-my-zsh
     [[ -r $ZSH/oh-my-zsh.sh ]] && source $ZSH/oh-my-zsh.sh

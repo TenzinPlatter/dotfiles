@@ -52,6 +52,7 @@ nv() {
 	fi
 }
 
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 bindkey '' autosuggest-accept
 
 # so gazebo works
