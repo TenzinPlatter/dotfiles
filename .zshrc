@@ -16,7 +16,6 @@ alias nvcf='nvim ~/.config/nvim/.' alias lgnv='lazygit -p ~/.config/nvim/' alias
 alias p='python'
 alias tmuxkill="tmux kill-session"
 alias cl='clear'
-alias sr="source /opt/ros/humble/setup.zsh"
 alias fzfd="find . -type d -print | fzf"
 alias installvencord='sh -c "$(curl -sS https://raw.githubusercontent.com/Vendicated/VencordInstaller/main/install.sh)"'
 alias pkginfo="pacman -Qq | fzf --preview 'pacman -Qil {} | bat -fpl yml' --layout=reverse  --bind 'enter:execute(pacman -Qil {} | less)'"
@@ -30,7 +29,9 @@ alias cmakecompcomm="cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -B build"
 alias update="sudo apt update && sudo apt upgrade"
 alias caps="sudo nohup casp2esc ; disown"
 alias sr="source ~/coding/siri/sirius-software-source-install/ros2_humble/install/setup.zsh"
+alias srl="source ./install/setup.zsh"
 alias cbuild="colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+alias mkdir="mkdir -p"
 
 alias gs='git status '
 alias ga='git add '
