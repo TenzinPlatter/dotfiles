@@ -48,7 +48,6 @@ function load_zsh_plugins {
     # Deduplicate plugins
     plugins=("${plugins[@]}")
     plugins=($(printf "%s\n" "${plugins[@]}" | sort -u))
-		echo $plugins
 
     # Loads om-my-zsh
     [[ -r $ZSH/oh-my-zsh.sh ]] && source $ZSH/oh-my-zsh.sh
