@@ -1,3 +1,5 @@
-return {
-	"https://github.com/mfussenegger/nvim-jdtls",
-}
+-- return {
+-- 	"https://github.com/mfussenegger/nvim-jdtls",
+-- }
+
+return {}
