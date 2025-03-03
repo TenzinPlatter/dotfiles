@@ -41,9 +41,11 @@ function load_zsh_plugins {
         "/usr/local/share/oh-my-zsh"
         "/usr/share/oh-my-zsh"
     )
-    for zsh_path in "${zsh_paths[@]}"; do [[ -d $zsh_path ]] && export ZSH=$zsh_path && break; done
+
+		for zsh_path in "${zsh_paths[@]}"; do [[ -d $zsh_path ]] && export ZSH=$zsh_path && break; done
+
     # Load Plugins
-    hyde_plugins=( git zsh-256color zsh-syntax-highlighting )
+    hyde_plugins=( git zsh-256color zsh-syntax-highlighting zsh-autosuggestions )
     plugins+=( "${plugins[@]}" "${hyde_plugins[@]}" git zsh-256color zsh-syntax-highlighting)
     # Deduplicate plugins
     plugins=("${plugins[@]}")

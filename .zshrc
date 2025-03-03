@@ -32,6 +32,7 @@ alias sr="source ~/coding/siri/sirius-software-source-install/ros2_humble/instal
 alias srl="source ./install/setup.zsh"
 alias cbuild="colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
 alias mkdir="mkdir -p"
+alias dbr="distrobox enter ros"
 
 alias gs='git status '
 alias ga='git add '
@@ -53,12 +54,6 @@ nv() {
 	fi
 }
 
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-bindkey '' autosuggest-accept
-
-# so gazebo works
-export QT_QPA_PLATFORM=xcb
-
 path=(
 	$PATH
 	~/.cargo/bin
@@ -70,10 +65,14 @@ path=(
 
 export PATH="${(j/:/)path}"
 
+# so gazebo works
+export QT_QPA_PLATFORM=xcb
+
 eval "$(zoxide init zsh --cmd cd)"
 eval "$(fzf --zsh)"
 
 bindkey -v
+bindkey '' autosuggest-accept
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
