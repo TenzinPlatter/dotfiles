@@ -3,6 +3,7 @@ theme = "catppuccin_mocha_transparent"
 [editor]
 line-number = "relative"
 mouse = false
+completion-timeout = 5
 
 [editor.cursor-shape]
 insert = "bar"
@@ -11,3 +12,21 @@ select = "underline"
 
 [editor.statusline]
 center = ["version-control"]
+
+[editor.indent-guides]
+render = true
+character = "▏"
+
+[editor.soft-wrap]
+enable = true
+
+[keys.normal]
+C-s = ":w"
+C-j = ["extend_to_line_bounds", "delete_selection", "paste_after"]
+C-k = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before"]
+
+[keys.insert]
+C-h = "move_char_left"
+C-j = "move_line_down"
+C-k = "move_line_up"
+C-l = "move_char_right"
