@@ -1,0 +1,9 @@
+[[language]]
+name = "python"
+scope = "source.python"
+roots = [".git"]
+file-types = ["py"]
+# language-servers = [{command = "pyright-langserver", args = ["--stdio"]}]
+language-servers = [{name = "pyright"}]
+auto-format = true
+formatter = {command = "black", args = ["--quiet", "-"]}

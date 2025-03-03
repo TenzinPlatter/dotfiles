@@ -33,6 +33,7 @@ alias srl="source ./install/setup.zsh"
 alias cbuild="colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
 alias mkdir="mkdir -p"
 alias dbr="distrobox enter ros"
+alias hx="helix"
 
 alias gs='git status '
 alias ga='git add '
