@@ -4,15 +4,17 @@ alias sl='ls'
 alias ll='eza -lha --icons auto --sort name --group-directories-first' # long list all
 alias ld='eza -lhD --icons auto' # long list dirs
 alias lt='eza --icons auto --tree' # list folder as tree
-alias nvf='nv $(fzf)'
-alias nvfd='nv $(fzfd)'
-alias nvsh='nvim ~/.zshrc && source ~/.zshrc'
-alias nvenv='nvim ~/.zshenv && source ~/.zshenv'
-alias nvhl='nvim ~/.config/hypr/.' alias db='distrobox'
+alias hxf='hx $(fzf)'
+alias hxfd='hx $(fzfd)'
+alias hxsh='hx ~/.zshrc && source ~/.zshrc'
+alias hxenv='hx ~/.zshenv && source ~/.zshenv'
+alias hxhl='hx ~/.config/hypr/.'
+alias db='distrobox'
 alias dbr='distrobox enter ros2'
 alias ff='firefox'
 alias lg='lazygit'
-alias nvcf='nvim ~/.config/nvim/.' alias lgnv='lazygit -p ~/.config/nvim/' alias cat='bat'
+alias hxcf='hx ~/.config/nvim/.'
+alias cat='bat'
 alias p='python'
 alias tmuxkill="tmux kill-session"
 alias cl='clear'
@@ -22,7 +24,7 @@ alias pkginfo="pacman -Qq | fzf --preview 'pacman -Qil {} | bat -fpl yml' --layo
 alias nvsw="cd ~/.local/state/nvim/swap"
 alias tx="tmux"
 alias sourceenv="source env/bin/activate"
-alias nvtx="nvim ~/.tmux.conf"
+alias hxtx="hx ~/.tmux.conf"
 alias srtx="tmux source ~/.tmux.conf"
 alias cdapp="cd /usr/share/applications"
 alias cmakecompcomm="cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -B build"
@@ -33,7 +35,6 @@ alias srl="source ./install/setup.zsh"
 alias cbuild="colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
 alias mkdir="mkdir -p"
 alias dbr="distrobox enter ros"
-alias hx="helix"
 
 alias gs='git status '
 alias ga='git add '
@@ -52,6 +53,14 @@ nv() {
 		nvim .
 	else
 		nvim "$@"
+	fi
+}
+
+hx() {
+	if [[ $# -eq 0 ]]; then
+		helix .
+	else
+		helix "$@"
 	fi
 }
 
