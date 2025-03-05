@@ -7,3 +7,12 @@ file-types = ["py"]
 language-servers = [{name = "pyright"}]
 auto-format = true
 formatter = {command = "black", args = ["--quiet", "-"]}
+
+[[language]]
+name = "c"
+scope = "source.c"
+roots = [".git"]
+file-types = ["c", "h"]
+language-servers = [{name = "clangd"}]
+auto-format = true
+formatter = {command = "clangd-format"}
