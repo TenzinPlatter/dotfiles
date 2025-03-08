@@ -71,6 +71,7 @@ path=(
 	~/.scripts
 	/home/tenzin/.spicetify
 	/home/tenzin/.local/bin
+	~/scripts
 )
 
 export PATH="${(j/:/)path}"
