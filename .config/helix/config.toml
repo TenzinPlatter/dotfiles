@@ -4,11 +4,15 @@ theme = "catppuccin_mocha_transparent"
 line-number = "relative"
 mouse = false
 completion-timeout = 5
+rulers = [80]
 
 [editor.cursor-shape]
 insert = "bar"
 normal = "block"
 select = "underline"
+
+[editor.file-picker]
+hidden = false
 
 [editor.statusline]
 center = ["version-control"]
@@ -20,10 +24,19 @@ character = "▏"
 [editor.soft-wrap]
 enable = true
 
+[editor.auto-save]
+focus-lost = true
+
 [keys.normal]
-C-s = ":w"
+C-l = ":w"
 C-j = ["extend_to_line_bounds", "delete_selection", "paste_after"]
 C-k = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before"]
+X = ["extend_line_up", "extend_to_line_bounds"]
+A-x = ["extend_to_line_bounds"]
+
+[keys.select]
+X = ["extend_line_up", "extend_to_line_bounds"]
+A-x = ["extend_to_line_bounds"]
 
 [keys.insert]
 C-h = "move_char_left"
