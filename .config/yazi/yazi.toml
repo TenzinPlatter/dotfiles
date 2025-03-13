@@ -1,0 +1,9 @@
+[opener]
+imgopen = [
+  { run = 'sxiv "$@"', orphan = true, for = "unix" },
+]
+
+[open]
+rules = [
+  { mime = "image/*", use = "imgopen" }
+]

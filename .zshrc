@@ -1,3 +1,5 @@
+alias xh="hx"
+alias rbug="RUST_BACKTRACE=1"
 alias l='eza -lh --icons auto' # long list
 alias ls='eza -1 --icons auto -a' # short list
 alias sl='ls'
@@ -35,6 +37,7 @@ alias srl="source ./install/setup.zsh"
 alias cbuild="colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
 alias mkdir="mkdir -p"
 alias dbr="distrobox enter ros"
+alias cr="cargo run"
 
 alias gs='git status '
 alias ga='git add '
@@ -56,12 +59,22 @@ nv() {
 	fi
 }
 
-hx() {
-	if [[ $# -eq 0 ]]; then
-		helix .
-	else
-		helix "$@"
-	fi
+findbin() {
+  local purple='\e[1;35m' bright='\e[0;1m' green='\e[1;32m' reset='\e[0m'
+  local entries=( ${(f)"$(/usr/bin/pacman -F --machinereadable -- "/usr/bin/$1")"} )
+  if (( ${#entries[@]} > 0 )); then
+      printf "${bright}$1${reset} may be found in the following packages:\n"
+      local pkg
+      for entry in "${entries[@]}"; do
+          local fields=( ${(0)entry} )
+          if [[ "$pkg" != "${fields[2]}" ]]; then
+              printf "${purple}%s/${bright}%s ${green}%s${reset}\n" "${fields[1]}" "${fields[2]}" "${fields[3]}"
+          fi
+          printf '    /%s\n' "${fields[4]}"
+          pkg="${fields[2]}"
+      done
+  fi
+  return 127
 }
 
 path=(
@@ -72,9 +85,13 @@ path=(
 	/home/tenzin/.spicetify
 	/home/tenzin/.local/bin
 	~/scripts
+	/usr/bin
 )
 
+. "$HOME/.cargo/env"
+
 export PATH="${(j/:/)path}"
+export EDITOR="hx"
 
 # so gazebo works
 export QT_QPA_PLATFORM=xcb
