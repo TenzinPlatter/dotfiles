@@ -1,5 +1,5 @@
-alias xh="hx"
 alias rbug="RUST_BACKTRACE=1"
+alias xh="hx"
 alias l='eza -lh --icons auto' # long list
 alias ls='eza -1 --icons auto -a' # short list
 alias sl='ls'
@@ -59,6 +59,14 @@ nv() {
 	fi
 }
 
+hx() {
+	if [[ $# -eq 0 ]]; then
+		helix .
+	else
+		helix "$@"
+	fi
+}
+
 findbin() {
   local purple='\e[1;35m' bright='\e[0;1m' green='\e[1;32m' reset='\e[0m'
   local entries=( ${(f)"$(/usr/bin/pacman -F --machinereadable -- "/usr/bin/$1")"} )
@@ -91,7 +99,7 @@ path=(
 . "$HOME/.cargo/env"
 
 export PATH="${(j/:/)path}"
-export EDITOR="hx"
+export EDITOR="helix"
 
 # so gazebo works
 export QT_QPA_PLATFORM=xcb
