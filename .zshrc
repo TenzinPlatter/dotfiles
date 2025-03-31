@@ -1,3 +1,9 @@
+alias shx='sudo env "PATH=$PATH" helix'
+alias mk="make"
+alias cc="clang"
+alias sp="sudo pacman"
+alias spi="sp -S"
+alias spr="sp -Rs"
 alias rbug="RUST_BACKTRACE=1"
 alias xh="hx"
 alias l='eza -lh --icons auto' # long list
@@ -101,8 +107,7 @@ path=(
 export PATH="${(j/:/)path}"
 export EDITOR="helix"
 
-# so gazebo works
-export QT_QPA_PLATFORM=xcb
+export LD_LIBRARY_PATH="/home/tenzin/coding/c/comp2017_p1/target/libraries:$LD_LIBRARY_PATH"
 
 eval "$(zoxide init zsh --cmd cd)"
 eval "$(fzf --zsh)"
