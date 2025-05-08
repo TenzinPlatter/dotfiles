@@ -5,3 +5,8 @@
 [submodule ".zsh"]
 	path = ./.zsh
 	url = git@github.com:TenzinPlatter/zsh.git
+
+[submodule "nvim"]
+	path = ./.config/nvim
+	url = git@github.com:TenzinPlatter/NeovimConfig.git
+

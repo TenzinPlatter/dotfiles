@@ -1,6 +1,5 @@
 source "/home/tenzin/.zsh/aliases.zsh"
 source "/home/tenzin/.zsh/fns.zsh"
-source "/home/tenzin/.zsh/git_repo_completions.zsh"
 
 path=(
 	$PATH
