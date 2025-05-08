@@ -1,0 +1,47 @@
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
+[init]
+	defaultBranch = main
+
+[user]
+	name = Tenzin Platter
+	email = 143778894+TenzinPlatter@users.noreply.github.com
+
+[core]
+	compression = 9
+	whitespace = error
+	preloadindex = true
+
+
+[url "git@github.com:TenzinPlatter/"]
+	insteadOf = "tp:"
+
+[url "git@github.sydney.edu.au:tpla0149/"]
+	insteadOf = "syd:"
+
+[status]
+	branch = true
+	showStash = true
+	showUntrackedFiles = all
+
+[diff]
+	context = 3
+	renames = copies
+	interHunkContext = 10
+
+[pager]
+	diff = diff-so-fancy | $PAGER
+
+[diff-so-fancy]
+	markEmptyLines = false
+
+[color "diff"]
+	meta = black bold
+	frag = magenta
+	context = white
+	whtiespace = yellow reverse
+	old = red

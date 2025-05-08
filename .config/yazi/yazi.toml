@@ -7,3 +7,6 @@ imgopen = [
 rules = [
   { mime = "image/*", use = "imgopen" }
 ]
+
+[manager]
+show_hidden = true
