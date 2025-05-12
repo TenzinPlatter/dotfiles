@@ -5,7 +5,7 @@ path=(
 	$PATH
 	~/.cargo/bin
 	~/.npm-packages
-	~/.scripts
+	~/scripts
 	/home/tenzin/.spicetify
 	/home/tenzin/.local/bin
 	~/.scripts

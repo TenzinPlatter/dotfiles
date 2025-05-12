@@ -1,0 +1,4 @@
+AlignArrayOfStructures: Left
+AlignConsecutiveMacros: Consecutive
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: True
