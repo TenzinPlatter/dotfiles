@@ -21,10 +21,9 @@ export LD_LIBRARY_PATH="/home/tenzin/coding/c/comp2017_p1/target/libraries:$LD_L
 
 eval "$(zoxide init zsh --cmd cd)"
 eval "$(fzf --zsh)"
-eval "$(op completion zsh)"; compdef _op op
 
 bindkey '' autosuggest-accept
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+# export SDKMAN_DIR="$HOME/.sdkman"
+# [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
