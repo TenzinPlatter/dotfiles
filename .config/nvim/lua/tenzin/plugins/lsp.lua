@@ -37,7 +37,7 @@ return {
 			local my_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 			-- args are client, bufnr
-			local my_on_attach = function(_, _)
+			local my_on_attach = function(client, _)
 				vim.keymap.set('n', '<leader>th', function()
 					vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
 
@@ -47,6 +47,11 @@ return {
 						print("Enabled inlay hints")
 					end
 				end)
+				print(client)
+
+				if client == "clangd" then
+					vim.keymap.set('n', '<leader>sh', vim.cmd("LspClangdSwitchSourceHeader"))
+				end
 
 				vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename)
 				vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action)

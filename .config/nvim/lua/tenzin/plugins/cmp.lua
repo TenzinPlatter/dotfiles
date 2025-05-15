@@ -34,7 +34,7 @@ return {
 					['<C-e>'] = cmp.mapping.abort(),
 					['<Tab>'] = cmp.mapping.confirm({ select = true }),
 
-					['<C-L>'] = cmp.mapping(function(fallback)
+					['<C-l>'] = cmp.mapping(function(fallback)
 						if cmp.visible() then
 							cmp.mapping.confirm({ select = true })
 						elseif luasnip.expand_or_jumpable() then
@@ -44,7 +44,7 @@ return {
 						end
 					end, { 'i', 's' }),
 
-					['<C-H>'] = cmp.mapping(function(fallback)
+					['<C-h>'] = cmp.mapping(function(fallback)
 						if cmp.visible() then
 							cmp.mapping.confirm({ select = true })
 						elseif luasnip.jumpable(-1) then
@@ -64,5 +64,5 @@ return {
 				})
 			})
 		end
-}
+	}
 }

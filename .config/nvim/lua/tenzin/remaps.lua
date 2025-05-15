@@ -36,8 +36,8 @@ vim.keymap.set('i', '<C-f>', '<C-r>"')
 vim.keymap.set('n', '<C-c>', function() vim.cmd('nohlsearch') end)
 
 -- center on move
-vim.keymap.set("n", "n", "nzz")
-vim.keymap.set("n", "gd", "gdzz")
+-- vim.keymap.set("n", "n", "nzz")
+-- vim.keymap.set("n", "gd", "gdzz")
 
 -- make the window bigger vertically
 vim.keymap.set("n", "=", [[<cmd>vertical resize +5<cr>]])
