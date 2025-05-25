@@ -1,6 +1,34 @@
--- format buf
-vim.keymap.set("n", "<C-u>", function()
-	vim.lsp.buf.format({ bufnr = 0, async = true })
+-- lsp stuff
+vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename)
+vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action)
+vim.keymap.set('n', 'gd', vim.lsp.buf.definition)
+vim.keymap.set('n', 'gi', vim.lsp.buf.implementation)
+vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references)
+vim.keymap.set('n', 'K', vim.lsp.buf.hover)
+vim.keymap.set('n', '<leader>sh', function()
+	local function is_clangd_attached(bufnr)
+		bufnr = bufnr or vim.api.nvim_get_current_buf()
+		for _, client in pairs(vim.lsp.get_active_clients({ bufnr = bufnr })) do
+			if client.name == "clangd" then
+				return true
+			end
+		end
+		return false
+	end
+
+	if is_clangd_attached() then
+		vim.cmd("LspClangdSwitchSourceHeader")
+	else
+		print('clangd not attached')
+	end
+end)
+
+vim.keymap.set("n", "zi", "za")
+
+-- format and write all buffers
+vim.keymap.set("n", "<C-S>", function()
+	vim.lsp.buf.format()
+	vim.cmd("wall")
 end)
 
 vim.keymap.set("n", "<C-l>", "xp")
@@ -10,13 +38,14 @@ vim.keymap.set("n", "<C-h>", "xhP")
 vim.keymap.set("v", "<leader>y", '"+y')
 
 -- Highlight whole buffer
-vim.keymap.set("n", "<leader>a", "ggVG")
+vim.keymap.set("n", "<leader>%", "ggVG")
 
 -- Copy line to clipboard
 vim.keymap.set("n", "<leader>yy", '"+yy')
 
 -- Paste from clipboard
 vim.keymap.set("v", "<leader>p", '"+p')
+vim.keymap.set("n", "<leader>p", '"+p')
 
 -- Format entire buffer
 vim.keymap.set("n", "<leader>=", "ggVG=")
@@ -36,8 +65,8 @@ vim.keymap.set('i', '<C-f>', '<C-r>"')
 vim.keymap.set('n', '<C-c>', function() vim.cmd('nohlsearch') end)
 
 -- center on move
-vim.keymap.set("n", "n", "nzz")
-vim.keymap.set("n", "gd", "gdzz")
+-- vim.keymap.set("n", "n", "nzz")
+-- vim.keymap.set("n", "gd", "gdzz")
 
 -- make the window bigger vertically
 vim.keymap.set("n", "=", [[<cmd>vertical resize +5<cr>]])

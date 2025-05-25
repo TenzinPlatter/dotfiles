@@ -156,7 +156,7 @@ if [ -t 1 ]; then
         # ===== START Initialize Starship prompt =====
         eval "$(starship init zsh)"
         export STARSHIP_CACHE=$XDG_CACHE_HOME/starship
-        export STARSHIP_CONFIG=$XDG_CONFIG_HOME/starship/starship.toml
+        export STARSHIP_CONFIG=$XDG_CONFIG_HOME/starship.toml
         # starship.toml can be swapped with : brackets.toml  heavy-right.toml  lualine.toml  powerline.toml
     # ===== END Initialize Starship prompt =====
     elif [ -f ~/.p10k.zsh ]; then
@@ -165,7 +165,7 @@ if [ -t 1 ]; then
         [[ -r $P10k_THEME ]] && source $P10k_THEME
         # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh
         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-    # ===== END Initialize Powerlevel10k theme =====
+    # # ===== END Initialize Powerlevel10k theme =====
     fi
 
     PM="pm.sh"

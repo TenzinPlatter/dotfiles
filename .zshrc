@@ -15,7 +15,7 @@ path=(
 . "$HOME/.cargo/env"
 
 export PATH="${(j/:/)path}"
-export EDITOR="helix"
+export EDITOR="nv"
 
 export LD_LIBRARY_PATH="/home/tenzin/coding/c/comp2017_p1/target/libraries:$LD_LIBRARY_PATH"
 
