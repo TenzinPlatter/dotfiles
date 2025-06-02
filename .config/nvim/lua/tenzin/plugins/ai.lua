@@ -8,6 +8,18 @@ return {
 		require("copilot").setup({})
 		require("copilot_cmp").setup({})
 		require("codecompanion").setup({})
+
+		vim.api.nvim_create_user_command(
+			'CC',
+			'CodeCompanion',
+			{ nargs = '*' }
+		)
+
+		vim.api.nvim_create_user_command(
+			'CCC',
+			'CodeCompanionChat',
+			{ nargs = '*' }
+		)
 	end
 }
 
