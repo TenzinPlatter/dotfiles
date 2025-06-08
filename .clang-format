@@ -2,3 +2,4 @@ AlignArrayOfStructures: Left
 AlignConsecutiveMacros: Consecutive
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: WithoutElse
+IndentWidth: 4

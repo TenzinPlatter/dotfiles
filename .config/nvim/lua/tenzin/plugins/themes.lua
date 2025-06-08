@@ -1,7 +1,7 @@
 return {
 	{
 		"https://github.com/zaldih/themery.nvim",
-		config = function ()
+		config = function()
 			vim.keymap.set('n', '<leader>tp', ':Themery<CR>')
 
 			require("themery").setup({
@@ -13,13 +13,14 @@ return {
 					"rose-pine",
 					"kanagawa",
 					"github_dark",
+					"nordfox",
 				}
 			})
 		end
 	},
 	{
 		"https://github.com/rebelot/kanagawa.nvim",
-		config = function ()
+		config = function()
 			require("kanagawa").setup({
 				transparent = true,
 			})
@@ -28,7 +29,7 @@ return {
 	{
 		"https://github.com/rose-pine/neovim",
 		name = "rose-pine",
-		config = function ()
+		config = function()
 			require("rose-pine").setup({
 				variant = "moon",
 				styles = { transparency = true, }
@@ -44,7 +45,7 @@ return {
 	},
 	{
 		"https://github.com/aktersnurra/no-clown-fiesta.nvim",
-		config = function ()
+		config = function()
 			require("no-clown-fiesta").setup({
 				transparent = true,
 			})
@@ -54,7 +55,7 @@ return {
 		"catppuccin/nvim",
 		name = "catppuccin",
 		priority = 1000,
-		config = function ()
+		config = function()
 			require("catppuccin").setup({
 				transparent_background = true,
 			})
@@ -74,9 +75,23 @@ return {
 	},
 	{
 		"https://github.com/projekt0n/github-nvim-theme",
-		config = function ()
+		config = function()
 			require("github-theme").setup({
 				options = { transparent = true, }
+			})
+		end
+	},
+	{
+		"EdenEast/nightfox.nvim",
+		config = function()
+			require("nightfox").setup({
+				options = {
+					transparent = true,
+					styles = {
+						comments = "italic",
+						functions = "italic",
+					},
+				},
 			})
 		end
 	},

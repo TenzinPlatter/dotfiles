@@ -1,4 +1,4 @@
---[[
+-- [[
 return {
   "epwalsh/obsidian.nvim",
   version = "*",
@@ -9,20 +9,12 @@ return {
   opts = {
 		workspaces = {
 			{
-				name = "INFO1111",
-				path = "~/obsidian/INFO1111"
-			},
-			{
-				name = "DATA1001",
-				path = "~/obsidian/data1001"
-			},
-			{
-				name = "Miscellaneous",
-				path = "~/obsidian/misc"
+				name = "notes",
+				path = "~/notes"
 			}
 		},
 	}
 }
-]]
+-- ]]
 
-return {}
+-- return {}

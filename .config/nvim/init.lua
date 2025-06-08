@@ -91,6 +91,7 @@ vim.opt.colorcolumn = "80"
 vim.opt.mouse = ""
 vim.opt.splitright = true
 vim.opt.splitbelow = true
+vim.opt.linebreak = true
 
 -- folds
 vim.opt.foldmethod = "expr"

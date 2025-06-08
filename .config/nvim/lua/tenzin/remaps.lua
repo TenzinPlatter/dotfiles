@@ -25,9 +25,10 @@ end)
 
 vim.keymap.set("n", "zi", "za")
 
--- format and write all buffers
+-- Format entire buffer
+vim.keymap.set("n", "<leader>=", vim.lsp.buf.format)
+
 vim.keymap.set("n", "<C-S>", function()
-	vim.lsp.buf.format()
 	vim.cmd("wall")
 end)
 
@@ -46,9 +47,6 @@ vim.keymap.set("n", "<leader>yy", '"+yy')
 -- Paste from clipboard
 vim.keymap.set("v", "<leader>p", '"+p')
 vim.keymap.set("n", "<leader>p", '"+p')
-
--- Format entire buffer
-vim.keymap.set("n", "<leader>=", "ggVG=")
 
 -- Navigate quick fix list
 vim.keymap.set("n", "<leader>j", function() vim.cmd("cnext") end)
@@ -90,13 +88,5 @@ vim.keymap.set("v", "<C-k>", ":m '<-2<CR>gv=gv")
 -- move line up/ down
 vim.keymap.set("n", "<C-j>", "V:m '>+1<CR>gv=gv")
 vim.keymap.set("n", "<C-k>", "V:m '<-2<CR>gv=gv")
-
--- keep highlight when indenting
-vim.keymap.set('v', '>', '>gv')
-vim.keymap.set('v', '<', '<gv')
-
--- keep highlight when indenting
-vim.keymap.set('n', '>', 'V>gv')
-vim.keymap.set('n', '<', 'V<gv')
 
 vim.keymap.set('n', 'ZZ', ':wqa!<cr>')
