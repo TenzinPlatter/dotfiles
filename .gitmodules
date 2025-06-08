@@ -1,12 +1,12 @@
 [submodule "helix_conf"]
-	path = ./.config/helix
+	path = .config/helix
 	url = git@github.com:TenzinPlatter/helix_conf.git
 
 [submodule ".zsh"]
-	path = ./.zsh
+	path = .zsh
 	url = git@github.com:TenzinPlatter/zsh.git
 
 [submodule "nvim"]
-	path = ./.config/nvim
+	path = .config/nvim
 	url = git@github.com:TenzinPlatter/NeovimConfig.git
 
