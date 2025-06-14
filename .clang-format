@@ -3,3 +3,4 @@ AlignConsecutiveMacros: Consecutive
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: WithoutElse
 IndentWidth: 4
+IndentCaseLabels: true
