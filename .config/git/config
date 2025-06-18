@@ -23,6 +23,12 @@
 [url "git@github.sydney.edu.au:tpla0149/"]
 	insteadOf = "syd:"
 
+[url "git@github.com:Greenroom-Robotics/"]
+	insteadOf = "gr:"
+
+[url "git@github.com:"]
+	insteadOf = "gh:"
+
 [status]
 	branch = true
 	showStash = true
