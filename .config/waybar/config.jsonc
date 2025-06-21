@@ -21,7 +21,8 @@
     "group/pill#left1": {
         "orientation": "inherit",
         "modules": [
-					"custom/spotify"
+            "cpu",
+            "memory"
         ]
     },
     "group/pill#left2": {
@@ -36,7 +37,8 @@
     ],
     "group/pill#center": {
         "modules": [
-            "hyprland/workspaces"
+            "hyprland/workspaces",
+            "hyprland/window"
         ],
         "orientation": "inherit"
     },
