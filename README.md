@@ -5,4 +5,4 @@ cd ~/.dotfiles
 stow .
 ```
 
-New watcher should autocommit changes
+New watcher should autocommit changes maybe?
