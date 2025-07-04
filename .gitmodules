@@ -10,3 +10,9 @@
 	path = .config/nvim
 	url = git@github.com:TenzinPlatter/NeovimConfig.git
 
+[submodule "tp:scripts"]
+	path = tp:scripts
+	url = tp:dotfiles
+[submodule "scripts"]
+	path = scripts
+	url = tp:scripts

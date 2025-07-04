@@ -1,6 +1,8 @@
 source "/home/tenzin/.zsh/aliases.zsh"
 source "/home/tenzin/.zsh/fns.zsh"
 
+alias ssr="ssh rock@192.168.68.72"
+
 path=(
 	$PATH
 	~/.cargo/bin
