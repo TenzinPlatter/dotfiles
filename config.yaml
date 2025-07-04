@@ -1,0 +1,62 @@
+# Dotfiles Watcher Configuration
+# This file contains configuration for the dotfile_watcher.py script
+
+# Directory settings
+watch_directory: "~/.dotfiles"
+repo_directory: "~/.dotfiles"
+
+# Timing settings (in seconds)
+commit_delay: 60        # Wait time before committing after last change
+fetch_interval: 600     # Interval between remote fetches (10 minutes)
+
+# Notification settings
+enable_notifications: true
+notify_on_commit: true       # Send notification for main repo commits
+notify_on_remote_changes: true
+
+# Exclusion patterns for files that should not trigger commits
+excluded_patterns:
+  # Git internal files
+  - ".git/"
+  - ".git\\"
+  - "/.git/"
+  - "\\.git\\"
+  - "index.lock"
+  - "COMMIT_EDITMSG"
+  - "HEAD.lock"
+  - "refs/heads/"
+  - "refs/remotes/"
+  - "logs/HEAD"
+  - "logs/refs/"
+  - "objects/"
+  - "hooks/"
+  - "info/"
+  - "packed-refs"
+  - "config.lock"
+  - "shallow.lock"
+  - "modules/"
+  - ".git/index"
+  - ".git/HEAD"
+  - ".git/refs/"
+  - ".git/logs/"
+  - ".git/objects/"
+  - ".git/modules/"
+  - "ORIG_HEAD"
+  - "FETCH_HEAD"
+  - "MERGE_HEAD"
+  - "CHERRY_PICK_HEAD"
+  
+  # Temporary files
+  - ".tmp_"
+  - "__pycache__/"
+  - ".pyc"
+  - ".pyo"
+  - ".swp"
+  - ".swo"
+  - ".tmp"
+  - "~"
+  - ".bak"
+
+# Git settings
+auto_push: true         # Automatically push after commits
+respect_gitignore: true # Follow gitignore patterns
