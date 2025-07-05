@@ -19,6 +19,8 @@ path=(
 export PATH="${(j/:/)path}"
 export EDITOR="nv"
 
+setopt NO_AUTO_CD 
+
 eval "$(zoxide init zsh --cmd cd)"
 eval "$(fzf --zsh)"
 
