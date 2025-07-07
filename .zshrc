@@ -8,42 +8,51 @@ path=(
 	~/scripts
 	/home/tenzin/.spicetify
 	/home/tenzin/.local/bin
-	~/.scripts
 	/usr/bin
 )
 
-pokego -r 1 --no-title | fastfetch --file-raw -
+export ZSH="$HOME/.oh-my-zsh"
+export ZSH_THEME=""
 
 plugins=(
 	zsh-autosuggestions
 )
 
-. "$HOME/.cargo/env"
-
-export ROS_DOMAIN_ID=10
+export ROS_DOMAIN_ID=123
+export ROS_DISTRO=jazzy
 export PATH="${(j/:/)path}"
-export EDITOR="nv"
+export EDITOR="nvim"
 
-eval "$(zoxide init zsh --cmd cd)"
-# eval "$(fzf --zsh)"
+if [[ $- == *i* ]]; then
+  source $ZSH/oh-my-zsh.sh
+  . "$HOME/.cargo/env"
+  eval "$(zoxide init zsh --cmd cd)"
+  # eval "$(fzf --zsh)"
 
-bindkey '' autosuggest-accept
+  bindkey '' autosuggest-accept
 
-zle -N set-nv
-bindkey '' set-nv
+  zle -N set-nv
+  bindkey '' set-nv
 
-zle -N set-cd
-bindkey '' set-cd
+  zle -N set-cd
+  bindkey '' set-cd
 
-zle -N run-ls
-bindkey '' run-ls
+  zle -N run-ls
+  bindkey '' run-ls
+
+  zle -N sudo-command-line
+  bindkey '\e\e' sudo-command-line
+
+  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+fi
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 # export SDKMAN_DIR="$HOME/.sdkman"
 # [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# ?
+# . "$HOME/.local/share/../bin/env"
