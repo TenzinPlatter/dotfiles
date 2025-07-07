@@ -14,9 +14,9 @@
 # And ensures that we have an obstruction-free ~/.zshrc file
 # This also ensures that the proper HyDE $ENVs are loaded
 
-# function command_not_found_handler {
-#     local purple='\e[1;35m' bright='\e[0;1m' green='\e[1;32m' reset='\e[0m'
-#     printf "${green}zsh${reset}: command ${purple}NOT${reset} found: ${bright}'%s'${reset}\n" "$1"
+function command_not_found_handler {
+    local purple='\e[1;35m' bright='\e[0;1m' green='\e[1;32m' reset='\e[0m'
+    printf "${green}zsh${reset}: command ${purple}NOT${reset} found: ${bright}'%s'${reset}\n" "$1"
 
 #     if ! ${PM_COMMAND[@]} -h &>/dev/null; then
 #         return 127
@@ -36,7 +36,7 @@
 
 #     fi
 #     return 127
-# }
+}
 
 function _load_zsh_plugins {
     unset -f _load_zsh_plugins
@@ -228,6 +228,7 @@ function _load_post_init() {
     [[ -f $HOME/.zshrc ]] && source $HOME/.zshrc
 
 }
+
 function do_render {
     # Check if the terminal supports images
     local type="${1:-image}"
@@ -281,6 +282,9 @@ function _load_if_terminal {
         # ===== END Initialize Powerlevel10k theme =====
         fi
 
+				source ~/.zshrc
+				_load_post_init()
+
         # Optionally load user configuration // useful for customizing the shell without modifying the main file
         if [[ -f $HOME/.hyde.zshrc ]]; then
             source $HOME/.hyde.zshrc # for backward compatibility
@@ -313,24 +317,24 @@ function _load_if_terminal {
         # Warn if the shell is slow to load
         add-zsh-hook -Uz precmd _slow_load_warning
 
-        alias c='clear' \
-            in='${PM_COMMAND[@]} install' \
-            un='${PM_COMMAND[@]} remove' \
-            up='${PM_COMMAND[@]} upgrade' \
-            pl='${PM_COMMAND[@]} search installed' \
-            pa='${PM_COMMAND[@]} search all' \
-            vc='code' \
-            fastfetch='fastfetch --logo-type kitty' \
-            ..='cd ..' \
-            ...='cd ../..' \
-            .3='cd ../../..' \
-            .4='cd ../../../..' \
-            .5='cd ../../../../..' \
-            mkdir='mkdir -p' \
-            ffec='_fuzzy_edit_search_file_content' \
-            ffcd='_fuzzy_change_directory' \
-            ffe='_fuzzy_edit_search_file' \
-            df='_df'
+        # alias c='clear' \
+        #     in='${PM_COMMAND[@]} install' \
+        #     un='${PM_COMMAND[@]} remove' \
+        #     up='${PM_COMMAND[@]} upgrade' \
+        #     pl='${PM_COMMAND[@]} search installed' \
+        #     pa='${PM_COMMAND[@]} search all' \
+        #     vc='code' \
+        #     fastfetch='fastfetch --logo-type kitty' \
+        #     ..='cd ..' \
+        #     ...='cd ../..' \
+        #     .3='cd ../../..' \
+        #     .4='cd ../../../..' \
+        #     .5='cd ../../../../..' \
+        #     mkdir='mkdir -p' \
+        #     ffec='_fuzzy_edit_search_file_content' \
+        #     ffcd='_fuzzy_change_directory' \
+        #     ffe='_fuzzy_edit_search_file' \
+        #     df='_df'
 
         # Some binds won't work on first prompt when deferred
         bindkey '\e[H' beginning-of-line
@@ -379,6 +383,8 @@ setopt HIST_IGNORE_ALL_DUPS   # Delete an old recorded event if a new event is a
 
 # HyDE Package Manager
 PM_COMMAND=(hyde-shell pm)
+
+pokego -r 1 --no-title | fastfetch --file-raw -
 
 export XDG_CONFIG_HOME XDG_DATA_HOME XDG_STATE_HOME \
     XDG_CACHE_HOME XDG_DESKTOP_DIR XDG_DOWNLOAD_DIR \

@@ -12,13 +12,20 @@ path=(
 	/usr/bin
 )
 
+pokego -r 1 --no-title | fastfetch --file-raw -
+
+plugins=(
+	zsh-autosuggestions
+)
+
 . "$HOME/.cargo/env"
 
+export ROS_DOMAIN_ID=10
 export PATH="${(j/:/)path}"
 export EDITOR="nv"
 
 eval "$(zoxide init zsh --cmd cd)"
-eval "$(fzf --zsh)"
+# eval "$(fzf --zsh)"
 
 bindkey '' autosuggest-accept
 
