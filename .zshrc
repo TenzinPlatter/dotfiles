@@ -22,7 +22,7 @@ plugins=(
 export ROS_DOMAIN_ID=123
 export ROS_DISTRO=jazzy
 export PATH="${(j/:/)path}"
-export EDITOR="nvim"
+export EDITOR="nv"
 
 if [[ $- == *i* ]]; then
   source $ZSH/oh-my-zsh.sh
