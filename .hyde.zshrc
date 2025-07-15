@@ -7,9 +7,9 @@
 # pokego --no-title -r 1,3,6
 # fastfetch --logo-type kitty
 
-if [[ $- == *i* ]]; then
-  pokego -r 1 --no-title | fastfetch --file-raw -
-fi
+# if [[ $- == *i* ]]; then
+#   pokego -r 1 --no-title | fastfetch --file-raw -
+# fi
 
 #  Aliases 
 # Override aliases here or in '~/.zshrc' (already set in .zshenv)
