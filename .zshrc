@@ -24,7 +24,7 @@ plugins=(
 export ROS_DOMAIN_ID=123
 export ROS_DISTRO=jazzy
 export PATH="${(j/:/)path}"
-export EDITOR="nv"
+export EDITOR="nvim"
 
 setopt NO_AUTO_CD 
 
