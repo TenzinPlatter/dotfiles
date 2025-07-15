@@ -45,9 +45,6 @@ if [[ $- == *i* ]]; then
   zle -N run-ls
   bindkey '' run-ls
 
-  zle -N sudo-command-line
-  bindkey '\e\e' sudo-command-line
-
   [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 fi
 
