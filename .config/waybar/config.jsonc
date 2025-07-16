@@ -21,8 +21,7 @@
     "group/pill#left1": {
         "orientation": "inherit",
         "modules": [
-            "cpu",
-            "memory"
+          "custom/spotify"
         ]
     },
     "group/pill#left2": {
