@@ -8,7 +8,7 @@
 # fastfetch --logo-type kitty
 
 if [[ $- == *i* ]]; then
-  pokego -r 1 --no-title | fastfetch --file-raw -
+  # pokego -r 1 --no-title | fastfetch --file-raw -
 fi
 
 #  Aliases 
