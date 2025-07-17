@@ -1,0 +1,22 @@
+[Unit]
+Description=File Watcher for Auto Git Commits in dotfiles
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 %h/.dotfiles/scripts/dotfile_watcher.py
+WorkingDirectory=%h/.dotfiles
+Restart=always
+RestartSec=10
+
+# Environment variables
+Environment=HOME=%h
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=dotfiles-watcher
+
+[Install]
+WantedBy=default.target
