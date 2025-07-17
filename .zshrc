@@ -1,9 +1,5 @@
-zmodload zsh/zprof
-
 source "/home/tenzin/.zsh/aliases.zsh"
 source "/home/tenzin/.zsh/fns.zsh"
-
-alias ssr="ssh rock@192.168.68.72"
 
 path=(
 	$PATH
@@ -30,6 +26,8 @@ export EDITOR="nvim"
 setopt NO_AUTO_CD 
 
 if [[ $- == *i* ]]; then
+  pokego -r 1 --no-title | fastfetch --file-raw -
+
   source $ZSH/oh-my-zsh.sh
   . "$HOME/.cargo/env"
 	eval "$(zoxide init zsh --cmd cd)"
@@ -59,5 +57,3 @@ fi
 
 # ?
 # . "$HOME/.local/share/../bin/env"
-
-zprof
