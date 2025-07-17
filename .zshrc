@@ -1,3 +1,5 @@
+zmodload zsh/zprof
+
 source "/home/tenzin/.zsh/aliases.zsh"
 source "/home/tenzin/.zsh/fns.zsh"
 
@@ -57,3 +59,5 @@ export NVM_DIR="$HOME/.config/nvm"
 
 # ?
 # . "$HOME/.local/share/../bin/env"
+
+zprof
