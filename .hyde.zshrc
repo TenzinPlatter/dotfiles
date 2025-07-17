@@ -7,9 +7,15 @@
 # pokego --no-title -r 1,3,6
 # fastfetch --logo-type kitty
 
+<<<<<<< HEAD
 if [[ $- == *i* ]]; then
   # pokego -r 1 --no-title | fastfetch --file-raw -
 fi
+=======
+# if [[ $- == *i* ]]; then
+#   pokego -r 1 --no-title | fastfetch --file-raw -
+# fi
+>>>>>>> origin/archie/tenzin
 
 #  Aliases 
 # Override aliases here or in '~/.zshrc' (already set in .zshenv)

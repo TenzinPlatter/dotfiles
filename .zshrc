@@ -2,6 +2,8 @@ source "/home/tenzin/.zsh/aliases.zsh"
 source "/home/tenzin/.zsh/fns.zsh"
 [[ -f "/home/tenzin/env.zsh" ]] && source "/home/tenzin/env.zsh"
 
+alias ssr="ssh rock@192.168.68.72"
+
 path=(
 	$PATH
 	~/.cargo/bin
@@ -22,13 +24,15 @@ plugins=(
 export ROS_DOMAIN_ID=123
 export ROS_DISTRO=jazzy
 export PATH="${(j/:/)path}"
-export EDITOR="nv"
+export EDITOR="nvim"
+
+setopt NO_AUTO_CD 
 
 if [[ $- == *i* ]]; then
   source $ZSH/oh-my-zsh.sh
   . "$HOME/.cargo/env"
-  eval "$(zoxide init zsh --cmd cd)"
-  # eval "$(fzf --zsh)"
+	eval "$(zoxide init zsh --cmd cd)"
+	eval "$(fzf --zsh)"
 
   bindkey '' autosuggest-accept
 
@@ -40,9 +44,6 @@ if [[ $- == *i* ]]; then
 
   zle -N run-ls
   bindkey '' run-ls
-
-  zle -N sudo-command-line
-  bindkey '\e\e' sudo-command-line
 
   [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 fi
