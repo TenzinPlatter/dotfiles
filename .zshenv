@@ -287,7 +287,7 @@ function _load_if_terminal {
 
         # Optionally load user configuration // useful for customizing the shell without modifying the main file
         if [[ -f $HOME/.hyde.zshrc ]]; then
-            source $HOME/.hyde.zshrc # for backward compatibility
+            # source $HOME/.hyde.zshrc # for backward compatibility
         elif [[ -f $HOME/.user.zsh ]]; then
             source $HOME/.user.zsh # renamed to .user.zsh for intuitiveness that it is a user config
         fi
@@ -383,8 +383,6 @@ setopt HIST_IGNORE_ALL_DUPS   # Delete an old recorded event if a new event is a
 
 # HyDE Package Manager
 PM_COMMAND=(hyde-shell pm)
-
-pokego -r 1 --no-title | fastfetch --file-raw -
 
 export XDG_CONFIG_HOME XDG_DATA_HOME XDG_STATE_HOME \
     XDG_CACHE_HOME XDG_DESKTOP_DIR XDG_DOWNLOAD_DIR \
