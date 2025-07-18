@@ -1,1 +1,0 @@
-.zsh/node_bloat.zsh
