@@ -1,6 +1,7 @@
 source "/home/tenzin/.zsh/aliases.zsh"
 source "/home/tenzin/.zsh/fns.zsh"
 source "/home/tenzin/.zsh/node_bloat.zsh"
+[[ -f "/home/tenzin/.zsh/env.zsh" ]] && source "/home/tenzin/.zsh/env.zsh"
 
 path=(
 	$PATH
