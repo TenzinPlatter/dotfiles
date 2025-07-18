@@ -1,6 +1,6 @@
 source "/home/tenzin/.zsh/aliases.zsh"
 source "/home/tenzin/.zsh/fns.zsh"
-source "/home/tenzin/.zsh/node_bloat.zsh"
+# source "/home/tenzin/.zsh/node_bloat.zsh"
 [[ -f "/home/tenzin/.zsh/env.zsh" ]] && source "/home/tenzin/.zsh/env.zsh"
 
 path=(
@@ -48,13 +48,12 @@ if [[ $- == *i* ]]; then
   [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 fi
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-# export SDKMAN_DIR="$HOME/.sdkman"
-# [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# export NVM_DIR="$HOME/.config/nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# ?
-# . "$HOME/.local/share/../bin/env"
+export PNPM_HOME="/home/tenzin/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
