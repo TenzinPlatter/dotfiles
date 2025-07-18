@@ -31,7 +31,6 @@ if [[ $- == *i* ]]; then
   source $ZSH/oh-my-zsh.sh
   . "$HOME/.cargo/env"
 	eval "$(zoxide init zsh --cmd cd)"
-	eval "$(fzf --zsh)"
 
   bindkey '' autosuggest-accept
 
@@ -43,6 +42,9 @@ if [[ $- == *i* ]]; then
 
   zle -N run-ls
   bindkey '' run-ls
+
+  bindkey -r ''
+  bindkey '' suspend
 
   [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 fi
