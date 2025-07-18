@@ -43,9 +43,6 @@ if [[ $- == *i* ]]; then
   zle -N run-ls
   bindkey '' run-ls
 
-  bindkey -r ''
-  bindkey '' suspend
-
   [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 fi
 
