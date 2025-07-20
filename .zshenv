@@ -384,8 +384,6 @@ setopt HIST_IGNORE_ALL_DUPS   # Delete an old recorded event if a new event is a
 # HyDE Package Manager
 PM_COMMAND=(hyde-shell pm)
 
-pokego -r 1 --no-title | fastfetch --file-raw -
-
 export XDG_CONFIG_HOME XDG_DATA_HOME XDG_STATE_HOME \
     XDG_CACHE_HOME XDG_DESKTOP_DIR XDG_DOWNLOAD_DIR \
     XDG_TEMPLATES_DIR XDG_PUBLICSHARE_DIR XDG_DOCUMENTS_DIR \
