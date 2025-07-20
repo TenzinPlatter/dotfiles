@@ -225,7 +225,10 @@ function _load_post_init() {
     fi
 
     # User rc file always overrides
-    [[ -f $HOME/.zshrc ]] && source $HOME/.zshrc
+    [[ -f $HOME/.zshrc ]] && {
+      echo "sourcing zshrc"
+      source $HOME/.zshrc
+    }
 
 }
 
