@@ -2,6 +2,8 @@ source "/home/tenzin/.zsh/aliases.zsh"
 source "/home/tenzin/.zsh/fns.zsh"
 [[ -f "/home/tenzin/env.zsh" ]] && source "/home/tenzin/env.zsh"
 
+echo "hi"
+
 alias ssr="ssh rock@192.168.68.72"
 
 path=(
