@@ -36,7 +36,7 @@ if [[ $- == *i* ]]; then
   . "$HOME/.cargo/env"
 	eval "$(zoxide init zsh --cmd cd)"
 
-  bindkey '' autosuggest-accept
+  bindkey '^ ' autosuggest-accept
 
   zle -N set-nv
   bindkey '' set-nv
