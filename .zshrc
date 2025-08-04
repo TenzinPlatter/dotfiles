@@ -18,6 +18,7 @@ export ZSH_THEME=""
 
 plugins=(
 	zsh-autosuggestions
+	you-should-use
 )
 
 export ROS_DOMAIN_ID=123
