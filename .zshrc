@@ -45,9 +45,6 @@ if [[ $- == *i* ]]; then
   zle -N set-cd
   bindkey '' set-cd
 
-  zle -N run-ls
-  bindkey '' run-ls
-
   [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 fi
 
