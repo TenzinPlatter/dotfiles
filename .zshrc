@@ -25,8 +25,10 @@ export ROS_DOMAIN_ID=123
 export ROS_DISTRO=jazzy
 export ROS_OVERLAY=/opt/ros/jazzy
 export ROS_VERSION=2
+
 export PATH="${(j/:/)path}"
 export EDITOR="nvim"
+export NIXPKGS_ALLOW_UNFREE=1
 
 setopt NO_AUTO_CD 
 
