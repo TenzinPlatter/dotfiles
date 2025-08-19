@@ -47,6 +47,9 @@ if [[ $- == *i* ]]; then
   zle -N set-cd
   bindkey '' set-cd
 
+  zle -N prepend-sudo
+  bindkey '\e\e' prepend-sudo
+
   [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 fi
 
