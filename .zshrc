@@ -1,6 +1,7 @@
 source "/home/tenzin/.zsh/aliases.zsh"
 source "/home/tenzin/.zsh/fns.zsh"
-[[ -f "/home/tenzin/env.zsh" ]] && source "/home/tenzin/env.zsh"
+# source "/home/tenzin/.zsh/node_bloat.zsh"
+[[ -f "/home/tenzin/.zsh/env.zsh" ]] && source "/home/tenzin/.zsh/env.zsh"
 
 path=(
 	$PATH
@@ -17,22 +18,28 @@ export ZSH_THEME=""
 
 plugins=(
 	zsh-autosuggestions
+	you-should-use
 )
 
 export ROS_DOMAIN_ID=123
 export ROS_DISTRO=jazzy
+export ROS_OVERLAY=/opt/ros/jazzy
+export ROS_VERSION=2
+
 export PATH="${(j/:/)path}"
 export EDITOR="nvim"
+export NIXPKGS_ALLOW_UNFREE=1
 
 setopt NO_AUTO_CD 
 
 if [[ $- == *i* ]]; then
+  pokego -r 1 --no-title | fastfetch --file-raw -
+
   source $ZSH/oh-my-zsh.sh
   . "$HOME/.cargo/env"
 	eval "$(zoxide init zsh --cmd cd)"
-	eval "$(fzf --zsh)"
 
-  bindkey '' autosuggest-accept
+  bindkey '^ ' autosuggest-accept
 
   zle -N set-nv
   bindkey '' set-nv
@@ -40,19 +47,18 @@ if [[ $- == *i* ]]; then
   zle -N set-cd
   bindkey '' set-cd
 
-  zle -N run-ls
-  bindkey '' run-ls
+  zle -N prepend-sudo
+  bindkey '\e\e' prepend-sudo
 
   [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 fi
-
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-# export SDKMAN_DIR="$HOME/.sdkman"
-# [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# ?
-# . "$HOME/.local/share/../bin/env"
+export PNPM_HOME="/home/tenzin/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac

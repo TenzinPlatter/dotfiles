@@ -1,8 +1,11 @@
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
+
+[push]
+  autoSetupRemote = true
 
 [merge]
   tool = diffview
@@ -12,49 +15,49 @@
 [mergetool "diffview"]
   cmd = nvim -n -c "DiffviewOpen" "$MERGE"
 [init]
-	defaultBranch = main
+  defaultBranch = main
 
 [user]
-	name = Tenzin Platter
-	email = 143778894+TenzinPlatter@users.noreply.github.com
+  name = Tenzin Platter
+  email = 143778894+TenzinPlatter@users.noreply.github.com
 
 [core]
-	compression = 9
-	whitespace = error
-	preloadindex = true
-	excludesFile = /home/tenzin/.gitignore_global
+  compression = 9
+  whitespace = error
+  preloadindex = true
+  excludesFile = /home/tenzin/.gitignore_global
 
 [url "git@github.com:TenzinPlatter/"]
-	insteadOf = "tp:"
+  insteadOf = "tp:"
 
 [url "git@github.sydney.edu.au:tpla0149/"]
-	insteadOf = "syd:"
+  insteadOf = "syd:"
 
 [url "git@github.com:Greenroom-Robotics/"]
-	insteadOf = "gr:"
+  insteadOf = "gr:"
 
 [url "git@github.com:"]
-	insteadOf = "gh:"
+  insteadOf = "gh:"
 
 [status]
-	branch = true
-	showStash = true
-	showUntrackedFiles = all
+  branch = true
+  showStash = true
+  showUntrackedFiles = all
 
 [diff]
-	context = 3
-	renames = copies
-	interHunkContext = 10
+  context = 3
+  renames = copies
+  interHunkContext = 10
 
 [pager]
-	diff = diff-so-fancy | $PAGER
+  diff = diff-so-fancy | $PAGER
 
 [diff-so-fancy]
-	markEmptyLines = false
+  markEmptyLines = false
 
 [color "diff"]
-	meta = black bold
-	frag = magenta
-	context = white
-	whtiespace = yellow reverse
-	old = red
+  meta = black bold
+  frag = magenta
+  context = white
+  whtiespace = yellow reverse
+  old = red
