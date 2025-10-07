@@ -1,0 +1,30 @@
+#!/usr/bin/env python3
+
+import argparse
+
+def build_command(container: str, follow: bool) -> str:
+    return f"docker logs {follow and '-f'} {container}"
+
+def main():
+    parser = argparse.ArgumentParser(description="Docker logs helper")
+
+    parser.add_argument("-l", "--lookout", help="Use a lookout container", action="store_true")
+    parser.add_argument("-g", "--gama", help="Use a gama container", action="store_true")
+    parser.add_argument("-n", "--no-follow", help="Don't tail the logs", action="store_true")
+    parser.add_argument("container", help="Container name")
+
+    args = parser.parse_args()
+    container_name = ""
+    if args.lookout:
+        container_name = "lookout_"
+
+    if args.gama:
+        container_name = "gama_"
+
+    container_name += args.container
+
+
+
+
+if __name__ == "__main__":
+    main()
