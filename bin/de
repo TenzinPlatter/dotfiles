@@ -1,0 +1,163 @@
+#!/usr/bin/env python3
+import argparse
+import subprocess
+import sys
+import os
+
+def run_command(cmd, check=True):
+    """Run a command and return the result."""
+    try:
+        result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+        if check and result.returncode != 0:
+            print(f"Error running command: {cmd}")
+            print(f"Error: {result.stderr}")
+            return None
+        return result
+    except Exception as e:
+        print(f"Error running command: {cmd}")
+        print(f"Exception: {e}")
+        return None
+
+def run_command_live(cmd):
+    """Run a command without capturing output, showing live output."""
+    try:
+        result = subprocess.run(cmd, shell=True)
+        return result.returncode == 0
+    except Exception as e:
+        print(f"Error running command: {cmd}")
+        print(f"Exception: {e}")
+        return False
+
+def container_is_running(container_name):
+    """Check if a container is running."""
+    cmd = f"docker ps -q -f name={container_name}"
+    result = run_command(cmd, check=False)
+    return result and result.stdout.strip() != ""
+
+def will_trigger_build(container_name):
+    """Check if the container image exists, which would trigger a build if missing."""
+    # Get the image name from docker compose config
+    cmd = f"docker compose config --services | grep -q {container_name}"
+    result = run_command(cmd, check=False)
+    if not result or result.returncode != 0:
+        return False
+
+    # Get the image name for this service
+    cmd = f"docker compose config | grep -A 10 '{container_name}:' | grep 'image:' | head -1"
+    result = run_command(cmd, check=False)
+    if result and result.stdout.strip():
+        # Service uses a pre-built image, check if it exists
+        image_line = result.stdout.strip()
+        image_name = image_line.split('image:')[1].strip()
+        cmd = f"docker images -q {image_name}"
+        result = run_command(cmd, check=False)
+        return not (result and result.stdout.strip())
+    else:
+        # Service has a build context, check if image exists
+        # Try to get the built image name
+        cmd = f"docker images -q | head -1"  # Simplified check - if no recent images, likely will build
+        result = run_command(cmd, check=False)
+        # If this is a build-based service, assume it will build if we can't find a recent image
+        return True
+
+def main():
+    parser = argparse.ArgumentParser(description="Docker exec helper - start container if needed and exec into it")
+    parser.add_argument("container", nargs='?', help="Container name")
+    parser.add_argument("-p", "--platform", action="store_true", 
+                       help="Prepend 'platform_' to container name")
+    parser.add_argument("-b", "--build", action="store_true",
+                       help="Add --build flag to docker compose up command")
+    parser.add_argument("-r", "--restart", action="store_true",
+                       help="Restart the container before exec")
+    parser.add_argument("-s", "--stop", action="store_true",
+                       help="Stop the container without restarting it")
+
+    args = parser.parse_args()
+    
+    # Determine container name
+    if args.platform:
+        if not args.container:
+            # Use current directory name when no container specified with -p flag
+            current_dir = os.path.basename(os.getcwd())
+            container_name = f"platform_{current_dir}"
+        else:
+            container_name = f"platform_{args.container}"
+    else:
+        if not args.container:
+            # Use current directory name when no container specified
+            current_dir = os.path.basename(os.getcwd())
+            container_name = current_dir
+        else:
+            container_name = args.container
+    
+    # Handle stop flag
+    if args.stop:
+        print(f"Stopping container: {container_name}")
+
+        # Stop the container
+        down_cmd = f"docker compose down {container_name}"
+        success = run_command_live(down_cmd)
+        if not success:
+            print("Failed to stop container")
+            sys.exit(1)
+
+        print(f"Container {container_name} stopped successfully")
+        sys.exit(0)
+
+    # Handle restart flag
+    if args.restart:
+        print(f"Restarting container: {container_name}")
+        
+        # Stop the container
+        down_cmd = f"docker compose down {container_name}"
+        success = run_command_live(down_cmd)
+        if not success:
+            print("Failed to stop container")
+            sys.exit(1)
+
+        # Start the container back up
+        up_cmd = f"docker compose up -d {container_name}"
+        will_build = args.build or will_trigger_build(container_name)
+
+        if args.build:
+            up_cmd = f"docker compose up -d --build {container_name}"
+
+        if will_build:
+            success = run_command_live(up_cmd)
+        else:
+            result = run_command(up_cmd)
+            success = result is not None
+
+        if not success:
+            print("Failed to start container")
+            sys.exit(1)
+    elif not container_is_running(container_name):
+        print(f"Starting container: {container_name}")
+        
+        # Build docker compose up command
+        compose_cmd = f"docker compose up -d {container_name}"
+        will_build = args.build or will_trigger_build(container_name)
+
+        if args.build:
+            compose_cmd = f"docker compose up -d --build {container_name}"
+
+        if will_build:
+            success = run_command_live(compose_cmd)
+        else:
+            result = run_command(compose_cmd)
+            success = result is not None
+
+        if not success:
+            print("Failed to start container")
+            sys.exit(1)
+    
+    # Exec into the container
+    exec_cmd = f"docker exec -it {container_name} bash -l"
+    print(f"Executing: {exec_cmd}")
+    
+    # Use os.system instead of subprocess to maintain interactive session
+    exit_code = os.system(exec_cmd)
+    sys.exit(exit_code >> 8)  # Convert to normal exit code
+
+if __name__ == "__main__":
+    main()
