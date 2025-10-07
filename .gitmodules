@@ -7,10 +7,6 @@
 	url = git@github.com:TenzinPlatter/NeovimConfig.git
 	branch = main
 
-[submodule "scripts"]
-	path = scripts
-	url = tp:scripts
-
 [submodule ".config/zsh"]
 	path = .config/zsh
 	url = git@github.com:TenzinPlatter/zsh.git
