@@ -8,5 +8,5 @@ rules = [
   { mime = "image/*", use = "imgopen" }
 ]
 
-[manager]
+[mgr]
 show_hidden = true
