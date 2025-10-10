@@ -4,6 +4,12 @@ import subprocess
 import sys
 import os
 
+def get_container_name(container: str | None, prefix: str | None = None):
+    if not container:
+        container = os.path.basename(os.getcwd())
+
+    return f"{prefix}_{container}" if prefix else container
+
 def run_command(cmd, check=True):
     """Run a command and return the result."""
     try:
@@ -65,6 +71,10 @@ def main():
     parser.add_argument("container", nargs='?', help="Container name")
     parser.add_argument("-p", "--platform", action="store_true", 
                        help="Prepend 'platform_' to container name")
+    parser.add_argument("-l", "--lookout", action="store_true", 
+                       help="Prepend 'lookout_' to container name")
+    parser.add_argument("-g", "--gama", action="store_true", 
+                       help="Prepend 'gama_' to container name")
     parser.add_argument("-b", "--build", action="store_true",
                        help="Add --build flag to docker compose up command")
     parser.add_argument("-r", "--restart", action="store_true",
@@ -76,19 +86,13 @@ def main():
     
     # Determine container name
     if args.platform:
-        if not args.container:
-            # Use current directory name when no container specified with -p flag
-            current_dir = os.path.basename(os.getcwd())
-            container_name = f"platform_{current_dir}"
-        else:
-            container_name = f"platform_{args.container}"
+        container_name = get_container_name(args.container, "platform")
+    elif args.gama:
+        container_name = get_container_name(args.container, "gama")
+    elif args.lookout:
+        container_name = get_container_name(args.container, "lookout")
     else:
-        if not args.container:
-            # Use current directory name when no container specified
-            current_dir = os.path.basename(os.getcwd())
-            container_name = current_dir
-        else:
-            container_name = args.container
+        container_name = get_container_name(args.container)
     
     # Handle stop flag
     if args.stop:
