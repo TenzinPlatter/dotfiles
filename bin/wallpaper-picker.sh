@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Store the selected file from yazi
 selected=$(yazi --chooser-file=/dev/stdout ~/wallpapers)
@@ -6,4 +6,5 @@ selected=$(yazi --chooser-file=/dev/stdout ~/wallpapers)
 # If a file was selected, set it as wallpaper with swww
 if [ -n "$selected" ]; then
     swww img "$selected" --resize crop
+    echo "$selected" > ~/.cache/current_wallpaper
 fi
