@@ -6,6 +6,7 @@
 
 [push]
   autoSetupRemote = true
+  default = upstream
 
 [merge]
   tool = diffview
