@@ -135,6 +135,7 @@ def main():
         if not success:
             print("Failed to start container")
             sys.exit(1)
+
     elif not container_is_running(container_name):
         print(f"Starting container: {container_name}")
         
