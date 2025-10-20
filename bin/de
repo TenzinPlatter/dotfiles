@@ -81,6 +81,8 @@ def main():
                        help="Restart the container before exec")
     parser.add_argument("-s", "--stop", action="store_true",
                        help="Stop the container without restarting it")
+    parser.add_argument("-n", "--no-exec", action="store_true",
+                       help="Start/restart container but don't exec into it")
 
     args = parser.parse_args()
     
@@ -155,11 +157,16 @@ def main():
         if not success:
             print("Failed to start container")
             sys.exit(1)
-    
+
+    # Skip exec if -n flag is set
+    if args.no_exec:
+        print(f"Container {container_name} is running (skipping exec)")
+        sys.exit(0)
+
     # Exec into the container
     exec_cmd = f"docker exec -it {container_name} bash -l"
     print(f"Executing: {exec_cmd}")
-    
+
     # Use os.system instead of subprocess to maintain interactive session
     exit_code = os.system(exec_cmd)
     sys.exit(exit_code >> 8)  # Convert to normal exit code
