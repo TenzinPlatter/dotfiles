@@ -5,8 +5,10 @@ import sys
 
 import argparse
 
+
 def build_command(container: str, follow: bool) -> str:
-    return f"docker logs {follow and '-f'} {container}"
+    return " ".join(["docker logs", "-f" if follow else "", f"{container}"])
+
 
 def main():
     parser = argparse.ArgumentParser(description="Docker logs helper")
@@ -29,7 +31,6 @@ def main():
     exec_cmd = build_command(container_name, not args.no_follow)
     exit_code = os.system(exec_cmd)
     sys.exit(exit_code >> 8)  # Convert to normal exit code  # noqa: F821
-
 
 
 if __name__ == "__main__":
