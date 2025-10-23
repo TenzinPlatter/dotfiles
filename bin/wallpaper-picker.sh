@@ -5,6 +5,6 @@ selected=$(yazi --chooser-file=/dev/stdout ~/wallpapers)
 
 # If a file was selected, set it as wallpaper with swww
 if [ -n "$selected" ]; then
-    swww img "$selected" --resize crop
+    dms ipc call wallpaper set "$selected"
     echo "$selected" > ~/.cache/current_wallpaper
 fi
