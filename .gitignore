@@ -1,3 +1,4 @@
 /.config/kitty/machine.conf
 /env.zsh
 .claude
+.config/kitty/dank-theme.conf

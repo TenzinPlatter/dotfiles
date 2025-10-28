@@ -6,8 +6,8 @@ if [ -f ~/.cache/current_wallpaper ]; then
     swww-daemon &
     sleep 0.5
     if [ -f "$wallpaper" ]; then
-        swww img "$wallpaper" --resize crop
+        dms ipc call wallpaper set "$selected"
     else
-        swww img "f1-redbull.jpeg"
+        dms ipc call wallpaper set "~/wallpapers/Tokyo Night/street.gif"
     fi
 fi
