@@ -1,6 +1,6 @@
 [opener]
 imgopen = [
-  { run = 'sxiv "$@"', orphan = true, for = "unix" },
+  { run = 'swayimg "$@"', orphan = true, for = "unix" },
 ]
 
 [open]

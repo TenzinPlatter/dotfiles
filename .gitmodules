@@ -11,3 +11,13 @@
 	path = .config/zsh
 	url = git@github.com:TenzinPlatter/zsh.git
 	branch = main
+
+[submodule "niri"]
+	path = .config/niri
+	url = git@github.com:TenzinPlatter/niri.git
+	branch = main
+
+[submodule "waybar"]
+	path = .config/waybar
+	url = git@github.com:TenzinPlatter/waybar.git
+	branch = main
