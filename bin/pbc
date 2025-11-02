@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 
+import os
+
 import argparse
 import subprocess
 
 GR_ROSDEP_LOCATION = "/home/tenzin/Repositories/rosdep/install/rosdep/bin/rosdep"
 
+
 def main(args):
+    cwd = os.getcwd()
+    platform_module = os.path.basename(cwd)
+
     cmd = []
 
     # fragile, only works for my setup
@@ -18,6 +24,17 @@ def main(args):
     if args.install:
         cmd.extend(["platform", "pkg", "install-deps", "&&"])
 
+    cmd.extend(
+        [
+            "colcon",
+            "build",
+            "--merge-install",
+            "--install-base",
+            f'"/opt/greenroom/{platform_module}"',
+            "--cmake-args",
+            "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+        ]
+    )
 
 
 
