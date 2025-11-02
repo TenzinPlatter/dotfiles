@@ -1,13 +1,29 @@
 #!/usr/bin/env python3
 
 import argparse
+import subprocess
+
+GR_ROSDEP_LOCATION = "/home/tenzin/Repositories/rosdep/install/rosdep/bin/rosdep"
 
 def main(args):
-    ...
+    cmd = []
+
+    # fragile, only works for my setup
+    rosdep_location = subprocess.run(["which", "rosdep"]).stdout.decode().strip()
+
+    if rosdep_location != GR_ROSDEP_LOCATION:
+        # source ros env
+        cmd.extend(["sr", "&&"])
+
+    if args.install:
+        cmd.extend(["platform", "pkg", "install-deps"])
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="PBC Command Line Tool")
-    parser.add_argument()
+    parser.add_argument("-i", "--install", help="Whether to install dependencies")
+    parser.add_argument("packages", nargs="*", help="List of packages to install")
+
+    args = parser.parse_args()
 
     main(args)
