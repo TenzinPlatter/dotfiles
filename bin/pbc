@@ -3,6 +3,7 @@
 import os
 
 import argparse
+from itertools import groupby
 import subprocess
 
 GR_ROSDEP_LOCATION = "/home/tenzin/Repositories/rosdep/install/rosdep/bin/rosdep"
