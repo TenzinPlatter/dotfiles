@@ -16,7 +16,9 @@ def main(args):
         cmd.extend(["sr", "&&"])
 
     if args.install:
-        cmd.extend(["platform", "pkg", "install-deps"])
+        cmd.extend(["platform", "pkg", "install-deps", "&&"])
+
+
 
 
 if __name__ == "__main__":
