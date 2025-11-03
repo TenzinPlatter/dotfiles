@@ -1,0 +1,115 @@
+#!/usr/bin/env python3
+"""
+Script to enable/disable packet loss for a network interface using tc netem.
+
+Usage: packetloss <interface> <percentage>
+  - percentage=0 disables packet loss and cleans up
+  - percentage>0 enables packet loss at that rate
+"""
+
+import os
+import sys
+import subprocess
+import argparse
+from pathlib import Path
+
+
+class PacketLossController:
+    def __init__(self, interface: str, percentage: float):
+        self.interface = interface
+        self.percentage = percentage
+
+    def _run_cmd(self, cmd: list, check: bool = True, capture: bool = False):
+        """Run command with optional error checking."""
+        try:
+            result = subprocess.run(
+                cmd,
+                capture_output=capture,
+                text=True,
+                check=check
+            )
+            return result.stdout if capture else None
+        except subprocess.CalledProcessError as e:
+            if check:
+                raise RuntimeError(f"Command failed: {' '.join(cmd)}\n{e.stderr}")
+            return None
+
+    def validate(self):
+        """Validate preconditions."""
+        # Check if interface exists
+        if not Path(f"/sys/class/net/{self.interface}").exists():
+            raise ValueError(f"Interface {self.interface} does not exist")
+
+        # Validate percentage
+        if not (0 <= self.percentage <= 100):
+            raise ValueError("Percentage must be between 0 and 100")
+
+    def enable(self):
+        """Enable packet loss for the interface."""
+        print(f"Enabling {self.percentage}% packet loss on {self.interface}")
+
+        # Remove any existing qdisc first
+        self._run_cmd(["sudo", "tc", "qdisc", "del", "dev", self.interface, "root"], check=False)
+
+        # Add netem qdisc with packet loss
+        self._run_cmd([
+            "sudo", "tc", "qdisc", "add", "dev", self.interface,
+            "root", "netem", "loss", f"{self.percentage}%"
+        ])
+        print("✓ Packet loss enabled successfully")
+
+    def disable(self):
+        """Disable packet loss and cleanup."""
+        print(f"Disabling packet loss on {self.interface}")
+
+        # Remove tc qdisc
+        self._run_cmd([
+            "sudo", "tc", "qdisc", "del", "dev", self.interface, "root"
+        ], check=False)
+        print("✓ Packet loss disabled successfully")
+
+    def show_status(self):
+        """Show current tc configuration."""
+        print(f"\nCurrent tc configuration for {self.interface}:")
+        output = self._run_cmd(
+            ["sudo", "tc", "qdisc", "show", "dev", self.interface],
+            capture=True
+        )
+        print(output)
+
+    def run(self):
+        """Main execution."""
+        self.validate()
+
+        if self.percentage == 0:
+            self.disable()
+        else:
+            self.enable()
+
+        self.show_status()
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Control packet loss for a network interface using tc netem",
+        epilog="Example: packetloss eth0 50  # Enable 50%% packet loss on eth0"
+    )
+    parser.add_argument("interface", type=str, help="Network interface (e.g., eth0, enp49s0)")
+    parser.add_argument(
+        "percentage",
+        type=float,
+        help="Packet loss percentage (0-100, use 0 to disable)"
+    )
+
+    args = parser.parse_args()
+
+    try:
+        controller = PacketLossController(args.interface, args.percentage)
+        controller.run()
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

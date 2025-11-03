@@ -70,7 +70,7 @@ def main(args):
 
     # Determine which rc file to source based on shell
     if shell_name == "zsh":
-        rc_file = os.path.expanduser("~/.zshrc")
+        rc_file = os.path.expanduser("~/.zshenv")
     else:  # bash or other
         rc_file = os.path.expanduser("~/.bashrc")
 
