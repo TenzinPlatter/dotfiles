@@ -9,6 +9,26 @@ import subprocess
 GR_ROSDEP_LOCATION = "/home/tenzin/Repositories/rosdep/install/rosdep/bin/rosdep"
 
 
+def split_on_condition(lst, condition):
+    """Split list into sublists, splitting at elements where condition is
+    True."""
+    result = []
+    current = []
+
+    for item in lst:
+        if condition(item):
+            if current:  # Only add non-empty groups
+                result.append(current)
+                current = []
+        else:
+            current.append(item)
+
+    if current:  # Don't forget the last group
+        result.append(current)
+
+    return result
+
+
 def main(args):
     cwd = os.getcwd()
     platform_module = os.path.basename(cwd)
@@ -37,7 +57,11 @@ def main(args):
         ]
     )
 
+    cmds = split_on_condition(cmd, lambda x: x == "&&")
+    print("Running commands:\n")
+    print("\n".join(cmds))
 
+    subprocess.run(cmd, shell=True, check=True)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="PBC Command Line Tool")
