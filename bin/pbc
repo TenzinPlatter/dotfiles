@@ -35,7 +35,7 @@ def main(args):
     cmd = []
 
     # fragile, only works for my setup
-    rosdep_location = subprocess.run(["which", "rosdep"]).stdout.decode().strip()
+    rosdep_location = subprocess.run(["which", "rosdep"], capture_output=True).stdout.decode().strip()
 
     if rosdep_location != GR_ROSDEP_LOCATION:
         # source ros env
@@ -57,8 +57,9 @@ def main(args):
     )
 
     cmds = split_on_condition(cmd, lambda x: x == "&&")
-    print("Running commands:\n")
-    print("\n".join(cmds))
+    print("Running commands:")
+    for c in cmds:
+        print(" ".join(c))
 
     subprocess.run(cmd, shell=True, check=True)
 
