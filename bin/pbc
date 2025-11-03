@@ -61,7 +61,22 @@ def main(args):
     for c in cmds:
         print(" ".join(c))
 
-    subprocess.run(cmd, shell=True, check=True)
+    # Join the command list into a single string for shell execution
+    cmd_string = str(" ".join(cmd))
+
+    # Use the current user's shell and explicitly source the rc file
+    shell = os.environ.get("SHELL", "/bin/bash")
+    shell_name = os.path.basename(shell)
+
+    # Determine which rc file to source based on shell
+    if shell_name == "zsh":
+        rc_file = os.path.expanduser("~/.zshrc")
+    else:  # bash or other
+        rc_file = os.path.expanduser("~/.bashrc")
+
+    # Source the rc file, then run the command
+    full_cmd = f"source {rc_file} && {cmd_string}"
+    subprocess.run([shell, "-c", full_cmd], check=True)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="PBC Command Line Tool")
