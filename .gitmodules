@@ -1,6 +1,7 @@
 [submodule "helix_conf"]
 	path = .config/helix
 	url = git@github.com:TenzinPlatter/helix_conf.git
+	branch = main
 
 [submodule "nvim"]
 	path = .config/nvim
