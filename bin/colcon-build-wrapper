@@ -1,0 +1,29 @@
+#!/usr/bin/env zsh
+
+# Minimal wrapper for colcon build that sources only necessary ROS environment
+# without interactive shell output
+
+# Source ROS environment (from sr function)
+if ! command -v ros2 &> /dev/null; then
+    source /opt/ros/jazzy/setup.zsh 2>/dev/null
+fi
+
+if [[ ! "$(which rosdep 2>/dev/null)" = "/home/tenzin/Repositories/rosdep/install/rosdep/bin/rosdep" ]]; then
+    source /home/tenzin/Repositories/rosdep/install/setup.zsh 2>/dev/null
+fi
+
+# Get platform module from current directory
+local platform_module="${PWD:t}"
+
+# Source greenroom overlay if it exists
+if [[ -f /opt/greenroom/$platform_module/install/setup.zsh ]]; then
+    source /opt/greenroom/$platform_module/install/setup.zsh 2>/dev/null
+fi
+
+# Source local workspace if it exists
+if [[ -f ./install/setup.zsh ]]; then
+    source ./install/setup.zsh 2>/dev/null
+fi
+
+# Run colcon build with compile commands export
+colcon build --merge-install --install-base "/opt/greenroom/${platform_module}" --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON "$@"
