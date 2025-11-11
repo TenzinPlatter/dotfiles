@@ -26,17 +26,26 @@ def stream_ollama_response(model, prompt):
 
     try:
         with urllib.request.urlopen(request) as response:
+            buffer = ""
             while True:
-                line = response.read(4096)
-                if not line:
+                chunk = response.read(1024)
+                if not chunk:
                     break
 
-                # Parse each line as JSON
-                for json_line in line.decode('utf-8').strip().split('\n'):
-                    if json_line:
-                        chunk = json.loads(json_line)
-                        if 'response' in chunk:
-                            print(chunk['response'], end='', flush=True)
+                # Decode and add to buffer
+                buffer += chunk.decode('utf-8')
+
+                # Process complete lines
+                while '\n' in buffer:
+                    line, buffer = buffer.split('\n', 1)
+                    if line.strip():
+                        try:
+                            json_chunk = json.loads(line)
+                            if 'response' in json_chunk:
+                                print(json_chunk['response'], end='', flush=True)
+                        except json.JSONDecodeError:
+                            # Skip malformed JSON
+                            continue
     except urllib.error.URLError as e:
         print("Error: Could not connect to ollama. Is it running? (ollama serve)", file=sys.stderr)
         raise
