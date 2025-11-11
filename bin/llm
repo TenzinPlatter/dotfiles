@@ -38,7 +38,7 @@ def stream_ollama_response(model, prompt):
                         if 'response' in chunk:
                             print(chunk['response'], end='', flush=True)
     except urllib.error.URLError as e:
-        print(f"Error: Could not connect to ollama. Is it running? (ollama serve)", file=sys.stderr)
+        print("Error: Could not connect to ollama. Is it running? (ollama serve)", file=sys.stderr)
         raise
 
 
