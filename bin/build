@@ -1,0 +1,20 @@
+#!/usr/bin/env python3
+
+import argparse
+import subprocess
+
+
+def main(args):
+    out = subprocess.run(
+        [args.build_cmd] + args.build_args, check=True, capture_output=True
+    ).stdout
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("build_cmd", help="The build command to execute")
+    parser.add_argument(
+        "build_args", nargs=argparse.REMAINDER, help="Arguments for the build command"
+    )
+    args = parser.parse_args()
+    main(args)
