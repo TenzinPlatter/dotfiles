@@ -90,22 +90,32 @@ def main(args=None):
             print_usage()
             return 1
 
-        result = subprocess.run(
+        # Run build command and capture output while displaying it
+        process = subprocess.Popen(
             build_cmd,
-            capture_output=True,
-            text=True
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1
         )
 
-        # Combine stdout and stderr
-        build_output = result.stdout + result.stderr
+        # Stream output to terminal and capture it
+        build_output = []
+        for line in process.stdout:
+            print(line, end='', flush=True)
+            build_output.append(line)
+
+        process.wait()
+        combined_output = ''.join(build_output)
 
         # Parse errors with AI
+        print("\n--- Parsing errors with AI ---", flush=True)
         try:
-            parse_build_errors(build_output)
+            parse_build_errors(combined_output)
         except urllib.error.URLError:
             return 1
 
-        return result.returncode
+        return process.returncode
     else:
         # Basic mode: join all args as prompt
         prompt = ' '.join(args)
