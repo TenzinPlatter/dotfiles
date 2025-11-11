@@ -1,0 +1,168 @@
+diff --git a/bin/build b/bin/build
+deleted file mode 100644
+index 20746c6..0000000
+--- a/bin/build
++++ /dev/null
+@@ -1,20 +0,0 @@
+-#!/usr/bin/env python3
+-
+-import argparse
+-import subprocess
+-
+-
+-def main(args):
+-    out = subprocess.run(
+-        [args.build_cmd] + args.build_args, check=True, capture_output=True
+-    ).stdout
+-
+-
+-if __name__ == "__main__":
+-    parser = argparse.ArgumentParser()
+-    parser.add_argument("build_cmd", help="The build command to execute")
+-    parser.add_argument(
+-        "build_args", nargs=argparse.REMAINDER, help="Arguments for the build command"
+-    )
+-    args = parser.parse_args()
+-    main(args)
+diff --git a/bin/llm b/bin/llm
+index 7bdee47..da49019 100755
+--- a/bin/llm
++++ b/bin/llm
+@@ -12,18 +12,10 @@ import argparse
+ 
+ def stream_ollama_response(model, prompt):
+     """Send a prompt to ollama and stream the response."""
+-    url = 'http://localhost:11434/api/generate'
+-    data = json.dumps({
+-        'model': model,
+-        'prompt': prompt,
+-        'stream': True
+-    }).encode('utf-8')
+-
+-    request = urllib.request.Request(
+-        url,
+-        data=data,
+-        headers={'Content-Type': 'application/json'}
+-    )
++    url = "http://localhost:11434/api/generate"
++    data = json.dumps({"model": model, "prompt": prompt, "stream": True}).encode("utf-8")
++
++    request = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
+ 
+     try:
+         with urllib.request.urlopen(request) as response:
+@@ -34,16 +26,16 @@ def stream_ollama_response(model, prompt):
+                     break
+ 
+                 # Decode and add to buffer
+-                buffer += chunk.decode('utf-8')
++                buffer += chunk.decode("utf-8")
+ 
+                 # Process complete lines
+-                while '\n' in buffer:
+-                    line, buffer = buffer.split('\n', 1)
++                while "\n" in buffer:
++                    line, buffer = buffer.split("\n", 1)
+                     if line.strip():
+                         try:
+                             json_chunk = json.loads(line)
+-                            if 'response' in json_chunk:
+-                                print(json_chunk['response'], end='', flush=True)
++                            if "response" in json_chunk:
++                                print(json_chunk["response"], end="", flush=True)
+                         except json.JSONDecodeError:
+                             # Skip malformed JSON
+                             continue
+@@ -61,39 +53,34 @@ Only output the formatted errors, nothing else.
+ Build output:
+ {build_output}"""
+ 
+-    stream_ollama_response('llama3.2:1b', prompt)
++    stream_ollama_response("llama3.2:1b", prompt)
+ 
+ 
+ def main(argv=None):
+     """Main entry point for the llm script."""
+     parser = argparse.ArgumentParser(
+-        description='CLI tool for interacting with local ollama models',
++        description="CLI tool for interacting with local ollama models",
+         formatter_class=argparse.RawDescriptionHelpFormatter,
+         epilog="""
+ Examples:
+   llm "what is 2+2"                 # Ask a question
+   llm --build make test             # Parse build errors
+   llm --build -i make test          # Build in interactive shell
+-        """
++        """,
+     )
+ 
+     parser.add_argument(
+-        '--build', '-b',
+-        action='store_true',
+-        help='Build mode: run command and parse errors'
++        "--build", "-b", action="store_true", help="Build mode: run command and parse errors"
+     )
+ 
+     parser.add_argument(
+-        '--interactive', '-i',
+-        action='store_true',
+-        help='Run build command in interactive shell (zsh)'
++        "--interactive",
++        "-i",
++        action="store_true",
++        help="Run build command in interactive shell (zsh)",
+     )
+ 
+-    parser.add_argument(
+-        'args',
+-        nargs='*',
+-        help='Prompt for basic mode or command for build mode'
+-    )
++    parser.add_argument("args", nargs="*", help="Prompt for basic mode or command for build mode")
+ 
+     args = parser.parse_args(argv)
+ 
+@@ -113,21 +100,13 @@ Examples:
+         # Run build command
+         if args.interactive:
+             # Run through shell for interactive features
+-            cmd_str = ' '.join(build_cmd)
++            cmd_str = " ".join(build_cmd)
+             result = subprocess.run(
+-                cmd_str,
+-                shell=True,
+-                capture_output=True,
+-                text=True,
+-                executable='/bin/zsh'
++                cmd_str, shell=True, capture_output=True, text=True, executable="/bin/zsh"
+             )
+         else:
+             # Run directly
+-            result = subprocess.run(
+-                build_cmd,
+-                capture_output=True,
+-                text=True
+-            )
++            result = subprocess.run(build_cmd, capture_output=True, text=True)
+ 
+         # Combine stdout and stderr
+         build_output = result.stdout + result.stderr
+@@ -142,15 +121,15 @@ Examples:
+ 
+     # Basic mode: answer questions
+     else:
+-        prompt = ' '.join(args.args)
++        prompt = " ".join(args.args)
+ 
+         try:
+-            stream_ollama_response('llama3.2:3b', prompt)
++            stream_ollama_response("llama3.2:3b", prompt)
+         except urllib.error.URLError:
+             return 1
+ 
+         return 0
+ 
+ 
+-if __name__ == '__main__':
++if __name__ == "__main__":
+     sys.exit(main())
