@@ -66,8 +66,9 @@ Build output:
 def print_usage():
     """Print usage message."""
     print("Usage:", file=sys.stderr)
-    print("  llm 'your prompt here'              # Basic mode: answer questions", file=sys.stderr)
-    print("  llm --build <command> [args...]     # Build mode: parse build errors", file=sys.stderr)
+    print("  llm 'your prompt here'                    # Basic mode: answer questions", file=sys.stderr)
+    print("  llm --build <command> [args...]           # Build mode: parse build errors", file=sys.stderr)
+    print("  llm --build -i <command> [args...]        # Build in interactive shell", file=sys.stderr)
 
 
 def main(args=None):
@@ -85,37 +86,46 @@ def main(args=None):
         # Build mode: execute command and parse errors
         build_cmd = args[1:]
 
+        # Check for interactive flag
+        use_shell = False
+        if build_cmd and build_cmd[0] == '-i':
+            use_shell = True
+            build_cmd = build_cmd[1:]
+
         # Validate build command
         if not build_cmd:
             print_usage()
             return 1
 
-        # Run build command and capture output while displaying it
-        process = subprocess.Popen(
-            build_cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            bufsize=1
-        )
+        # Run build command
+        if use_shell:
+            # Run through shell for interactive features
+            cmd_str = ' '.join(build_cmd)
+            result = subprocess.run(
+                cmd_str,
+                shell=True,
+                capture_output=True,
+                text=True,
+                executable='/bin/bash'
+            )
+        else:
+            # Run directly
+            result = subprocess.run(
+                build_cmd,
+                capture_output=True,
+                text=True
+            )
 
-        # Stream output to terminal and capture it
-        build_output = []
-        for line in process.stdout:
-            print(line, end='', flush=True)
-            build_output.append(line)
-
-        process.wait()
-        combined_output = ''.join(build_output)
+        # Combine stdout and stderr
+        build_output = result.stdout + result.stderr
 
         # Parse errors with AI
-        print("\n--- Parsing errors with AI ---", flush=True)
         try:
-            parse_build_errors(combined_output)
+            parse_build_errors(build_output)
         except urllib.error.URLError:
             return 1
 
-        return process.returncode
+        return result.returncode
     else:
         # Basic mode: join all args as prompt
         prompt = ' '.join(args)
