@@ -7,6 +7,7 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import subprocess
+import argparse
 
 
 def stream_ollama_response(model, prompt):
@@ -63,42 +64,54 @@ Build output:
     stream_ollama_response('llama3.2:1b', prompt)
 
 
-def print_usage():
-    """Print usage message."""
-    print("Usage:", file=sys.stderr)
-    print("  llm 'your prompt here'                    # Basic mode: answer questions", file=sys.stderr)
-    print("  llm --build <command> [args...]           # Build mode: parse build errors", file=sys.stderr)
-    print("  llm --build -i <command> [args...]        # Build in interactive shell", file=sys.stderr)
-
-
-def main(args=None):
+def main(argv=None):
     """Main entry point for the llm script."""
-    if args is None:
-        args = sys.argv[1:]
+    parser = argparse.ArgumentParser(
+        description='CLI tool for interacting with local ollama models',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  llm "what is 2+2"                 # Ask a question
+  llm --build make test             # Parse build errors
+  llm --build -i make test          # Build in interactive shell
+        """
+    )
 
-    # Check for empty args
-    if not args:
-        print_usage()
+    parser.add_argument(
+        '--build', '-b',
+        action='store_true',
+        help='Build mode: run command and parse errors'
+    )
+
+    parser.add_argument(
+        '--interactive', '-i',
+        action='store_true',
+        help='Run build command in interactive shell (zsh)'
+    )
+
+    parser.add_argument(
+        'args',
+        nargs='*',
+        help='Prompt for basic mode or command for build mode'
+    )
+
+    args = parser.parse_args(argv)
+
+    # Validate arguments
+    if not args.args:
+        parser.print_help(sys.stderr)
         return 1
 
-    # Check for build mode
-    if args[0] == '--build':
-        # Build mode: execute command and parse errors
-        build_cmd = args[1:]
+    if args.interactive and not args.build:
+        print("Error: -i/--interactive can only be used with --build", file=sys.stderr)
+        return 1
 
-        # Check for interactive flag
-        use_shell = False
-        if build_cmd and build_cmd[0] == '-i':
-            use_shell = True
-            build_cmd = build_cmd[1:]
-
-        # Validate build command
-        if not build_cmd:
-            print_usage()
-            return 1
+    # Build mode
+    if args.build:
+        build_cmd = args.args
 
         # Run build command
-        if use_shell:
+        if args.interactive:
             # Run through shell for interactive features
             cmd_str = ' '.join(build_cmd)
             result = subprocess.run(
@@ -106,7 +119,7 @@ def main(args=None):
                 shell=True,
                 capture_output=True,
                 text=True,
-                executable='/bin/bash'
+                executable='/bin/zsh'
             )
         else:
             # Run directly
@@ -126,9 +139,10 @@ def main(args=None):
             return 1
 
         return result.returncode
+
+    # Basic mode: answer questions
     else:
-        # Basic mode: join all args as prompt
-        prompt = ' '.join(args)
+        prompt = ' '.join(args.args)
 
         try:
             stream_ollama_response('llama3.2:3b', prompt)
