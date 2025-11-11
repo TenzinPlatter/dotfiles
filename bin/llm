@@ -1,1 +1,113 @@
 #!/usr/bin/env python3
+"""CLI tool for interacting with local ollama models."""
+
+import sys
+import json
+import urllib.request
+import urllib.parse
+import urllib.error
+import subprocess
+
+
+def stream_ollama_response(model, prompt):
+    """Send a prompt to ollama and stream the response."""
+    url = 'http://localhost:11434/api/generate'
+    data = json.dumps({
+        'model': model,
+        'prompt': prompt,
+        'stream': True
+    }).encode('utf-8')
+
+    request = urllib.request.Request(
+        url,
+        data=data,
+        headers={'Content-Type': 'application/json'}
+    )
+
+    try:
+        with urllib.request.urlopen(request) as response:
+            while True:
+                line = response.read(4096)
+                if not line:
+                    break
+
+                # Parse each line as JSON
+                for json_line in line.decode('utf-8').strip().split('\n'):
+                    if json_line:
+                        chunk = json.loads(json_line)
+                        if 'response' in chunk:
+                            print(chunk['response'], end='', flush=True)
+    except urllib.error.URLError as e:
+        print(f"Error: Could not connect to ollama. Is it running? (ollama serve)", file=sys.stderr)
+        raise
+
+
+def parse_build_errors(build_output):
+    """Parse build errors using the 1B model and output in vim-compatible format."""
+    prompt = f"""Parse this build output and extract only compilation errors.
+Format each error exactly as: filename:line:column: error: message
+Only output the formatted errors, nothing else.
+
+Build output:
+{build_output}"""
+
+    stream_ollama_response('llama3.2:1b', prompt)
+
+
+def print_usage():
+    """Print usage message."""
+    print("Usage:", file=sys.stderr)
+    print("  llm 'your prompt here'              # Basic mode: answer questions", file=sys.stderr)
+    print("  llm --build <command> [args...]     # Build mode: parse build errors", file=sys.stderr)
+
+
+def main(args=None):
+    """Main entry point for the llm script."""
+    if args is None:
+        args = sys.argv[1:]
+
+    # Check for empty args
+    if not args:
+        print_usage()
+        return 1
+
+    # Check for build mode
+    if args[0] == '--build':
+        # Build mode: execute command and parse errors
+        build_cmd = args[1:]
+
+        # Validate build command
+        if not build_cmd:
+            print_usage()
+            return 1
+
+        result = subprocess.run(
+            build_cmd,
+            capture_output=True,
+            text=True
+        )
+
+        # Combine stdout and stderr
+        build_output = result.stdout + result.stderr
+
+        # Parse errors with AI
+        try:
+            parse_build_errors(build_output)
+        except urllib.error.URLError:
+            return 1
+
+        return result.returncode
+    else:
+        # Basic mode: join all args as prompt
+        prompt = ' '.join(args)
+
+        try:
+            stream_ollama_response('llama3.2:3b', prompt)
+        except urllib.error.URLError:
+            return 1
+
+        return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
