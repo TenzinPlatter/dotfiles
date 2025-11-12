@@ -44,11 +44,14 @@ def stream_ollama_response(model, prompt):
         raise
 
 
-def parse_build_errors(build_output):
+def parse_build_errors(build_cmd, build_output):
     """Parse build errors using the 1B model and output in vim-compatible format."""
     prompt = f"""Parse this build output and extract only compilation errors.
-Format each error exactly as: filename:line:column: error: message
+Format each error exactly as: <filename>:<line>:<column>: <error>: <message>
 Only output the formatted errors, nothing else.
+
+Build command:
+{build_cmd}
 
 Build output:
 {build_output}"""
@@ -113,7 +116,7 @@ Examples:
 
         # Parse errors with AI
         try:
-            parse_build_errors(build_output)
+            parse_build_errors(build_cmd, build_output)
         except urllib.error.URLError:
             return 1
 
