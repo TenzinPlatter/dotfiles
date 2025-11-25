@@ -1,0 +1,142 @@
+* {
+    font-family: "JetBrains Mono Nerd Font", monospace;
+    font-size: 14px;
+    font-weight: bold;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: rgba(15, 15, 23, 0.95);
+    border: 2px solid rgba(161, 189, 206, 0.3);
+    border-radius: 10px;
+    color: #A1BDCE;
+}
+
+/* Modules styling */
+#custom-niri-workspaces,
+#mpris,
+#clock,
+#cpu,
+#memory,
+#battery,
+#network,
+#pulseaudio,
+#tray {
+    padding: 0 12px;
+    margin: 4px 2px;
+    background-color: rgba(23, 23, 23, 0.6);
+    border-radius: 8px;
+}
+
+#custom-l-end {
+    min-width: 20px;
+    border-radius: 50%;
+}
+
+/* Niri workspaces */
+#custom-niri-workspaces {
+    color: #A1BDCE;
+    background-color: rgba(23, 23, 23, 0.8);
+}
+
+/* Spotify */
+#custom-spotify {
+    color: #1DB954;
+    background-color: rgba(29, 185, 84, 0.15);
+    padding: 4px 12px;
+    border-radius: 8px;
+}
+
+#custom-spotify.paused {
+    color: #808080;
+    background-color: rgba(128, 128, 128, 0.15);
+}
+
+#custom-spotify.stopped {
+    opacity: 0;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+}
+
+
+/* Clock */
+#clock {
+    color: #A1BDCE;
+    font-weight: 900;
+}
+
+/* CPU */
+#cpu {
+    color: #915CAF;
+}
+
+/* Memory */
+#memory {
+    color: #E4C9AF;
+}
+
+/* Battery */
+#battery {
+    color: #a6d189;
+}
+
+#battery.charging {
+    color: #a6d189;
+    animation: charging 2s ease-in-out infinite;
+}
+
+#battery.warning:not(.charging) {
+    color: #f9e2af;
+}
+
+#battery.critical:not(.charging) {
+    color: #f38ba8;
+    animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes charging {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Network */
+#network {
+    color: #89b4fa;
+}
+
+#network.disconnected {
+    color: #f38ba8;
+}
+
+/* Pulseaudio */
+#pulseaudio {
+    color: #6F8FDB;
+}
+
+#pulseaudio.muted {
+    color: #808080;
+}
+
+/* Tray */
+#tray {
+    color: #A1BDCE;
+    margin-right: 12px;
+}
+
+/* Tooltips */
+tooltip {
+    background-color: #171717;
+    color: #A1BDCE;
+    border: 2px solid rgba(161, 189, 206, 0.3);
+    border-radius: 8px;
+    padding: 8px;
+}
+

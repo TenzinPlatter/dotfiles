@@ -1,0 +1,55 @@
+[language-server.rust-analyzer.config]
+files.watcher = "server"
+
+[[language]]
+name = "markdown"
+file-types = ["md"]
+formatter = {command = "dprint", args = ["fmt", "--stdin", "md"]}
+
+[[language]]
+name = "cpp"
+formatter = {command = "clang-format"}
+auto-format = true
+
+[[language]]
+name = "python"
+scope = "source.python"
+roots = [".git"]
+file-types = ["py"]
+# language-servers = [{command = "pyright-langserver", args = ["--stdio"]}]
+language-servers = [{name = "pyright"}]
+auto-format = true
+formatter = {command = "black", args = ["--quiet", "-"]}
+
+[[language]]
+name = "c"
+scope = "source.c"
+roots = [".git"]
+file-types = ["c", "h"]
+language-servers = [{name = "clangd"}]
+auto-format = true
+formatter = {command = "clang-format"}
+
+[[language]]
+name = "rust"
+roots = ["Cargo.toml", "Cargo.lock"]
+auto-format = true
+
+[language-server.emmet-lsp]
+command = "emmet-language-server"
+args = ["--stdio"]
+
+[[language]]
+name = "html"
+roots = [".git"]
+language-servers = ["emmet-lsp"]
+formatter = { command = "prettier", args = ["--parser", "html"]}
+auto-format = true
+
+[language.auto-pairs]
+"<" = ">"
+
+[[language]]
+name = "typescript"
+formatter = { command = "prettier", args = ["--parser", "typescript"]}
+auto-format = true

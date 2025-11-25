@@ -1,0 +1,15 @@
+alias nv="nvim"
+alias vn="nv"
+alias nvv="nv"
+alias nnv="nv"
+alias nvfd='nv $(fzfd)'
+alias nvsh='(cd ~/.config/zsh && nv) && new'
+alias nvenv='nv ~/.zshenv && source ~/.zshenv'
+alias nvhl='nv ~/.config/hypr/.'
+alias nvcf='cd ~/.config/nvim && nv && cd -'
+alias nval='nv ~/.config/zsh/user/aliases.zsh && new'
+alias nvfn='nv ~/.config/zsh/user/fns.zsh && new'
+alias nvsc='nv ~/.scripts'
+alias nvzsh='cd ~/.config/zsh && nv && source ~/.config/.zsh/.zshrc && cd -'
+alias nvcl="nv ~/.clang-format"
+alias nvtx="nv ~/.tmux.conf"

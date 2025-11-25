@@ -1,0 +1,78 @@
+theme = "kanagawa_transparent"
+
+[editor]
+line-number = "relative"
+mouse = false
+completion-timeout = 5
+rulers = [80]
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = false
+
+[editor.statusline]
+center = ["version-control"]
+
+[editor.indent-guides]
+render = true
+character = "▏"
+
+[editor.soft-wrap]
+enable = true
+
+[editor.auto-save]
+focus-lost = true
+
+[keys.normal]
+C-l =  ["delete_selection", "paste_after"]
+C-h = ["delete_selection", "move_char_left", "paste_before"]
+
+'{' = "@[p"
+'}' = "@]p"
+'A-{' = "@[f"
+'A-}' = "@]f"
+
+C-u = ":wa"
+Z = {Z = ":wqa"}
+
+X = ["extend_line_up", "extend_to_line_bounds"]
+A-x = ["extend_to_line_bounds"]
+C-j = ["extend_to_line_bounds", "delete_selection", "paste_after"]
+C-k = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before"]
+
+C-y = [
+  ":sh rm -f /tmp/yazi-path",
+  ":insert-output yazi %{buffer_name} --chooser-file=/tmp/yazi-path",
+  ":open %sh{cat /tmp/yazi-path}",
+  ":redraw",
+  ]
+
+[keys.normal.space]
+";" = "@A;<esc>"
+"," = "@A,<esc>"
+
+[keys.normal.space.s]
+"h" = [
+  ":insert-output switchsourceheader.sh %{buffer_name} $PWD",
+  ":open %sh{cat /tmp/switchsourceheader_path}",
+  ":redraw",
+]
+
+[keys.select]
+X = ["extend_line_up", "extend_to_line_bounds"]
+A-x = ["extend_to_line_bounds"]
+
+C-l = ["delete_selection", "paste_after"]
+C-h = ["delete_selection", "move_char_left", "paste_before"]
+C-S-l = ["delete_selection", "move_next_word_start", "paste_after"]
+C-S-h = ["delete_selection", "move_prev_word_start", "paste_before"]
+
+[keys.insert]
+C-h = "move_char_left"
+C-j = "move_line_down"
+C-k = "move_line_up"
+C-l = "move_char_right"

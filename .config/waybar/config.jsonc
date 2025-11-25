@@ -1,0 +1,108 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 32,
+    "margin-top": 5,
+    "margin-left": 10,
+    "margin-right": 10,
+    "spacing": 4,
+    "reload_style_on_change": true,
+
+    "modules-left": [
+        "custom/niri-workspaces",
+        "custom/spotify",
+        "clock",
+    ],
+    "modules-center": [
+    ],
+    "modules-right": [
+        "pulseaudio",
+        "network",
+        "cpu",
+        "memory",
+        "battery",
+        "tray",
+    ],
+
+    "custom/niri-workspaces": {
+        "exec": "~/.config/waybar/niri-workspaces.py",
+        "return-type": "json",
+        "format": "{}",
+        "tooltip": true
+    },
+
+    "custom/l-end": {
+        "format": "",
+        "tooltip": false
+    },
+
+    "custom/r-end": {
+        "format": "",
+        "tooltip": false
+    },
+
+    "custom/spotify": {
+        "exec": "~/.config/waybar/spotify-art.py",
+        "return-type": "json",
+        "interval": 2,
+        "format": "{}",
+        "on-click": "playerctl -p spotify play-pause",
+        "on-click-right": "playerctl -p spotify next",
+        "on-click-middle": "playerctl -p spotify previous"
+    },
+
+    "clock": {
+        "format": "{:%I:%M %p}",
+        "format-alt": "{:%A, %B %d, %Y}",
+        "tooltip-format": "<tt><small>{calendar}</small></tt>",
+        "calendar": {
+            "mode": "month",
+            "mode-mon-col": 3,
+            "format": {
+                "months": "<span color='#ffead3'><b>{}</b></span>",
+                "days": "<span color='#ecc6d9'>{}</span>",
+                "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
+                "today": "<span color='#ff6699'><b><u>{}</u></b></span>"
+            }
+        }
+    },
+
+    "cpu": {
+        "format": "CPU {usage}%"
+    },
+
+    "memory": {
+        "format": "RAM {percentage}%"
+    },
+
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "BAT {capacity}%",
+        "format-charging": "BAT {capacity}%",
+        "format-plugged": "BAT {capacity}%"
+    },
+
+    "network": {
+        "format-wifi": "WIFI {essid}",
+        "format-ethernet": "ETH {ipaddr}/{cidr}",
+        "format-linked": "NET {ifname} (No IP)",
+        "format-disconnected": "NET ⚠ Disconnected",
+        "tooltip-format": "{ifname}: {ipaddr}/{cidr}\nSignal: {signalStrength}%",
+        "on-click": "nm-connection-editor"
+    },
+
+    "pulseaudio": {
+        "format": "VOL {volume}%",
+        "format-muted": "MUT {volume}%",
+        "on-click": "pavucontrol",
+        "scroll-step": 5
+    },
+
+    "tray": {
+        "icon-size": 16,
+        "spacing": 8
+    }
+}

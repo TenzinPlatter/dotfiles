@@ -1,0 +1,8 @@
+#custom-spotify-art {
+  min-width: 32px;
+  min-height: 32px;
+  background-image: url("file:///home/tenzin/.cache/waybar/albumart/81fde5fc50d7cf2303e2d12c0edf757e.jpg?ts=1761630053");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
