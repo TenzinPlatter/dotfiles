@@ -142,7 +142,7 @@ window-rule {
 window-rule {
     match app-id="spotify"
     draw-border-with-background false
-    opacity 0.85
+    opacity 0.93
 }
 
 window-rule {
