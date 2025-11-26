@@ -23,6 +23,7 @@ export ZSH="$HOME/.oh-my-zsh"
 export ZSH_THEME=""
 
 export EDITOR="nvim"
+export TERMINAL="kitty"
 export NIXPKGS_ALLOW_UNFREE=1
 
 export PATH="${(j/:/)path}"
