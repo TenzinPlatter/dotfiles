@@ -321,13 +321,19 @@ format_archive_tree() {
     if has_cmd "tree"; then
         # Create temp dir and structure, then tree it
         local tmpdir
-        tmpdir=$(mktemp -d)
+        tmpdir=$(mktemp -d -t peek.XXXXXXXXXX)
         trap 'rm -rf "$tmpdir"' RETURN
 
         for file in "${files[@]}"; do
-            local dir=$(dirname "$tmpdir/$file")
-            mkdir -p "$dir"
-            touch "$tmpdir/$file"
+            if [[ "$structure_only" == "true" ]]; then
+                # In structure mode, files are directories
+                mkdir -p "$tmpdir/$file"
+            else
+                # In normal mode, files are files
+                local dir=$(dirname "$tmpdir/$file")
+                mkdir -p "$dir"
+                touch "$tmpdir/$file"
+            fi
         done
 
         if [[ "$structure_only" == "true" ]]; then
@@ -335,7 +341,6 @@ format_archive_tree() {
         else
             tree -C --noreport "$tmpdir" | tail -n +2 | sed 's|'"$tmpdir"'||g'
         fi
-        rm -rf "$tmpdir"
     else
         # Simple fallback - just list with indentation
         printf '%s\n' "${files[@]}" | sort | while read -r file; do
