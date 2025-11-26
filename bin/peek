@@ -322,7 +322,7 @@ format_archive_tree() {
         # Create temp dir and structure, then tree it
         local tmpdir
         tmpdir=$(mktemp -d -t peek.XXXXXXXXXX)
-        trap 'rm -rf "$tmpdir"' RETURN
+        trap '[[ -n "${tmpdir:-}" ]] && rm -rf "$tmpdir"' RETURN
 
         for file in "${files[@]}"; do
             if [[ "$structure_only" == "true" ]]; then
