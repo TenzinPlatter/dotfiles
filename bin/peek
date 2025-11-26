@@ -35,13 +35,15 @@ ${CYAN}Supported formats:${RESET}
   - Binary files (metadata via specialized tools)
 
 ${CYAN}Options:${RESET}
+  -s          Structure only (directories only, no files)
   --health    Show available tools and capabilities
 
 ${CYAN}Examples:${RESET}
   peek README.md
   peek src/
+  peek -s src/                # Show only directory structure
   peek archive.tar.gz
-  peek data.json.gz
+  peek -s archive.tar.gz      # Show only directories in archive
 EOF
 }
 
@@ -63,7 +65,28 @@ main() {
         exit 0
     fi
 
-    local target="$1"
+    # Parse flags
+    local structure_only=false
+    local target=""
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -s)
+                structure_only=true
+                shift
+                ;;
+            *)
+                target="$1"
+                shift
+                ;;
+        esac
+    done
+
+    # Check if target was provided
+    if [[ -z "$target" ]]; then
+        show_usage
+        exit 1
+    fi
 
     # Check if path exists
     if [[ ! -e "$target" ]]; then
@@ -86,16 +109,17 @@ main() {
     fi
 
     # Detect and dispatch
-    detect_and_peek "$target"
+    detect_and_peek "$target" "$structure_only"
 }
 
 # Detect file type and route to appropriate handler
 detect_and_peek() {
     local target="$1"
+    local structure_only="$2"
 
     # Directory
     if [[ -d "$target" ]]; then
-        peek_directory "$target"
+        peek_directory "$target" "$structure_only"
         return
     fi
 
@@ -106,27 +130,27 @@ detect_and_peek() {
     # Archive detection (by extension, longest match first)
     case "$filename" in
         *.tar.gz|*.tgz)
-            peek_tar_gz "$target"
+            peek_tar_gz "$target" "$structure_only"
             return
             ;;
         *.tar.bz2|*.tbz2|*.tbz)
-            peek_tar_bz2 "$target"
+            peek_tar_bz2 "$target" "$structure_only"
             return
             ;;
         *.tar.xz|*.txz)
-            peek_tar_xz "$target"
+            peek_tar_xz "$target" "$structure_only"
             return
             ;;
         *.tar)
-            peek_tar "$target"
+            peek_tar "$target" "$structure_only"
             return
             ;;
         *.zip)
-            peek_zip "$target"
+            peek_zip "$target" "$structure_only"
             return
             ;;
         *.7z)
-            peek_7z "$target"
+            peek_7z "$target" "$structure_only"
             return
             ;;
         *.gz)
@@ -252,6 +276,7 @@ check_multi_tool() {
 
 peek_directory() {
     local dir="$1"
+    local structure_only="$2"
 
     # Check if directory is empty
     if [[ -z "$(ls -A "$dir" 2>/dev/null)" ]]; then
@@ -259,20 +284,34 @@ peek_directory() {
         return 0
     fi
 
-    echo -e "${BLUE}📁 Directory:${RESET} $dir"
+    if [[ "$structure_only" == "true" ]]; then
+        echo -e "${BLUE}📁 Directory structure:${RESET} $dir"
+    else
+        echo -e "${BLUE}📁 Directory:${RESET} $dir"
+    fi
     echo ""
 
     # Try tree first (preferred for colored output)
     if has_cmd "tree"; then
-        tree -C -L 3 --dirsfirst "$dir"
+        if [[ "$structure_only" == "true" ]]; then
+            tree -C -L 3 -d --dirsfirst "$dir"
+        else
+            tree -C -L 3 --dirsfirst "$dir"
+        fi
     else
         # Fallback to ls with color
-        ls -lAh --color=auto "$dir"
+        if [[ "$structure_only" == "true" ]]; then
+            ls -lAhd --color=auto "$dir"/*/ 2>/dev/null || echo -e "${GRAY}(no subdirectories)${RESET}"
+        else
+            ls -lAh --color=auto "$dir"
+        fi
     fi
 }
 
 # Helper function to format archive listing as tree
 format_archive_tree() {
+    local structure_only="$1"
+    shift
     local files=("$@")
 
     if [[ ${#files[@]} -eq 0 ]]; then
@@ -293,7 +332,11 @@ format_archive_tree() {
             touch "$tmpdir/$file"
         done
 
-        tree -C --noreport "$tmpdir" | tail -n +2 | sed 's|'"$tmpdir"'||g'
+        if [[ "$structure_only" == "true" ]]; then
+            tree -C -d --noreport "$tmpdir" | tail -n +2 | sed 's|'"$tmpdir"'||g'
+        else
+            tree -C --noreport "$tmpdir" | tail -n +2 | sed 's|'"$tmpdir"'||g'
+        fi
         rm -rf "$tmpdir"
     else
         # Simple fallback - just list with indentation
@@ -308,7 +351,13 @@ format_archive_tree() {
 
 peek_tar() {
     local file="$1"
-    echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(tar)${RESET}"
+    local structure_only="$2"
+
+    if [[ "$structure_only" == "true" ]]; then
+        echo -e "${MAGENTA}📦 Archive structure:${RESET} $file ${GRAY}(tar)${RESET}"
+    else
+        echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(tar)${RESET}"
+    fi
     echo ""
 
     if ! has_cmd "tar"; then
@@ -317,19 +366,33 @@ peek_tar() {
     fi
 
     local files
-    mapfile -t files < <(tar -tf "$file" 2>/dev/null | grep -v '/$' || true)
+    if [[ "$structure_only" == "true" ]]; then
+        mapfile -t files < <(tar -tf "$file" 2>/dev/null | grep '/$' | sed 's|/$||' || true)
+    else
+        mapfile -t files < <(tar -tf "$file" 2>/dev/null | grep -v '/$' || true)
+    fi
 
     if [[ ${#files[@]} -eq 0 ]]; then
-        echo -e "${GRAY}(empty or corrupted)${RESET}"
+        if [[ "$structure_only" == "true" ]]; then
+            echo -e "${GRAY}(no directories)${RESET}"
+        else
+            echo -e "${GRAY}(empty or corrupted)${RESET}"
+        fi
         return 0
     fi
 
-    format_archive_tree "${files[@]}"
+    format_archive_tree "$structure_only" "${files[@]}"
 }
 
 peek_tar_gz() {
     local file="$1"
-    echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(tar.gz)${RESET}"
+    local structure_only="$2"
+
+    if [[ "$structure_only" == "true" ]]; then
+        echo -e "${MAGENTA}📦 Archive structure:${RESET} $file ${GRAY}(tar.gz)${RESET}"
+    else
+        echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(tar.gz)${RESET}"
+    fi
     echo ""
 
     if ! has_cmd "tar"; then
@@ -338,19 +401,33 @@ peek_tar_gz() {
     fi
 
     local files
-    mapfile -t files < <(tar -tzf "$file" 2>/dev/null | grep -v '/$' || true)
+    if [[ "$structure_only" == "true" ]]; then
+        mapfile -t files < <(tar -tzf "$file" 2>/dev/null | grep '/$' | sed 's|/$||' || true)
+    else
+        mapfile -t files < <(tar -tzf "$file" 2>/dev/null | grep -v '/$' || true)
+    fi
 
     if [[ ${#files[@]} -eq 0 ]]; then
-        echo -e "${GRAY}(empty or corrupted)${RESET}"
+        if [[ "$structure_only" == "true" ]]; then
+            echo -e "${GRAY}(no directories)${RESET}"
+        else
+            echo -e "${GRAY}(empty or corrupted)${RESET}"
+        fi
         return 0
     fi
 
-    format_archive_tree "${files[@]}"
+    format_archive_tree "$structure_only" "${files[@]}"
 }
 
 peek_tar_bz2() {
     local file="$1"
-    echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(tar.bz2)${RESET}"
+    local structure_only="$2"
+
+    if [[ "$structure_only" == "true" ]]; then
+        echo -e "${MAGENTA}📦 Archive structure:${RESET} $file ${GRAY}(tar.bz2)${RESET}"
+    else
+        echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(tar.bz2)${RESET}"
+    fi
     echo ""
 
     if ! has_cmd "tar"; then
@@ -359,19 +436,33 @@ peek_tar_bz2() {
     fi
 
     local files
-    mapfile -t files < <(tar -tjf "$file" 2>/dev/null | grep -v '/$' || true)
+    if [[ "$structure_only" == "true" ]]; then
+        mapfile -t files < <(tar -tjf "$file" 2>/dev/null | grep '/$' | sed 's|/$||' || true)
+    else
+        mapfile -t files < <(tar -tjf "$file" 2>/dev/null | grep -v '/$' || true)
+    fi
 
     if [[ ${#files[@]} -eq 0 ]]; then
-        echo -e "${GRAY}(empty or corrupted)${RESET}"
+        if [[ "$structure_only" == "true" ]]; then
+            echo -e "${GRAY}(no directories)${RESET}"
+        else
+            echo -e "${GRAY}(empty or corrupted)${RESET}"
+        fi
         return 0
     fi
 
-    format_archive_tree "${files[@]}"
+    format_archive_tree "$structure_only" "${files[@]}"
 }
 
 peek_tar_xz() {
     local file="$1"
-    echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(tar.xz)${RESET}"
+    local structure_only="$2"
+
+    if [[ "$structure_only" == "true" ]]; then
+        echo -e "${MAGENTA}📦 Archive structure:${RESET} $file ${GRAY}(tar.xz)${RESET}"
+    else
+        echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(tar.xz)${RESET}"
+    fi
     echo ""
 
     if ! has_cmd "tar"; then
@@ -380,42 +471,74 @@ peek_tar_xz() {
     fi
 
     local files
-    mapfile -t files < <(tar -tJf "$file" 2>/dev/null | grep -v '/$' || true)
+    if [[ "$structure_only" == "true" ]]; then
+        mapfile -t files < <(tar -tJf "$file" 2>/dev/null | grep '/$' | sed 's|/$||' || true)
+    else
+        mapfile -t files < <(tar -tJf "$file" 2>/dev/null | grep -v '/$' || true)
+    fi
 
     if [[ ${#files[@]} -eq 0 ]]; then
-        echo -e "${GRAY}(empty or corrupted)${RESET}"
+        if [[ "$structure_only" == "true" ]]; then
+            echo -e "${GRAY}(no directories)${RESET}"
+        else
+            echo -e "${GRAY}(empty or corrupted)${RESET}"
+        fi
         return 0
     fi
 
-    format_archive_tree "${files[@]}"
+    format_archive_tree "$structure_only" "${files[@]}"
 }
 
 peek_zip() {
     local file="$1"
-    echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(zip)${RESET}"
+    local structure_only="$2"
+
+    if [[ "$structure_only" == "true" ]]; then
+        echo -e "${MAGENTA}📦 Archive structure:${RESET} $file ${GRAY}(zip)${RESET}"
+    else
+        echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(zip)${RESET}"
+    fi
     echo ""
 
     local files
     if has_cmd "unzip"; then
-        mapfile -t files < <(unzip -Z1 "$file" 2>/dev/null | grep -v '/$' || true)
+        if [[ "$structure_only" == "true" ]]; then
+            mapfile -t files < <(unzip -Z1 "$file" 2>/dev/null | grep '/$' | sed 's|/$||' || true)
+        else
+            mapfile -t files < <(unzip -Z1 "$file" 2>/dev/null | grep -v '/$' || true)
+        fi
     elif has_cmd "zipinfo"; then
-        mapfile -t files < <(zipinfo -1 "$file" 2>/dev/null | grep -v '/$' || true)
+        if [[ "$structure_only" == "true" ]]; then
+            mapfile -t files < <(zipinfo -1 "$file" 2>/dev/null | grep '/$' | sed 's|/$||' || true)
+        else
+            mapfile -t files < <(zipinfo -1 "$file" 2>/dev/null | grep -v '/$' || true)
+        fi
     else
         echo -e "${RED}Error:${RESET} unzip or zipinfo command not found"
         return 1
     fi
 
     if [[ ${#files[@]} -eq 0 ]]; then
-        echo -e "${GRAY}(empty or corrupted)${RESET}"
+        if [[ "$structure_only" == "true" ]]; then
+            echo -e "${GRAY}(no directories)${RESET}"
+        else
+            echo -e "${GRAY}(empty or corrupted)${RESET}"
+        fi
         return 0
     fi
 
-    format_archive_tree "${files[@]}"
+    format_archive_tree "$structure_only" "${files[@]}"
 }
 
 peek_7z() {
     local file="$1"
-    echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(7z)${RESET}"
+    local structure_only="$2"
+
+    if [[ "$structure_only" == "true" ]]; then
+        echo -e "${MAGENTA}📦 Archive structure:${RESET} $file ${GRAY}(7z)${RESET}"
+    else
+        echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(7z)${RESET}"
+    fi
     echo ""
 
     if ! has_cmd "7z"; then
@@ -424,14 +547,22 @@ peek_7z() {
     fi
 
     local files
-    mapfile -t files < <(7z l -ba "$file" 2>/dev/null | grep -v '/$' | awk '{print $NF}' || true)
+    if [[ "$structure_only" == "true" ]]; then
+        mapfile -t files < <(7z l -ba "$file" 2>/dev/null | grep '/$' | sed 's|/$||' | awk '{print $NF}' || true)
+    else
+        mapfile -t files < <(7z l -ba "$file" 2>/dev/null | grep -v '/$' | awk '{print $NF}' || true)
+    fi
 
     if [[ ${#files[@]} -eq 0 ]]; then
-        echo -e "${GRAY}(empty or corrupted)${RESET}"
+        if [[ "$structure_only" == "true" ]]; then
+            echo -e "${GRAY}(no directories)${RESET}"
+        else
+            echo -e "${GRAY}(empty or corrupted)${RESET}"
+        fi
         return 0
     fi
 
-    format_archive_tree "${files[@]}"
+    format_archive_tree "$structure_only" "${files[@]}"
 }
 
 peek_compressed() {
