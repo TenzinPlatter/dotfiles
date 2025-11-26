@@ -306,7 +306,7 @@ peek_directory() {
     fi
 }
 
-# Helper function to format archive listing as tree
+# Helper function to format archive listing as rtee
 format_archive_tree() {
     local structure_only="$1"
     shift
