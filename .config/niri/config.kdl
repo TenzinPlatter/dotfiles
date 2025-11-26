@@ -179,6 +179,7 @@ binds {
         spawn "dms" "ipc" "call" "spotlight" "toggle"; 
     }
 
+    Mod+E { spawn "nautilus" "--new-window"; }
     Mod+D { spawn "niri" "msg" "action" "toggle-overview"; }
     Mod+Tab repeat=false { toggle-overview; }
     Mod+Shift+Slash { show-hotkey-overlay; }
