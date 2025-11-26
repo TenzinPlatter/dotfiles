@@ -22,29 +22,27 @@ has_cmd() {
 
 # Show usage message
 show_usage() {
-    cat << EOF
-${CYAN}Usage:${RESET} peek <path>
-
-Shows contents of files, directories, and archives with colored output.
-
-${CYAN}Supported formats:${RESET}
-  - Regular files (with syntax highlighting via bat)
-  - Directories (tree view)
-  - Archives: tar, tar.gz, tar.bz2, tar.xz, zip, 7z
-  - Compressed: .gz, .bz2, .xz, .lz4, .zst
-  - Binary files (metadata via specialized tools)
-
-${CYAN}Options:${RESET}
-  -s          Structure only (directories only, no files)
-  --health    Show available tools and capabilities
-
-${CYAN}Examples:${RESET}
-  peek README.md
-  peek src/
-  peek -s src/                # Show only directory structure
-  peek archive.tar.gz
-  peek -s archive.tar.gz      # Show only directories in archive
-EOF
+    echo -e "${CYAN}Usage:${RESET} peek <path>"
+    echo ""
+    echo "Shows contents of files, directories, and archives with colored output."
+    echo ""
+    echo -e "${CYAN}Supported formats:${RESET}"
+    echo "  - Regular files (with syntax highlighting via bat)"
+    echo "  - Directories (tree view)"
+    echo "  - Archives: tar, tar.gz, tar.bz2, tar.xz, zip, 7z"
+    echo "  - Compressed: .gz, .bz2, .xz, .lz4, .zst"
+    echo "  - Binary files (metadata via specialized tools)"
+    echo ""
+    echo -e "${CYAN}Options:${RESET}"
+    echo "  -s          Structure only (directories only, no files)"
+    echo "  --health    Show available tools and capabilities"
+    echo ""
+    echo -e "${CYAN}Examples:${RESET}"
+    echo "  peek README.md"
+    echo "  peek src/"
+    echo "  peek -s src/                # Show only directory structure"
+    echo "  peek archive.tar.gz"
+    echo "  peek -s archive.tar.gz      # Show only directories in archive"
 }
 
 # Main dispatcher
@@ -199,44 +197,44 @@ health_check() {
 
     # Core utilities
     echo -e "${YELLOW}Core utilities${RESET}"
-    check_tool "file" "File type detection (required)" && true || exit_code=1
-    check_tool "test" "Path validation (required)" && true || exit_code=1
+    check_tool "file" "File type detection (required)" || exit_code=1
+    check_tool "test" "Path validation (required)" || exit_code=1
     echo ""
 
     # Enhanced viewing
     echo -e "${YELLOW}Enhanced viewing${RESET}"
-    check_multi_tool "bat" "batcat" "Syntax highlighting for files"
-    check_tool "cat" "Fallback for files"
+    check_multi_tool "bat" "batcat" "Syntax highlighting for files" || true
+    check_tool "cat" "Fallback for files" || true
     echo ""
 
     # Directory viewing
     echo -e "${YELLOW}Directory viewing${RESET}"
-    check_tool "tree" "Colored directory tree"
-    check_tool "ls" "Fallback directory listing"
+    check_tool "tree" "Colored directory tree" || true
+    check_tool "ls" "Fallback directory listing" || true
     echo ""
 
     # Archive support
     echo -e "${YELLOW}Archive support${RESET}"
-    check_tool "tar" "TAR archives (.tar, .tar.gz, .tar.bz2, .tar.xz)"
-    check_multi_tool "unzip" "zipinfo" "ZIP archives (.zip)"
-    check_tool "7z" "7-Zip archives (.7z)"
+    check_tool "tar" "TAR archives (.tar, .tar.gz, .tar.bz2, .tar.xz)" || true
+    check_multi_tool "unzip" "zipinfo" "ZIP archives (.zip)" || true
+    check_tool "7z" "7-Zip archives (.7z)" || true
     echo ""
 
     # Compression support
     echo -e "${YELLOW}Compression support${RESET}"
-    check_tool "gzip" ".gz files"
-    check_tool "bzip2" ".bz2 files"
-    check_tool "xz" ".xz files"
-    check_tool "lz4" ".lz4 files"
-    check_tool "zstd" ".zst files"
+    check_tool "gzip" ".gz files" || true
+    check_tool "bzip2" ".bz2 files" || true
+    check_tool "xz" ".xz files" || true
+    check_tool "lz4" ".lz4 files" || true
+    check_tool "zstd" ".zst files" || true
     echo ""
 
     # Binary file inspection
     echo -e "${YELLOW}Binary file inspection${RESET}"
-    check_tool "exiftool" "Image/PDF metadata"
-    check_tool "identify" "ImageMagick image info"
-    check_tool "sqlite3" "SQLite database inspection"
-    check_tool "pdfinfo" "PDF information"
+    check_tool "exiftool" "Image/PDF metadata" || true
+    check_tool "identify" "ImageMagick image info" || true
+    check_tool "sqlite3" "SQLite database inspection" || true
+    check_tool "pdfinfo" "PDF information" || true
     echo ""
 
     echo -e "${GRAY}Legend: ${GREEN}✓${GRAY} available  ${RED}✗${GRAY} not found  ${YELLOW}⚠${GRAY} issue${RESET}"
