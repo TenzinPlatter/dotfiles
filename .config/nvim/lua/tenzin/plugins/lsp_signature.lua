@@ -7,8 +7,9 @@ return {
 			handler_opts = {
 				border = "rounded",
 			},
+			move_signature_window_key = { "<M-j>", "<M-k>", "<M-h>", "<M-l>" },
 		})
-		vim.api.nvim_set_hl(0, "LspSignatureActiveParameter", { link = "LspInlayHint" })
+		vim.api.nvim_set_hl(0, "LspSignatureActiveParameter", { fg = "#e5c07b", bold = true })
 	end,
 	keys = {
 		{

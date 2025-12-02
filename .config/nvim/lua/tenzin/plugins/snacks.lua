@@ -400,7 +400,7 @@ return {
 			desc = "Goto Definition in vertical split",
 		},
 		{
-			"gdh",
+			"gds",
 			function()
 				vim.cmd("split")
 				vim.lsp.buf.definition()

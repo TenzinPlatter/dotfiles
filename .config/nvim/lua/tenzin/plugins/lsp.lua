@@ -36,7 +36,20 @@ return {
 			"mason-org/mason.nvim",
 		},
 		opts = {
-			ensure_installed = {
+			ensure_installed = {},
+			handlers = {
+				-- Default handler for all servers
+				function(server_name)
+					require("lspconfig")[server_name].setup({})
+				end,
+				-- Ruff: disable diagnostics, use only for formatting
+				["ruff"] = function()
+					require("lspconfig").ruff.setup({
+						on_attach = function(client)
+							client.server_capabilities.diagnosticProvider = false
+						end,
+					})
+				end,
 			},
 		},
 	},
