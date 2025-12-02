@@ -23,6 +23,7 @@ return {
 	end,
 }
 
+-- -h diffview-layouts
 -- • A: OURS (current branch)
 -- • B: LOCAL (the file as it currently exists on disk)
 -- • C: THEIRS (incoming branch)
