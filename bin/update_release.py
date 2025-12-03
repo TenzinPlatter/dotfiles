@@ -21,6 +21,7 @@ def main():
     for r in release_files:
         with open(r, "+") as f:
             contents = yaml.safe_load(f.read())
+            contestn
 
         
 
