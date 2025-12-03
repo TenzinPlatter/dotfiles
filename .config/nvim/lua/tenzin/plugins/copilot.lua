@@ -13,6 +13,13 @@ return {
 			},
 		},
 	},
+	keys = {
+		{
+			"<leader>tc",
+			"<cmd>Copilot toggle<cr>",
+			desc = "Toggle Copilot",
+		},
+	},
 }
 
 -- {
