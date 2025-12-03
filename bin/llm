@@ -44,6 +44,88 @@ def stream_ollama_response(model, prompt):
         raise
 
 
+def stream_chat_response(model, messages):
+    """Send messages to ollama chat endpoint and stream the response.
+
+    Returns the assistant's response text for context tracking.
+    """
+    url = "http://localhost:11434/api/chat"
+    data = json.dumps({"model": model, "messages": messages, "stream": True}).encode("utf-8")
+
+    request = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
+
+    response_text = ""
+    try:
+        with urllib.request.urlopen(request) as response:
+            buffer = ""
+            while True:
+                chunk = response.read(1024)
+                if not chunk:
+                    break
+
+                # Decode and add to buffer
+                buffer += chunk.decode("utf-8")
+
+                # Process complete lines
+                while "\n" in buffer:
+                    line, buffer = buffer.split("\n", 1)
+                    if line.strip():
+                        try:
+                            json_chunk = json.loads(line)
+                            if "message" in json_chunk and "content" in json_chunk["message"]:
+                                content = json_chunk["message"]["content"]
+                                print(content, end="", flush=True)
+                                response_text += content
+                        except json.JSONDecodeError:
+                            # Skip malformed JSON
+                            continue
+    except urllib.error.URLError as e:
+        print("Error: Could not connect to ollama. Is it running? (ollama serve)", file=sys.stderr)
+        raise
+
+    return response_text
+
+
+def interactive_session(model):
+    """Run an interactive chat session with context preservation."""
+    messages = []
+
+    print(f"Starting interactive session with {model}")
+    print("Type your messages and press Enter. Use Ctrl+D or Ctrl+C to exit.")
+    print("-" * 60)
+
+    try:
+        while True:
+            try:
+                # Read user input
+                print("\nYou: ", end="", flush=True)
+                user_input = input()
+
+                if not user_input.strip():
+                    continue
+
+                # Add user message to context
+                messages.append({"role": "user", "content": user_input})
+
+                # Get and stream response
+                print(f"\n{model}: ", end="", flush=True)
+                response = stream_chat_response(model, messages)
+                print()  # Newline after response
+
+                # Add assistant response to context
+                messages.append({"role": "assistant", "content": response})
+
+            except EOFError:
+                # Ctrl+D pressed
+                print("\n\nExiting interactive session.")
+                break
+    except KeyboardInterrupt:
+        # Ctrl+C pressed
+        print("\n\nExiting interactive session.")
+
+    return 0
+
+
 def parse_build_errors(build_cmd, build_output):
     """Parse build errors using the 1B model and output in vim-compatible format."""
     prompt = f"""Parse this build output and extract only compilation errors.
@@ -67,6 +149,7 @@ def main(argv=None):
         epilog="""
 Examples:
   llm "what is 2+2"                 # Ask a question
+  llm -i                            # Start interactive chat session
   llm --build make test             # Parse build errors
   llm --build -i make test          # Build in interactive shell
         """,
@@ -80,20 +163,23 @@ Examples:
         "--interactive",
         "-i",
         action="store_true",
-        help="Run build command in interactive shell (zsh)",
+        help="Interactive mode: Start a chat session with context OR run build command in interactive shell (zsh)",
     )
 
     parser.add_argument("args", nargs="*", help="Prompt for basic mode or command for build mode")
 
     args = parser.parse_args(argv)
 
-    # Validate arguments
+    # Interactive chat session mode
+    if args.interactive and not args.build:
+        if args.args:
+            print("Error: Interactive chat mode does not take arguments", file=sys.stderr)
+            return 1
+        return interactive_session("llama3.2:3b")
+
+    # Validate arguments for other modes
     if not args.args:
         parser.print_help(sys.stderr)
-        return 1
-
-    if args.interactive and not args.build:
-        print("Error: -i/--interactive can only be used with --build", file=sys.stderr)
         return 1
 
     # Build mode
