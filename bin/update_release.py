@@ -20,7 +20,7 @@ def main():
 
     for r in release_files:
         with open(r, "+") as f:
-            contents = yaml.parse(f.read())
+            contents = yaml.safe_load(f.read())
 
         
 
