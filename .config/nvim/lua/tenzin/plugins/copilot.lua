@@ -4,7 +4,6 @@ return {
 		"copilotlsp-nvim/copilot-lsp",
 	},
 	cmd = "Copilot",
-	event = "InsertEnter",
 	opts = {
 		suggestion = {
 			auto_trigger = false,
@@ -21,17 +20,3 @@ return {
 		},
 	},
 }
-
--- {
--- 	"https://github.com/zbirenbaum/copilot-cmp",
--- 	config = function()
--- 		require("copilot_cmp").setup({
--- 			formatting = {
--- 				format = require("copilot_cmp.format").format,
--- 			},
--- 			experimental = {
--- 				ghost_text = true,
--- 			},
--- 		})
--- 	end,
--- },
