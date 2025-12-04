@@ -25,7 +25,9 @@ def main():
             contents = yaml.load(f.read())
             jobs = contents['jobs']['release']['strategy']['matrix']['job']
 
-            jobs.append(kilted_job)
+            jobs.append({
+                "runner": "ubuntu-24-04"
+                })
 
 
         
