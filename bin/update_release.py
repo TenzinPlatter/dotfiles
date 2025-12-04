@@ -23,7 +23,7 @@ def main():
     for r in release_files:
         with open(r, "+") as f:
             contents = yaml.load(f.read())
-            contents['']
+            contents['jobs']['release']['strategy']['matrix']
 
         
 
