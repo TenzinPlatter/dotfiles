@@ -23,7 +23,10 @@ def main():
     for r in release_files:
         with open(r, "+") as f:
             contents = yaml.load(f.read())
-            contents['jobs']['release']['strategy']['matrix']
+            jobs = contents['jobs']['release']['strategy']['matrix']['job']
+
+            jobs.append(kilted_job)
+
 
         
 
