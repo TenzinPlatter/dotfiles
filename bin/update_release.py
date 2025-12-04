@@ -2,7 +2,9 @@
 
 import os
 from pathlib import Path
-import yaml
+from ruamel.yaml import YAML
+
+yaml = YAML()
 
 def main():
     cwd = Path(os.getcwd())
@@ -20,8 +22,8 @@ def main():
 
     for r in release_files:
         with open(r, "+") as f:
-            contents = yaml.safe_load(f.read())
-            contestn
+            contents = yaml.load(f.read())
+            contents['']
 
         
 
