@@ -78,34 +78,34 @@ vim.keymap.set("i", "t", function()
 end, { desc = "Insert 'async' before function declaration" })
 
 -- Split other windows with current buffer
-vim.keymap.set('n', '<leader>sh', function()
+vim.keymap.set('n', '<leader>wsh', function()
 	require('tenzin.helpers').split_window_with_current_buffer('h', false)
 end, { desc = 'Split left window with current buffer' })
 
-vim.keymap.set('n', '<leader>sj', function()
+vim.keymap.set('n', '<leader>wsj', function()
 	require('tenzin.helpers').split_window_with_current_buffer('j', false)
 end, { desc = 'Split bottom window with current buffer' })
 
-vim.keymap.set('n', '<leader>sk', function()
+vim.keymap.set('n', '<leader>wsk', function()
 	require('tenzin.helpers').split_window_with_current_buffer('k', false)
 end, { desc = 'Split top window with current buffer' })
 
-vim.keymap.set('n', '<leader>sl', function()
+vim.keymap.set('n', '<leader>wsl', function()
 	require('tenzin.helpers').split_window_with_current_buffer('l', false)
 end, { desc = 'Split right window with current buffer' })
 
-vim.keymap.set('n', '<leader>vh', function()
+vim.keymap.set('n', '<leader>wvh', function()
 	require('tenzin.helpers').split_window_with_current_buffer('h', true)
 end, { desc = 'VSplit left window with current buffer' })
 
-vim.keymap.set('n', '<leader>vj', function()
+vim.keymap.set('n', '<leader>wvj', function()
 	require('tenzin.helpers').split_window_with_current_buffer('j', true)
 end, { desc = 'VSplit bottom window with current buffer' })
 
-vim.keymap.set('n', '<leader>vk', function()
+vim.keymap.set('n', '<leader>wvk', function()
 	require('tenzin.helpers').split_window_with_current_buffer('k', true)
 end, { desc = 'VSplit top window with current buffer' })
 
-vim.keymap.set('n', '<leader>vl', function()
+vim.keymap.set('n', '<leader>wvl', function()
 	require('tenzin.helpers').split_window_with_current_buffer('l', true)
 end, { desc = 'VSplit right window with current buffer' })
