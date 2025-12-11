@@ -1,8 +1,6 @@
-include "keybinds.kdl"
-include "window-rules.kdl"
 include "monitors.kdl"
-include "keybinds.kdl"
 include "window-rules.kdl"
+include "keybinds.kdl"
 
 // INPUT
 // ════════════════════════════════════════════════════════════════
