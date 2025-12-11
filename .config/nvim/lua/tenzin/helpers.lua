@@ -208,4 +208,33 @@ function M.insert_async_before_function()
   vim.api.nvim_put({"t"}, "c", false, true)
 end
 
+-- Split a different window and show current buffer in the new split
+function M.split_window_with_current_buffer(direction, vertical)
+  local current_win = vim.api.nvim_get_current_win()
+  local current_buf = vim.api.nvim_get_current_buf()
+
+  -- Try to move to the target window
+  vim.cmd('wincmd ' .. direction)
+  local target_win = vim.api.nvim_get_current_win()
+
+  -- Check if we actually moved to a different window
+  if target_win == current_win then
+    print("No window in that direction")
+    return
+  end
+
+  -- Split the target window
+  if vertical then
+    vim.cmd('vsplit')
+  else
+    vim.cmd('split')
+  end
+
+  -- Set the new split to show the original buffer
+  vim.api.nvim_win_set_buf(0, current_buf)
+
+  -- Return to original window
+  vim.api.nvim_set_current_win(current_win)
+end
+
 return M
