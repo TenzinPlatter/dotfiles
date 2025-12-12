@@ -1,0 +1,58 @@
+;; Kanata configuration with home row mods and caps as ctrl/esc
+
+(defcfg
+  process-unmapped-keys yes
+  danger-enable-cmd no
+)
+
+(defsrc
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  caps a    s    d    f    g    h    j    k    l    ;    '    ret
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl lmet lalt           spc            ralt rmet rctl
+)
+
+(defalias
+  ;; Caps lock: Ctrl when held, Esc when tapped
+  cec (tap-hold 200 200 esc lctl)
+
+  ;; Space: Nav layer when held, Space when tapped
+  spc (tap-hold 200 200 spc (layer-toggle nav))
+
+  ;; Home row mods - Left hand
+  ;; a: Super when held with another key, a when tapped, repeats when held alone
+  a (tap-hold-release 200 200 a lmet)
+  ;; s: Alt when held with another key, s when tapped, repeats when held alone
+  s (tap-hold-release 200 200 s lalt)
+  ;; d: Ctrl when held with another key, d when tapped, repeats when held alone
+  d (tap-hold-release 200 200 d lctl)
+  ;; f: Shift when held with another key, f when tapped, repeats when held alone
+  f (tap-hold-release 200 200 f lsft)
+
+  ;; Home row mods - Right hand
+  ;; j: Shift when held with another key, j when tapped, repeats when held alone
+  j (tap-hold-release 200 200 j rsft)
+  ;; k: Ctrl when held with another key, k when tapped, repeats when held alone
+  k (tap-hold-release 200 200 k rctl)
+  ;; l: Alt when held with another key, l when tapped, repeats when held alone
+  l (tap-hold-release 200 200 l ralt)
+  ;; ;: Super when held with another key, ; when tapped, repeats when held alone
+  ; (tap-hold-release 200 200 ; rmet)
+)
+
+(deflayer base
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  @cec @a   @s   @d   @f   g    h    @j   @k   @l   @;   '    ret
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl lmet lalt           @spc           ralt rmet rctl
+)
+
+(deflayer nav
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    left down up   rght _    _    _
+  _    1    2    3    4    5    6    7    8    9    0    _
+  _    _    _              _              _    _    _
+)
