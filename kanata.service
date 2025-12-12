@@ -1,0 +1,12 @@
+[Unit]
+Description=Kanata keyboard remapper
+Documentation=https://github.com/jtroo/kanata
+
+[Service]
+Type=simple
+ExecStart=/home/tenzin/.cargo/bin/kanata -c /home/tenzin/.dotfiles/.config/kanata/kanata.kbd --nodelay
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
