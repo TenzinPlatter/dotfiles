@@ -45,3 +45,7 @@ window-rule {
     open-floating true
 }
 
+window-rule {
+    match app-id=".*zed.*"
+    opacity 0.93
+}
