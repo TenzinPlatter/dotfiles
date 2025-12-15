@@ -13,7 +13,7 @@ return {
 		keys = {
 			-- NOTE: references, definition, implementation is done in snacks
 			{ "<leader>r", vim.lsp.buf.rename, desc = "Rename symbol under cursor" },
-			{ "<leader>ca", vim.lsp.buf.code_action, desc = "Show code actions" },
+			{ "g.", vim.lsp.buf.code_action, desc = "Show code actions" },
 			 { "<leader>cd", vim.diagnostic.open_float, desc = "Line Diagnostics" },
 			{ "K", vim.lsp.buf.hover, desc = "Show hover documentation" },
 		},
