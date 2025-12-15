@@ -65,28 +65,6 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- Colcon build command using llm script for AI-parsed errors
-vim.api.nvim_create_user_command('Colcon', function()
-  -- Set makeprg to use llm with build command
-  vim.opt.makeprg = "llm --build -i pbc"
-
-  -- Set errorformat for AI-parsed output
-  vim.opt.errorformat = {
-    "%f:%l:%c: %trror: %m",
-    "%f:%l:%c: %tarning: %m",
-    "%f:%l:%c: %m",
-    "%f:%l: %trror: %m",
-    "%f:%l: %tarning: %m",
-    "%f:%l: %m",
-    "%-G%.%#"
-  }
-
-  -- Run make
-  vim.cmd('make!')
-end, {
-  desc = "Build with colcon and parse errors using llm"
-})
-
 -- Build command using llm script with custom arguments
 vim.api.nvim_create_user_command('Build', function(opts)
   local args = opts.args

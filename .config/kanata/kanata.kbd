@@ -22,23 +22,23 @@
 
   ;; Home row mods - Left hand
   ;; a: Super when held with another key, a when tapped, repeats when held alone
-  a (tap-hold-release 200 200 a lmet)
+  ;; a (tap-hold-release 200 200 a lmet)
   ;; s: Alt when held with another key, s when tapped, repeats when held alone
-  s (tap-hold-release 200 200 s lalt)
+  ;; s (tap-hold-release 200 200 s lalt)
   ;; d: Ctrl when held with another key, d when tapped, repeats when held alone
-  d (tap-hold-release 200 200 d lctl)
+  ;; d (tap-hold-release 200 200 d lctl)
   ;; f: Shift when held with another key, f when tapped, repeats when held alone
-  f (tap-hold-release 200 200 f lsft)
+  ;; f (tap-hold-release 200 200 f lsft)
 
   ;; Home row mods - Right hand
   ;; j: Shift when held with another key, j when tapped, repeats when held alone
-  j (tap-hold-release 200 200 j rsft)
+  ;; j (tap-hold-release 200 200 j rsft)
   ;; k: Ctrl when held with another key, k when tapped, repeats when held alone
-  k (tap-hold-release 200 200 k rctl)
+  ;; k (tap-hold-release 200 200 k rctl)
   ;; l: Alt when held with another key, l when tapped, repeats when held alone
-  l (tap-hold-release 200 200 l ralt)
+  ;; l (tap-hold-release 200 200 l ralt)
   ;; ;: Super when held with another key, ; when tapped, repeats when held alone
-  ; (tap-hold-release 200 200 ; rmet)
+  ;; (tap-hold-release 200 200 ; rmet)
 )
 
 (deflayer base

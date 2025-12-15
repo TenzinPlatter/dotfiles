@@ -46,6 +46,6 @@ window-rule {
 }
 
 window-rule {
-    match app-id=".*zed.*"
-    opacity 0.93
+    match app-id="dev.zed.Zed"
+    opacity 0.95
 }
