@@ -1,19 +1,8 @@
 return {
 	{
 		"neovim/nvim-lspconfig",
-		config = function()
-			local lspconfig = vim.lsp.config
-
-			-- delete default lsp keybinds
-			vim.keymap.del("n", "grr")
-			vim.keymap.del("n", "gra")
-			vim.keymap.del("n", "grn")
-			vim.keymap.del("n", "gri")
-		end,
 		keys = {
 			-- NOTE: references, definition, implementation is done in snacks
-			{ "<leader>r", vim.lsp.buf.rename, desc = "Rename symbol under cursor" },
-			{ "g.", vim.lsp.buf.code_action, desc = "Show code actions" },
 			 { "<C-S>", vim.diagnostic.open_float, desc = "Line Diagnostics" },
 			{ "K", vim.lsp.buf.hover, desc = "Show hover documentation" },
 		},
