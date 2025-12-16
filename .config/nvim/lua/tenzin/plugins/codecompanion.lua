@@ -6,8 +6,16 @@ return {
 	},
 	keys = {
 		{
-			"ge",
-		}
-	}
+			"<leader>cc",
+			function()
+				local input = vim.fn.input("CodeCompanion prompt: ")
+				if input ~= "" then
+					vim.cmd("CodeCompanion #{buffer} " .. input)
+				end
+			end,
+			desc = "CodeCompanion with buffer context",
+			mode = { "n", "v" }
+		},
+	},
 	opts = {},
 }
