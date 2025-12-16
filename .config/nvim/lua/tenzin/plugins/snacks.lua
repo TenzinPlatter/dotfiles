@@ -574,7 +574,7 @@ return {
 			desc = "Dismiss All Notifications",
 		},
 		{
-			"<c-/>",
+			"gt",
 			function()
 				Snacks.terminal()
 			end,
