@@ -1,5 +1,5 @@
 alias lg='lazygit'
-alias gs='git status '
+alias gs='git stash'
 alias ga='git add '
 alias gb='git branch '
 alias gp='git push'
