@@ -30,21 +30,23 @@ return {
 		},
 		cmd = "Copilot",
 		event = "InsertEnter",
-		opts = {
-			suggestion = {
-				auto_trigger = true,
-				keymap = {
-					accept = "<C-J>",
+		config = function()
+			require("copilot").setup({
+				suggestion = {
+					auto_trigger = true,
+					keymap = {
+						accept = "<C-J>",
+					},
 				},
-			},
-			nes = {
-				enabled = true,
-				keymap = {
-					accept_and_goto = "<C-Y>",
-					accept = false,
-					dismiss = "<Esc>",
+				nes = {
+					enabled = true,
+					keymap = {
+						accept_and_goto = "<C-Y>",
+						accept = false,
+						dismiss = "<Esc>",
+					},
 				},
-			},
-		},
+			})
+		end,
 	},
 }
