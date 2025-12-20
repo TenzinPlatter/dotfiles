@@ -9,8 +9,16 @@ return {
 		suggestion = {
 			auto_trigger = true,
 			keymap = {
-				accept = "<C-l>",
+				accept = "<C-e>",
 			},
+		},
+		nes = {
+			enabled	= true,
+			keymap = {
+				accept_and_goto = "<M-L>",
+				accept = false,
+				dismiss = "<Esc>",
+			}
 		},
 	},
 	keys = {
