@@ -7,7 +7,7 @@ return {
 	event = "InsertEnter",
 	opts = {
 		suggestion = {
-			auto_trigger = false,
+			auto_trigger = true,
 			keymap = {
 				accept = "<C-Space>",
 			},
