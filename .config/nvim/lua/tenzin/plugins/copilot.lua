@@ -39,7 +39,7 @@ return {
 					},
 				},
 				nes = {
-					enabled = true,
+					enabled = false,
 					keymap = {
 						accept_and_goto = false,
 						accept = false,
