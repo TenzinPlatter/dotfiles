@@ -34,13 +34,13 @@ return {
 			suggestion = {
 				auto_trigger = true,
 				keymap = {
-					accept = "<C-E>",
+					accept = "<C-J>",
 				},
 			},
 			nes = {
 				enabled = true,
 				keymap = {
-					accept_and_goto = "<M-L>",
+					accept_and_goto = "<C-Y>",
 					accept = false,
 					dismiss = "<Esc>",
 				},
