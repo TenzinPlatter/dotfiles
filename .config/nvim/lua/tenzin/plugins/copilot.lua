@@ -34,7 +34,7 @@ return {
 			suggestion = {
 				auto_trigger = true,
 				keymap = {
-					accept = "<C-D>",
+					accept = "<C-E>",
 				},
 			},
 			nes = {
