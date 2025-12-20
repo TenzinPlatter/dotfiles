@@ -35,18 +35,28 @@ return {
 				suggestion = {
 					auto_trigger = true,
 					keymap = {
-						accept = "<C-J>",
+						accept = false,
 					},
 				},
 				nes = {
 					enabled = true,
 					keymap = {
-						accept_and_goto = "<C-Y>",
+						accept_and_goto = false,
 						accept = false,
 						dismiss = "<Esc>",
 					},
 				},
 			})
+
+			-- Set keymaps manually
+			vim.keymap.set('i', '<C-J>', function()
+				require('copilot.suggestion').accept()
+			end, { desc = 'Accept Copilot suggestion' })
+
+			vim.keymap.set('i', '<C-Y>', function()
+				require('copilot-lsp.nes').apply_pending_nes()
+				require('copilot-lsp.nes').walk_cursor_end_edit()
+			end, { desc = 'Accept and goto NES suggestion' })
 		end,
 	},
 }
