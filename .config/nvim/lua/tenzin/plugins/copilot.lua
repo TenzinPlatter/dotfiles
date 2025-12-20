@@ -34,7 +34,7 @@ return {
 			suggestion = {
 				auto_trigger = true,
 				keymap = {
-					accept = "<C-e>",
+					accept = "<C-D>",
 				},
 			},
 			nes = {
@@ -44,13 +44,6 @@ return {
 					accept = false,
 					dismiss = "<Esc>",
 				},
-			},
-		},
-		keys = {
-			{
-				"<leader>tc",
-				"<cmd>Copilot toggle<cr>",
-				desc = "Toggle Copilot",
 			},
 		},
 	},

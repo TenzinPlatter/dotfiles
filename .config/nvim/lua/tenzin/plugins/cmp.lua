@@ -31,7 +31,6 @@ return {
         mapping = cmp.mapping.preset.insert({
           ['<C-u>'] = cmp.mapping.scroll_docs(-4),
           ['<C-d>'] = cmp.mapping.scroll_docs(4),
-          ['<C-e>'] = cmp.mapping.abort(),
           ['<Tab>'] = cmp.mapping.confirm({ select = true }),
 
           ['<C-L>'] = cmp.mapping(function(fallback)
