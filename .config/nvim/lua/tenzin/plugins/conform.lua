@@ -18,6 +18,7 @@ return {
 			typescriptreact = { "prettier" },
 			bash = { "beautysh" },
 			zsh = { "beautysh" },
+			sh = { "beautysh" },
 		},
 		formatters = {
 			ruff_format = {
