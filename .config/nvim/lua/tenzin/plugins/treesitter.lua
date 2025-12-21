@@ -3,4 +3,5 @@ return {
 	lazy = false,
 	branch = "main",
 	build = ":TSUpdate",
+	opts = {}
 }
