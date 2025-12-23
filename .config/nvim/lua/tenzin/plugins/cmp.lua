@@ -28,6 +28,49 @@ return {
           end
         },
 
+        formatting = {
+          format = function(entry, vim_item)
+            -- Add icons to completion items
+            local kind_icons = {
+              Text = "󰉿",
+              Method = "󰆧",
+              Function = "󰊕",
+              Constructor = "",
+              Field = "󰜢",
+              Variable = "󰀫",
+              Class = "󰠱",
+              Interface = "",
+              Module = "",
+              Property = "󰜢",
+              Unit = "󰑭",
+              Value = "󰎠",
+              Enum = "",
+              Keyword = "󰌋",
+              Snippet = "",
+              Color = "󰏘",
+              File = "󰈙",
+              Reference = "󰈇",
+              Folder = "󰉋",
+              EnumMember = "",
+              Constant = "󰏿",
+              Struct = "󰙅",
+              Event = "",
+              Operator = "󰆕",
+              TypeParameter = "",
+            }
+            -- Set the icon
+            vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind)
+            -- Set the source name
+            vim_item.menu = ({
+              nvim_lsp = "[LSP]",
+              luasnip = "[Snippet]",
+              buffer = "[Buffer]",
+              fuzzy_path = "[Path]",
+            })[entry.source.name]
+            return vim_item
+          end
+        },
+
         mapping = cmp.mapping.preset.insert({
           ['<C-u>'] = cmp.mapping.scroll_docs(-4),
           ['<C-d>'] = cmp.mapping.scroll_docs(4),
