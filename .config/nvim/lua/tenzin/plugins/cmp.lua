@@ -8,6 +8,7 @@ return {
 			"https://github.com/saadparwaiz1/cmp_luasnip",
 			"https://github.com/rafamadriz/friendly-snippets",
 			"tranzystorekk/cmp-minikind.nvim",
+			"https://github.com/nvim-mini/mini.icons",
 		},
 		config = function()
 			local cmp = require("cmp")
