@@ -8,7 +8,13 @@ return {
 			"https://github.com/saadparwaiz1/cmp_luasnip",
 			"https://github.com/rafamadriz/friendly-snippets",
 			"tranzystorekk/cmp-minikind.nvim",
-			"https://github.com/nvim-mini/mini.icons",
+			{
+				"https://github.com/nvim-mini/mini.icons",
+				verions = false,
+				config = function()
+					require("mini.icons").setup()
+				end,
+			}
 		},
 		config = function()
 			local cmp = require("cmp")
