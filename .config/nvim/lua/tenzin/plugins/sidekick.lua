@@ -80,9 +80,9 @@ return {
 		{
 			"<leader>ac",
 			function()
-				require("sidekick.cli").toggle({ name = "claude", focus = true })
+				require("sidekick.cli").toggle({ name = "crush", focus = true })
 			end,
-			desc = "Sidekick Claude Toggle",
+			desc = "Sidekick Crush Toggle",
 			mode = { "n", "v" },
 		},
 	},
