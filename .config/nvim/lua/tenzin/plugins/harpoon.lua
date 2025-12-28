@@ -11,16 +11,14 @@ return {
 		local function toggle_snacks_picker(harpoon_files)
 			local items = {}
 			for _, item in ipairs(harpoon_files.items) do
-				table.insert(items, item.value)
+				table.insert(items, {
+					file = item.value,
+					text = item.value,
+				})
 			end
 
 			Snacks.picker.pick({
-				source = {
-					name = "Harpoon",
-					get = function()
-						return items
-					end,
-				},
+				items = items,
 			})
 		end
 
