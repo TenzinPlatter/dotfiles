@@ -9,20 +9,18 @@ return {
 
 		-- snacks picker configuration
 		local function toggle_snacks_picker(harpoon_files)
-			local file_paths = {}
+			local items = {}
 			for _, item in ipairs(harpoon_files.items) do
-				table.insert(file_paths, item.value)
+				table.insert(items, item.value)
 			end
 
 			Snacks.picker.pick({
-				items = file_paths,
-				prompt = "Harpoon",
-				format = function(item)
-					return item
-				end,
-				confirm = function(item)
-					vim.cmd("edit " .. item)
-				end,
+				source = {
+					name = "Harpoon",
+					get = function()
+						return items
+					end,
+				},
 			})
 		end
 
