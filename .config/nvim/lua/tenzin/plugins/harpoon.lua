@@ -1,31 +1,31 @@
 return {
-  "https://github.com/ThePrimeagen/harpoon",
-  branch = "harpoon2",
-  dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
-  config = function()
-    local harpoon = require("harpoon")
-    -- REQUIRED for harpoon2
-    harpoon:setup({})
+	"https://github.com/ThePrimeagen/harpoon",
+	branch = "harpoon2",
+	dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
+	config = function()
+		local harpoon = require("harpoon")
+		-- REQUIRED for harpoon2
+		harpoon:setup({})
 
-    -- basic telescope configuration
-    local conf = require("telescope.config").values
-    local function toggle_telescope(harpoon_files)
-      local file_paths = {}
-      for _, item in ipairs(harpoon_files.items) do
-        table.insert(file_paths, item.value)
-      end
+		-- basic telescope configuration
+		local conf = require("telescope.config").values
+		local function toggle_telescope(harpoon_files)
+			local file_paths = {}
+			for _, item in ipairs(harpoon_files.items) do
+				table.insert(file_paths, item.value)
+			end
 
-      require("telescope.pickers")
-        .new({}, {
-          prompt_title = "Harpoon",
-          finder = require("telescope.finders").new_table({
-            results = file_paths,
-          }),
-          previewer = conf.file_previewer({}),
-          sorter = conf.generic_sorter({}),
-        })
-        :find()
-    end
+			require("telescope.pickers")
+				.new({}, {
+					prompt_title = "Harpoon",
+					finder = require("telescope.finders").new_table({
+						results = file_paths,
+					}),
+					previewer = conf.file_previewer({}),
+					sorter = conf.generic_sorter({}),
+				})
+				:find()
+		end
 
     -- stylua: ignore start
 
@@ -44,6 +44,6 @@ return {
     vim.keymap.set('n', '<leader>8', function() harpoon:list():select(8) end, { desc = "Harpoon Go to File 8" })
     vim.keymap.set('n', '<leader>9', function() harpoon:list():select(9) end, { desc = "Harpoon Go to File 9" })
 
--- stylua: ignore end
-end,
+		-- stylua: ignore end
+	end,
 }
