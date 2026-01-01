@@ -102,6 +102,10 @@ function M.resolve_and_goto_definition()
 		vim.notify("Symbol '" .. symbol .. "' not found", vim.log.levels.INFO)
 	elseif #results == 1 then
 		local location = symbol_to_location(results[1])
+		-- Close hover window and switch back to source window
+		local source_win = vim.b.hover_source_win
+		vim.api.nvim_win_close(0, true)
+		vim.api.nvim_set_current_win(source_win)
 		vim.lsp.util.jump_to_location(location, "utf-8")
 	else
 		-- Use Snacks picker for multiple results
@@ -109,6 +113,7 @@ function M.resolve_and_goto_definition()
 		for _, item in ipairs(results) do
 			table.insert(items, item)
 		end
+		local source_win = vim.b.hover_source_win
 		require("snacks").picker.pick({
 			items = items,
 			format = function(item)
@@ -116,6 +121,9 @@ function M.resolve_and_goto_definition()
 			end,
 			confirm = function(item)
 				local location = symbol_to_location(item)
+				-- Close hover window and switch back to source window
+				vim.api.nvim_win_close(0, true)
+				vim.api.nvim_set_current_win(source_win)
 				vim.lsp.util.jump_to_location(location, "utf-8")
 			end,
 		})
@@ -153,18 +161,20 @@ function M.resolve_and_show_hover()
 		vim.notify("Symbol '" .. symbol .. "' not found", vim.log.levels.INFO)
 	elseif #results == 1 then
 		local location = symbol_to_location(results[1])
-		-- Jump to location temporarily to get hover
-		local current_win = vim.api.nvim_get_current_win()
+		-- Close current hover window and switch back to source window
+		local source_win = vim.b.hover_source_win
+		vim.api.nvim_win_close(0, true)
+		vim.api.nvim_set_current_win(source_win)
+		-- Jump to location and show hover
 		vim.lsp.util.jump_to_location(location, "utf-8")
-		vim.lsp.buf.hover()
-		-- Return to hover window
-		vim.api.nvim_set_current_win(current_win)
+		M.hover()
 	else
 		-- Use Snacks picker for multiple results
 		local items = {}
 		for _, item in ipairs(results) do
 			table.insert(items, item)
 		end
+		local source_win = vim.b.hover_source_win
 		require("snacks").picker.pick({
 			items = items,
 			format = function(item)
@@ -172,10 +182,12 @@ function M.resolve_and_show_hover()
 			end,
 			confirm = function(item)
 				local location = symbol_to_location(item)
-				local current_win = vim.api.nvim_get_current_win()
+				-- Close current hover window and switch back to source window
+				vim.api.nvim_win_close(0, true)
+				vim.api.nvim_set_current_win(source_win)
+				-- Jump to location and show hover
 				vim.lsp.util.jump_to_location(location, "utf-8")
-				vim.lsp.buf.hover()
-				vim.api.nvim_set_current_win(current_win)
+				M.hover()
 			end,
 		})
 	end
@@ -212,7 +224,11 @@ function M.resolve_and_find_references()
 		vim.notify("Symbol '" .. symbol .. "' not found", vim.log.levels.INFO)
 	elseif #results == 1 then
 		local location = symbol_to_location(results[1])
-		-- Jump to location temporarily to get references
+		-- Close hover window and switch back to source window
+		local source_win = vim.b.hover_source_win
+		vim.api.nvim_win_close(0, true)
+		vim.api.nvim_set_current_win(source_win)
+		-- Jump to location to get references
 		vim.lsp.util.jump_to_location(location, "utf-8")
 		require("snacks").picker.lsp_references()
 	else
@@ -221,6 +237,7 @@ function M.resolve_and_find_references()
 		for _, item in ipairs(results) do
 			table.insert(items, item)
 		end
+		local source_win = vim.b.hover_source_win
 		require("snacks").picker.pick({
 			items = items,
 			format = function(item)
@@ -228,6 +245,9 @@ function M.resolve_and_find_references()
 			end,
 			confirm = function(item)
 				local location = symbol_to_location(item)
+				-- Close hover window and switch back to source window
+				vim.api.nvim_win_close(0, true)
+				vim.api.nvim_set_current_win(source_win)
 				vim.lsp.util.jump_to_location(location, "utf-8")
 				require("snacks").picker.lsp_references()
 			end,
@@ -266,7 +286,11 @@ function M.resolve_and_goto_implementation()
 		vim.notify("Symbol '" .. symbol .. "' not found", vim.log.levels.INFO)
 	elseif #results == 1 then
 		local location = symbol_to_location(results[1])
-		-- Jump to location temporarily to get implementations
+		-- Close hover window and switch back to source window
+		local source_win = vim.b.hover_source_win
+		vim.api.nvim_win_close(0, true)
+		vim.api.nvim_set_current_win(source_win)
+		-- Jump to location to get implementations
 		vim.lsp.util.jump_to_location(location, "utf-8")
 		require("snacks").picker.lsp_implementations()
 	else
@@ -275,6 +299,7 @@ function M.resolve_and_goto_implementation()
 		for _, item in ipairs(results) do
 			table.insert(items, item)
 		end
+		local source_win = vim.b.hover_source_win
 		require("snacks").picker.pick({
 			items = items,
 			format = function(item)
@@ -282,6 +307,9 @@ function M.resolve_and_goto_implementation()
 			end,
 			confirm = function(item)
 				local location = symbol_to_location(item)
+				-- Close hover window and switch back to source window
+				vim.api.nvim_win_close(0, true)
+				vim.api.nvim_set_current_win(source_win)
 				vim.lsp.util.jump_to_location(location, "utf-8")
 				require("snacks").picker.lsp_implementations()
 			end,
