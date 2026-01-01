@@ -6,6 +6,18 @@ local hover_called = false
 local hover_source_buf = nil
 local hover_source_win = nil
 
+-- Helper function to get LSP clients excluding Copilot
+local function get_filtered_clients(bufnr)
+	local clients = vim.lsp.get_clients({ bufnr = bufnr })
+	local filtered = {}
+	for _, client in ipairs(clients) do
+		if not client.name:lower():find("copilot") then
+			table.insert(filtered, client)
+		end
+	end
+	return filtered
+end
+
 -- Helper function to query workspace symbols from all LSP clients
 local function query_workspace_symbol(clients, symbol)
 	local results = {}
@@ -85,7 +97,7 @@ function M.resolve_and_goto_definition()
 		return
 	end
 
-	local clients = vim.lsp.get_clients({ bufnr = source_buf })
+	local clients = get_filtered_clients(source_buf)
 
 	if #clients == 0 then
 		vim.notify("No LSP client attached to source buffer " .. source_buf, vim.log.levels.WARN)
@@ -146,7 +158,7 @@ function M.resolve_and_show_hover()
 
 	-- Get LSP clients from source buffer
 	local source_buf = vim.b.hover_source_buf
-	local clients = vim.lsp.get_clients({ bufnr = source_buf })
+	local clients = get_filtered_clients(source_buf)
 
 	if #clients == 0 then
 		vim.notify("No LSP client attached to source buffer", vim.log.levels.WARN)
@@ -209,7 +221,7 @@ function M.resolve_and_find_references()
 
 	-- Get LSP clients from source buffer
 	local source_buf = vim.b.hover_source_buf
-	local clients = vim.lsp.get_clients({ bufnr = source_buf })
+	local clients = get_filtered_clients(source_buf)
 
 	if #clients == 0 then
 		vim.notify("No LSP client attached to source buffer", vim.log.levels.WARN)
@@ -271,7 +283,7 @@ function M.resolve_and_goto_implementation()
 
 	-- Get LSP clients from source buffer
 	local source_buf = vim.b.hover_source_buf
-	local clients = vim.lsp.get_clients({ bufnr = source_buf })
+	local clients = get_filtered_clients(source_buf)
 
 	if #clients == 0 then
 		vim.notify("No LSP client attached to source buffer", vim.log.levels.WARN)
