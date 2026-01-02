@@ -31,20 +31,14 @@ local function query_workspace_symbol(clients, symbol)
 	for _, client in ipairs(clients) do
 		if client.supports_method("workspace/symbol") then
 			client.request("workspace/symbol", { query = symbol }, function(err, result)
-				if err then
-					vim.notify("LSP error: " .. vim.inspect(err), vim.log.levels.ERROR)
-				elseif result then
-					vim.notify("Got " .. #result .. " results from " .. client.name, vim.log.levels.INFO)
+				if result then
 					for _, item in ipairs(result) do
 						table.insert(results, item)
 					end
-				else
-					vim.notify("No results from " .. client.name, vim.log.levels.INFO)
 				end
 				completed = completed + 1
 			end)
 		else
-			vim.notify("Client " .. client.name .. " doesn't support workspace/symbol", vim.log.levels.WARN)
 			completed = completed + 1
 		end
 	end
@@ -54,7 +48,6 @@ local function query_workspace_symbol(clients, symbol)
 		return completed == total
 	end)
 
-	vim.notify("Total results collected: " .. #results, vim.log.levels.INFO)
 	return results
 end
 
@@ -86,32 +79,27 @@ function M.resolve_and_goto_definition()
 	-- Extract symbol under cursor
 	local symbol = vim.fn.expand("<cword>")
 	if symbol == "" then
-		vim.notify("No symbol under cursor", vim.log.levels.WARN)
 		return
 	end
 
 	-- Get LSP clients from source buffer
 	local source_buf = vim.b.hover_source_buf
 	if not source_buf then
-		vim.notify("No source buffer stored", vim.log.levels.ERROR)
 		return
 	end
 
 	local clients = get_filtered_clients(source_buf)
 
 	if #clients == 0 then
-		vim.notify("No LSP client attached to source buffer " .. source_buf, vim.log.levels.WARN)
 		return
 	end
-
-	vim.notify("Searching for symbol: " .. symbol .. " with " .. #clients .. " LSP clients", vim.log.levels.INFO)
 
 	-- Query workspace_symbol
 	local results = query_workspace_symbol(clients, symbol)
 
 	-- Handle results
 	if #results == 0 then
-		vim.notify("Symbol '" .. symbol .. "' not found", vim.log.levels.INFO)
+		return
 	elseif #results == 1 then
 		local location = symbol_to_location(results[1])
 		-- Close hover window and switch back to source window
