@@ -109,17 +109,11 @@ function M.insert_async_before_function()
   local before_cursor = line_text:sub(math.max(1, col - 2), col + 1)
 
   -- Check if the 4 characters before cursor are 'awai'
-  print(string.format("DEBUG: before_cursor='%s', col=%d, row=%d", before_cursor, col, row))
   if before_cursor == "awai" then
-    print("DEBUG: awai check passed")
     local parser = vim.treesitter.get_parser(bufnr)
-    print("DEBUG: Parser:", parser)
     if parser then
-      print("DEBUG: Parser exists, parsing...")
       local tree = parser:parse()[1]
-      print("DEBUG: Tree:", tree)
       if tree then
-        print("DEBUG: Tree exists")
         local root = tree:root()
         local current_node = root:named_descendant_for_range(row, col, row, col)
 

@@ -4,7 +4,13 @@ return {
 		keys = {
 			-- NOTE: references, definition, implementation is done in snacks
 			 { "<C-S>", vim.diagnostic.open_float, desc = "Line Diagnostics" },
-			{ "K", vim.lsp.buf.hover, desc = "Show hover documentation" },
+			{
+			"K",
+			function()
+				require("tenzin.lsp_hover_enhanced").hover()
+			end,
+			desc = "Show hover documentation",
+		},
 		},
 	},
 	{

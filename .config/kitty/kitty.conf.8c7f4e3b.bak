@@ -18,4 +18,3 @@ sync_to_monitor no
 wayland_enable_ime no
 
 include machine.conf
-map shift+enter send_text all \e\r

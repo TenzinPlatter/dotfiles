@@ -1,23 +1,35 @@
 return {
-	"zbirenbaum/copilot.lua",
-	requires = {
-		"copilotlsp-nvim/copilot-lsp",
-	},
-	cmd = "Copilot",
-	event = "InsertEnter",
-	opts = {
-		suggestion = {
-			auto_trigger = false,
-			keymap = {
-				accept = "<C-Space>",
-			},
-		},
-	},
-	keys = {
-		{
-			"<leader>tc",
-			"<cmd>Copilot toggle<cr>",
-			desc = "Toggle Copilot",
-		},
+	{
+		"zbirenbaum/copilot.lua",
+		cmd = "Copilot",
+		event = "InsertEnter",
+		config = function()
+			require("copilot").setup({
+				suggestion = {
+					auto_trigger = true,
+					keymap = {
+						accept = false,
+					},
+				},
+				nes = {
+					enabled = false,
+					keymap = {
+						accept_and_goto = false,
+						accept = false,
+						dismiss = "<Esc>",
+					},
+				},
+			})
+
+			-- Set keymaps manually
+			vim.keymap.set('i', '<C-Space>', function()
+				require('copilot.suggestion').accept()
+			end, { desc = 'Accept Copilot suggestion' })
+
+			vim.keymap.set({'i', 'n'}, '<M-L>', function()
+				require('copilot-lsp.nes').apply_pending_nes()
+				require('copilot-lsp.nes').walk_cursor_end_edit()
+			end, { desc = 'Accept and goto NES suggestion' })
+		end,
 	},
 }
