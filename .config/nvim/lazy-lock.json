@@ -43,7 +43,7 @@
   "nvim-rip-substitute": { "branch": "main", "commit": "3023802f8d00091f8b6b02f8aa1aa96c392c9583" },
   "nvim-surround": { "branch": "main", "commit": "1098d7b3c34adcfa7feb3289ee434529abd4afd1" },
   "nvim-treesitter": { "branch": "main", "commit": "42fc28ba918343ebfd5565147a42a26580579482" },
-  "nvim-treesitter-textobjects": { "branch": "master", "commit": "5ca4aaa6efdcc59be46b95a3e876300cfead05ef" },
+  "nvim-treesitter-textobjects": { "branch": "main", "commit": "5ca4aaa6efdcc59be46b95a3e876300cfead05ef" },
   "nvim-web-devicons": { "branch": "master", "commit": "8dcb311b0c92d460fac00eac706abd43d94d68af" },
   "obsidian.nvim": { "branch": "main", "commit": "ae1f76a75c7ce36866e1d9342a8f6f5b9c2caf9b" },
   "octo.nvim": { "branch": "master", "commit": "09ff70efd885fe1cdf62505dce3a9bc6baeb85e1" },
