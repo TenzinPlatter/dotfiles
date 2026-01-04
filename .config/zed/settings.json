@@ -1,0 +1,225 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+// My Zed settings for a minimial dark transaprent glass-like theme.
+// Modify the colors in experimental.theme_overrides to suit yourself.
+{
+  "theme": {
+    "mode": "dark",
+    "light": "Nordfox - blurred",
+    "dark": "Nordfox - blurred",
+  },
+
+  "icon_theme": "Catppuccin Macchiato",
+
+  "unstable.ui_density": "comfortable",
+
+  "ui_font_size": 20,
+  "buffer_font_size": 18.0,
+  "agent_ui_font_size": 21.0,
+  "ui_font_weight": 300,
+  "buffer_font_weight": 300,
+
+  "ui_font_family": "JetBrainsMono Nerd Font",
+  "buffer_font_family": "JetBrainsMono Nerd Font",
+
+  "ui_font_features": {
+    "calt": true,
+  },
+  "buffer_font_features": {
+    "calt": true,
+  },
+
+  "hard_tabs": false,
+
+  "cursor_blink": false,
+
+  "autosave": "on_focus_change",
+  "restore_on_startup": "last_session",
+  "when_closing_with_no_tabs": "keep_window_open",
+
+  "use_autoclose": false,
+  "always_treat_brackets_as_autoclosed": true,
+  "jsx_tag_auto_close": null,
+
+  "vim_mode": true,
+  "vim": {
+    "use_smartcase_find": true,
+    "use_system_clipboard": "on_yank",
+  },
+
+  "tab_bar": {
+    "show": false,
+    "show_nav_history_buttons": false,
+  },
+  "tabs": {
+    "file_icons": true,
+    "close_position": "left",
+    "git_status": true,
+  },
+  "preview_tabs": {
+    "enabled": true,
+    "enable_preview_from_file_finder": true,
+    "enable_keep_preview_on_code_navigation": true,
+  },
+
+  "toolbar": {
+    "quick_actions": false,
+    "breadcrumbs": true,
+  },
+
+  "inline_code_actions": false,
+
+  "gutter": {
+    "breakpoints": false,
+    "line_numbers": true,
+    "runnables": false,
+    "folds": false,
+  },
+
+  "indent_guides": {
+    "enabled": true,
+    "line_width": 2,
+    "active_line_width": 2,
+    "coloring": "indent_aware",
+  },
+
+  "agent": {
+    "always_allow_tool_actions": true,
+    "default_profile": "write",
+    "default_model": {
+      "provider": "google",
+      "model": "gemini-2.5-pro",
+    },
+    "dock": "left",
+    "button": true,
+    "play_sound_when_agent_done": true,
+
+    "enable_feedback": false,
+  },
+
+  "title_bar": {
+    "show_user_picture": false,
+  },
+  "git_panel": {
+    "dock": "right",
+    "button": true,
+  },
+  "project_panel": {
+    "button": true,
+    "dock": "right",
+    "hide_root": true,
+    "indent_size": 32,
+    // "indent_size": 28,
+    "scrollbar": {
+      "show": "never",
+    },
+    "indent_guides": {
+      "show": "never",
+    },
+  },
+  "outline_panel": {
+    "dock": "right",
+    "button": false,
+  },
+  "collaboration_panel": {
+    "dock": "right",
+    "button": false,
+  },
+  "chat_panel": {
+    "button": "never",
+  },
+  "notification_panel": {
+    "button": false,
+  },
+  "terminal": {
+    "dock": "bottom",
+    "button": false,
+  },
+  "debugger": {
+    "button": false,
+  },
+  "search": {
+    "button": false,
+  },
+
+  "features": {
+    // "edit_prediction_provider": "zed"
+    "edit_prediction_provider": "none",
+  },
+
+  "show_edit_predictions": false,
+  "edit_predictions": {
+    "mode": "subtle",
+  },
+
+  "show_completions_on_input": true,
+  "completions": {
+    "lsp": true,
+    // "words": "enabled"
+  },
+
+  "auto_signature_help": false,
+  "show_signature_help_after_edits": false,
+
+  // "search_wrap": false,
+
+  "vertical_scroll_margin": 9,
+  "scroll_beyond_last_line": "vertical_scroll_margin",
+  // "scroll_sensitivity": 1.25,
+  "git": {
+    "inline_blame": {
+      "enabled": false,
+    },
+  },
+
+  "prettier": {
+    "allowed": true,
+  },
+
+  "show_whitespaces": "none",
+  // "show_whitespaces": "all",
+
+  "preferred_line_length": 120,
+  "soft_wrap": "editor_width",
+  // "soft_wrap": "bounded",
+  // "show_wrap_guides": true,
+
+  "centered_layout": {
+    "left_padding": 0.1,
+    "right_padding": 0,
+  },
+
+  // "double_click_in_multibuffer": "open",
+
+  "telemetry": {
+    "metrics": false,
+    "diagnostics": false,
+  },
+
+  "file_scan_exclusions": [
+    "**/.git",
+    "**/.svn",
+    "**/.hg",
+    "**/.jj",
+    "**/CVS",
+    "**/.DS_Store",
+    "**/Thumbs.db",
+    "**/.classpath",
+    "**/.settings",
+    "**/*.fbx",
+    "**/*.vrm",
+    "**/*.vrma",
+    "node_modules/.package-lock.json",
+    "package-lock.json",
+    "pnpm-lock.json",
+  ],
+
+  "relative_line_numbers": "enabled",
+  "redact_private_values": true,
+}
