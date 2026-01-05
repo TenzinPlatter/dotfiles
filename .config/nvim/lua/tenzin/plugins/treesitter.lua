@@ -110,6 +110,7 @@ return {
       'snacks_picker_preview',
       'image',
       'noice',
+      'sidekick_terminal',
     }
 
     -- Auto-install parsers and enable highlighting on FileType
@@ -137,7 +138,7 @@ return {
         end
 
         -- Auto-install missing parsers (async, no-op if already installed)
-        ts.install({ lang })
+        pcall(ts.install, { lang })
       end,
     })
   end,
