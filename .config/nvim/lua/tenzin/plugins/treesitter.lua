@@ -108,6 +108,7 @@ return {
       'image',
       'noice',
       'sidekick_terminal',
+      'no-neck-pain',
     }
 
     -- Auto-install parsers and enable highlighting on FileType
