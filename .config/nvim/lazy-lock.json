@@ -70,5 +70,6 @@
   "vim-tmux-navigator": { "branch": "master", "commit": "c45243dc1f32ac6bcf6068e5300f3b2b237e576a" },
   "volt": { "branch": "main", "commit": "620de1321f275ec9d80028c68d1b88b409c0c8b1" },
   "vscode-diff.nvim": { "branch": "next", "commit": "96845f95bc5539c8e2a0ab88223c5033f302fcd9" },
-  "which-key.nvim": { "branch": "main", "commit": "3aab2147e74890957785941f0c1ad87d0a44c15a" }
+  "which-key.nvim": { "branch": "main", "commit": "3aab2147e74890957785941f0c1ad87d0a44c15a" },
+  "wisteria": { "branch": "main", "commit": "937f9ff0435e30b9e5798b4b9e2b5ed3d83ee8e5" }
 }

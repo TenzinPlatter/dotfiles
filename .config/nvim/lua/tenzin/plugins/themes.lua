@@ -86,7 +86,7 @@ return {
 		opts = {
 			italics = true,
 			transparent = true,
-		}
+		},
 	},
 	{
 		"vague2k/huez.nvim",
@@ -102,6 +102,13 @@ return {
 				end,
 				desc = "Theme picker",
 			},
+		},
+	},
+	{
+		"masisz/wisteria.nvim",
+		name = "wisteria",
+		opts = {
+			transparent = true,
 		},
 	},
 }
