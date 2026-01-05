@@ -111,6 +111,8 @@ return {
       'image',
       'noice',
       'sidekick_terminal',
+      'snacks_layout_box',
+      'snacks_picker_list',
     }
 
     -- Auto-install parsers and enable highlighting on FileType
