@@ -102,17 +102,10 @@ return {
       'checkhealth',
       'lazy',
       'mason',
-      'snacks_dashboard',
-      'snacks_notif',
-      'snacks_win',
-      'snacks_picker_input',
-      'snacks_picker_input',
-      'snacks_picker_preview',
+      'snacks_.*', -- matches all snacks filetypes
       'image',
       'noice',
       'sidekick_terminal',
-      'snacks_layout_box',
-      'snacks_picker_list',
     }
 
     -- Auto-install parsers and enable highlighting on FileType
@@ -120,8 +113,11 @@ return {
       group = group,
       desc = 'Enable treesitter highlighting and indentation (non-blocking)',
       callback = function(event)
-        if vim.tbl_contains(ignore_filetypes, event.match) then
-          return
+        -- Check if filetype matches any ignore pattern
+        for _, pattern in ipairs(ignore_filetypes) do
+          if event.match:match('^' .. pattern .. '$') then
+            return
+          end
         end
 
         local lang = vim.treesitter.language.get_lang(event.match) or event.match
