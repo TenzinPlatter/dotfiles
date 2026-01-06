@@ -103,7 +103,8 @@ return {
       'lazy',
       'mason',
       'snacks_.*', -- matches all snacks filetypes
-      '.*telescope.*', -- matches all snacks filetypes
+      '.*telescope.*',
+      '.*Telescope.*',
       '.*cmp.*',
       '.*help.*',
       'image',
