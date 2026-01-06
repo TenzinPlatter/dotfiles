@@ -26,10 +26,6 @@ vim.keymap.set("n", "ZZ", function()
 	vim.cmd("quit")
 end, { desc = "Save session, close all buffers and quit" })
 
-vim.keymap.set("i", "<C-T>", function()
-	require("tenzin.helpers").insert_self()
-end, { desc = "Insert self/this reference" })
-
 vim.keymap.set("n", "<C-l>", "xp", { desc = "Swap character with next" })
 vim.keymap.set("n", "<C-h>", "xhP", { desc = "Swap character with previous" })
 
@@ -72,10 +68,6 @@ vim.keymap.set("n", "<C-k>", "V:m '<-2<CR>gv=", { desc = "Move line up" })
 
 vim.keymap.set("v", "<", "<gv", { desc = "Indent left and reselect" })
 vim.keymap.set("v", ">", ">gv", { desc = "Indent right and reselect" })
-
-vim.keymap.set("i", "t", function()
-	require("tenzin.helpers").insert_async_before_function()
-end, { desc = "Insert 'async' before function declaration" })
 
 -- Split other windows with current buffer
 vim.keymap.set('n', '<leader>wsh', function()
