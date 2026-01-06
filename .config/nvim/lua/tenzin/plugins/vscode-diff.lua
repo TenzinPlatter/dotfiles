@@ -9,6 +9,11 @@ return {
 			desc = "Open prompt for VSCode-diff view",
 		},
 		{
+			"<leader>cdf",
+			":CodeDiff file",
+			desc = "Open prompt for VSCode-diff view",
+		},
+		{
 			"<leader>cdd",
 			function()
 				vim.cmd("CodeDiff")
