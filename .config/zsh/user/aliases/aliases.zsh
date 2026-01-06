@@ -2,6 +2,8 @@
 
 alias cpwd="pwd | tr -d '\n' | wl-copy"
 
+alias tc="toad -a claude"
+
 alias cl="claude"
 alias wp="wallpaper-picker.sh"
 
