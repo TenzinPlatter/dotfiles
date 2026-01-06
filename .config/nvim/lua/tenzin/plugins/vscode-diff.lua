@@ -5,10 +5,8 @@ return {
   keys = {
     {
       "<leader>cd",
-      function ()
-        vim.cmd("CodeDiff")
-      end,
-      desc = "Toggle VSCode git diff"
+      ":CodeDiff",
+      desc = "Open prompt for VSCode-diff view",
     }
   }
 }
