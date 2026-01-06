@@ -9,6 +9,10 @@
 // My Zed settings for a minimial dark transaprent glass-like theme.
 // Modify the colors in experimental.theme_overrides to suit yourself.
 {
+  "git_panel": {
+    "tree_view": true
+  },
+  "vim_mode": true,
   "theme": {
     "mode": "dark",
     "light": "Nordfox - blurred",
