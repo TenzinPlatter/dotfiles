@@ -12,15 +12,6 @@ window-rule {
     open-floating true
 }
 
-window-rule {
-    match app-id=r#"zen"# is-playing-audio=true
-    opacity 1.0
-}
-
-window-rule {
-    match is-focused=false
-    opacity 0.85
-}
 
 window-rule {
     geometry-corner-radius 12
