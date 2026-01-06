@@ -106,6 +106,7 @@ def peek_directory(path: str, structure_only: bool, depth: Optional[int]) -> Non
     else:
         print(f"{Color.BLUE}📁 Directory:{Color.RESET} {path}")
     print()
+    sys.stdout.flush()  # Ensure header prints before subprocess output
 
     # Use depth 3 as default for directories
     tree_depth = depth if depth is not None else 3
@@ -146,6 +147,7 @@ def peek_tar(file: str, structure_only: bool, depth: Optional[int], compression:
     else:
         print(f"{Color.MAGENTA}📦 Archive:{Color.RESET} {file} {Color.GRAY}({format_name}){Color.RESET}")
     print()
+    sys.stdout.flush()
 
     if not has_cmd('tar'):
         print(f"{Color.RED}Error:{Color.RESET} tar command not found")
@@ -200,6 +202,7 @@ def peek_zip(file: str, structure_only: bool, depth: Optional[int]) -> None:
     else:
         print(f"{Color.MAGENTA}📦 Archive:{Color.RESET} {file} {Color.GRAY}(zip){Color.RESET}")
     print()
+    sys.stdout.flush()
 
     cmd = None
     if has_cmd('unzip'):
@@ -242,6 +245,7 @@ def peek_7z(file: str, structure_only: bool, depth: Optional[int]) -> None:
     else:
         print(f"{Color.MAGENTA}📦 Archive:{Color.RESET} {file} {Color.GRAY}(7z){Color.RESET}")
     print()
+    sys.stdout.flush()
 
     if not has_cmd('7z'):
         print(f"{Color.RED}Error:{Color.RESET} 7z command not found")
@@ -281,6 +285,7 @@ def peek_compressed(file: str, tool: str, flag: str) -> None:
     """Display compressed file contents."""
     print(f"{Color.CYAN}🗜️  Compressed file:{Color.RESET} {file}")
     print()
+    sys.stdout.flush()
 
     if not has_cmd(tool):
         print(f"{Color.RED}Error:{Color.RESET} {tool} command not found")
@@ -329,6 +334,7 @@ def peek_file(file: str) -> None:
 
     print(f"{Color.BLUE}📄 File:{Color.RESET} {file} {Color.GRAY}({size}){Color.RESET}")
     print()
+    sys.stdout.flush()
 
     # Try bat/batcat first for syntax highlighting
     if has_cmd('bat'):
@@ -345,6 +351,7 @@ def peek_binary(file: str, mime_type: str) -> None:
     """Display binary file metadata."""
     print(f"{Color.YELLOW}🔍 Binary file:{Color.RESET} {file} {Color.GRAY}({mime_type}){Color.RESET}")
     print()
+    sys.stdout.flush()
 
     # Try specialized tools based on MIME type
     if mime_type.startswith('image/'):
