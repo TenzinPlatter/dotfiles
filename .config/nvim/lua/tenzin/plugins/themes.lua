@@ -82,13 +82,6 @@ return {
 		end,
 	},
 	{
-		"alexmozaidze/palenight.nvim",
-		opts = {
-			italics = true,
-			transparent = true,
-		},
-	},
-	{
 		"vague2k/huez.nvim",
 		import = "huez-manager.import",
 		branch = "stable",
