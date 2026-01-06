@@ -13,6 +13,7 @@ alias capsoff="sudo systemctl disable --now udevmon"
 alias dk="docker"
 alias dcu="docker compose up -d"
 alias dcub="docker compose up -d --build"
+alias dkc="docker compose"
 
 alias srz="source $ZDOTDIR/.zshrc"
 alias new="exec zsh"
