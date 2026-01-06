@@ -111,6 +111,7 @@ return {
       'noice',
       'sidekick_terminal',
       'no-neck-pain',
+      '.*code.diff.*',
     }
 
     -- Auto-install parsers and enable highlighting on FileType
