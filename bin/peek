@@ -1,665 +1,583 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
 
-# peek - Show contents of files, directories, and archives with colored output
-# Supports: files, directories, tar, tar.gz, zip, 7z, gz, bz2, xz, and more
+"""
+peek - Show contents of files, directories, and archives with colored output
+Supports: files, directories, tar, tar.gz, zip, 7z, gz, bz2, xz, and more
+"""
 
-set -euo pipefail
+import argparse
+import os
+import sys
+import subprocess
+import shutil
+import tempfile
+import mimetypes
+from pathlib import Path
+from typing import Optional, List, Tuple
+
 
 # Color codes
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-MAGENTA='\033[0;35m'
-CYAN='\033[0;36m'
-GRAY='\033[0;90m'
-RESET='\033[0m'
+class Color:
+    RED = '\033[0;31m'
+    GREEN = '\033[0;32m'
+    YELLOW = '\033[1;33m'
+    BLUE = '\033[0;34m'
+    MAGENTA = '\033[0;35m'
+    CYAN = '\033[0;36m'
+    GRAY = '\033[0;90m'
+    RESET = '\033[0m'
 
-# Utility function to check if command exists
-has_cmd() {
-    command -v "$1" &> /dev/null
-}
 
-# Show usage message
-show_usage() {
-    echo -e "${CYAN}Usage:${RESET} peek <path>"
-    echo ""
-    echo "Shows contents of files, directories, and archives with colored output."
-    echo ""
-    echo -e "${CYAN}Supported formats:${RESET}"
-    echo "  - Regular files (with syntax highlighting via bat)"
-    echo "  - Directories (tree view)"
-    echo "  - Archives: tar, tar.gz, tar.bz2, tar.xz, zip, 7z"
-    echo "  - Compressed: .gz, .bz2, .xz, .lz4, .zst"
-    echo "  - Binary files (metadata via specialized tools)"
-    echo ""
-    echo -e "${CYAN}Options:${RESET}"
-    echo "  -s          Structure only (directories only, no files)"
-    echo "  --health    Show available tools and capabilities"
-    echo ""
-    echo -e "${CYAN}Examples:${RESET}"
-    echo "  peek README.md"
-    echo "  peek src/"
-    echo "  peek -s src/                # Show only directory structure"
-    echo "  peek archive.tar.gz"
-    echo "  peek -s archive.tar.gz      # Show only directories in archive"
-}
+def has_cmd(cmd: str) -> bool:
+    """Check if command exists."""
+    return shutil.which(cmd) is not None
 
-# Main dispatcher
-main() {
-    # Parse arguments
-    if [[ $# -eq 0 ]]; then
-        show_usage
-        exit 0
-    fi
 
-    if [[ "$1" == "--health" ]] || [[ "$1" == "health" ]]; then
-        health_check
-        exit $?
-    fi
+def filter_by_depth(files: List[str], depth: Optional[int]) -> List[str]:
+    """Filter file paths by depth (number of path components)."""
+    if depth is None or depth == 0:  # 0 means unlimited
+        return files
 
-    if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
-        show_usage
-        exit 0
-    fi
+    filtered = []
+    for file in files:
+        # Count path components (depth = number of slashes + 1)
+        file_depth = file.count('/') + 1
+        if file_depth <= depth:
+            filtered.append(file)
+    return filtered
 
-    # Parse flags
-    local structure_only=false
-    local target=""
 
-    while [[ $# -gt 0 ]]; do
-        case "$1" in
-            -s)
-                structure_only=true
-                shift
-                ;;
-            *)
-                target="$1"
-                shift
-                ;;
-        esac
-    done
-
-    # Check if target was provided
-    if [[ -z "$target" ]]; then
-        show_usage
-        exit 1
-    fi
-
-    # Check if path exists
-    if [[ ! -e "$target" ]]; then
-        echo -e "${RED}❌ Error:${RESET} $target not found" >&2
-        exit 1
-    fi
-
-    # Check if readable
-    if [[ ! -r "$target" ]]; then
-        echo -e "${RED}❌ Error:${RESET} Cannot read $target (permission denied)" >&2
-        exit 1
-    fi
-
-    # Handle symlinks
-    if [[ -L "$target" ]]; then
-        local real_target
-        real_target=$(readlink -f "$target")
-        echo -e "${CYAN}→ Following symlink to:${RESET} $real_target"
-        target="$real_target"
-    fi
-
-    # Detect and dispatch
-    detect_and_peek "$target" "$structure_only"
-}
-
-# Detect file type and route to appropriate handler
-detect_and_peek() {
-    local target="$1"
-    local structure_only="$2"
-
-    # Directory
-    if [[ -d "$target" ]]; then
-        peek_directory "$target" "$structure_only"
+def format_archive_tree(files: List[str], structure_only: bool) -> None:
+    """Format archive file listing as a tree structure."""
+    if not files:
+        print(f"{Color.GRAY}(empty){Color.RESET}")
         return
-    fi
-
-    # Get filename for extension matching
-    local filename
-    filename=$(basename "$target")
-
-    # Archive detection (by extension, longest match first)
-    case "$filename" in
-        *.tar.gz|*.tgz)
-            peek_tar_gz "$target" "$structure_only"
-            return
-            ;;
-        *.tar.bz2|*.tbz2|*.tbz)
-            peek_tar_bz2 "$target" "$structure_only"
-            return
-            ;;
-        *.tar.xz|*.txz)
-            peek_tar_xz "$target" "$structure_only"
-            return
-            ;;
-        *.tar)
-            peek_tar "$target" "$structure_only"
-            return
-            ;;
-        *.zip)
-            peek_zip "$target" "$structure_only"
-            return
-            ;;
-        *.7z)
-            peek_7z "$target" "$structure_only"
-            return
-            ;;
-        *.gz)
-            peek_compressed "$target" "gzip" "-dc"
-            return
-            ;;
-        *.bz2)
-            peek_compressed "$target" "bzip2" "-dc"
-            return
-            ;;
-        *.xz)
-            peek_compressed "$target" "xz" "-dc"
-            return
-            ;;
-        *.lz4)
-            peek_compressed "$target" "lz4" "-dc"
-            return
-            ;;
-        *.zst)
-            peek_compressed "$target" "zstd" "-dc"
-            return
-            ;;
-    esac
-
-    # MIME type detection for regular files
-    local mime_type
-    mime_type=$(file --brief --mime-type "$target" 2>/dev/null || echo "application/octet-stream")
-
-    case "$mime_type" in
-        text/*|application/json|application/xml|application/javascript|application/x-sh|application/x-shellscript)
-            peek_file "$target"
-            ;;
-        *)
-            peek_binary "$target" "$mime_type"
-            ;;
-    esac
-}
-
-# Health check - show available tools
-health_check() {
-    local exit_code=0
-
-    echo -e "${CYAN}peek health check${RESET}"
-    echo "================="
-    echo ""
-
-    # Core utilities
-    echo -e "${YELLOW}Core utilities${RESET}"
-    check_tool "file" "File type detection (required)" || exit_code=1
-    check_tool "test" "Path validation (required)" || exit_code=1
-    echo ""
-
-    # Enhanced viewing
-    echo -e "${YELLOW}Enhanced viewing${RESET}"
-    check_multi_tool "bat" "batcat" "Syntax highlighting for files" || true
-    check_tool "cat" "Fallback for files" || true
-    echo ""
-
-    # Directory viewing
-    echo -e "${YELLOW}Directory viewing${RESET}"
-    check_tool "tree" "Colored directory tree" || true
-    check_tool "ls" "Fallback directory listing" || true
-    echo ""
-
-    # Archive support
-    echo -e "${YELLOW}Archive support${RESET}"
-    check_tool "tar" "TAR archives (.tar, .tar.gz, .tar.bz2, .tar.xz)" || true
-    check_multi_tool "unzip" "zipinfo" "ZIP archives (.zip)" || true
-    check_tool "7z" "7-Zip archives (.7z)" || true
-    echo ""
-
-    # Compression support
-    echo -e "${YELLOW}Compression support${RESET}"
-    check_tool "gzip" ".gz files" || true
-    check_tool "bzip2" ".bz2 files" || true
-    check_tool "xz" ".xz files" || true
-    check_tool "lz4" ".lz4 files" || true
-    check_tool "zstd" ".zst files" || true
-    echo ""
-
-    # Binary file inspection
-    echo -e "${YELLOW}Binary file inspection${RESET}"
-    check_tool "exiftool" "Image/PDF metadata" || true
-    check_tool "identify" "ImageMagick image info" || true
-    check_tool "sqlite3" "SQLite database inspection" || true
-    check_tool "pdfinfo" "PDF information" || true
-    echo ""
-
-    echo -e "${GRAY}Legend: ${GREEN}✓${GRAY} available  ${RED}✗${GRAY} not found  ${YELLOW}⚠${GRAY} issue${RESET}"
-
-    return $exit_code
-}
-
-# Check if a tool is available
-check_tool() {
-    local tool="$1"
-    local description="$2"
-
-    if has_cmd "$tool"; then
-        echo -e "  ${GREEN}✓${RESET} ${tool}${GRAY} - ${description}${RESET}"
-        return 0
-    else
-        echo -e "  ${RED}✗${RESET} ${tool}${GRAY} - ${description}${RESET}"
-        return 1
-    fi
-}
-
-# Check if at least one of multiple tools is available
-check_multi_tool() {
-    local tool1="$1"
-    local tool2="$2"
-    local description="$3"
-    local combined="${tool1}/${tool2}"
-
-    if has_cmd "$tool1" || has_cmd "$tool2"; then
-        echo -e "  ${GREEN}✓${RESET} ${combined}${GRAY} - ${description}${RESET}"
-        return 0
-    else
-        echo -e "  ${RED}✗${RESET} ${combined}${GRAY} - ${description}${RESET}"
-        return 1
-    fi
-}
-
-peek_directory() {
-    local dir="$1"
-    local structure_only="$2"
-
-    # Check if directory is empty
-    if [[ -z "$(ls -A "$dir" 2>/dev/null)" ]]; then
-        echo -e "${BLUE}📁 Directory:${RESET} $dir ${GRAY}(empty)${RESET}"
-        return 0
-    fi
-
-    if [[ "$structure_only" == "true" ]]; then
-        echo -e "${BLUE}📁 Directory structure:${RESET} $dir"
-    else
-        echo -e "${BLUE}📁 Directory:${RESET} $dir"
-    fi
-    echo ""
-
-    # Try tree first (preferred for colored output)
-    if has_cmd "tree"; then
-        if [[ "$structure_only" == "true" ]]; then
-            tree -C -L 3 -d --dirsfirst "$dir"
-        else
-            tree -C -L 3 --dirsfirst "$dir"
-        fi
-    else
-        # Fallback to ls with color
-        if [[ "$structure_only" == "true" ]]; then
-            ls -lAhd --color=auto "$dir"/*/ 2>/dev/null || echo -e "${GRAY}(no subdirectories)${RESET}"
-        else
-            ls -lAh --color=auto "$dir"
-        fi
-    fi
-}
-
-# Helper function to format archive listing as rtee
-format_archive_tree() {
-    local structure_only="$1"
-    shift
-    local files=("$@")
-
-    if [[ ${#files[@]} -eq 0 ]]; then
-        echo -e "${GRAY}(empty)${RESET}"
-        return
-    fi
 
     # Use tree command if available
-    if has_cmd "tree"; then
-        # Create temp dir and structure, then tree it
-        local tmpdir
-        tmpdir=$(mktemp -d -t peek.XXXXXXXXXX)
-        trap '[[ -n "${tmpdir:-}" ]] && rm -rf "$tmpdir"' RETURN
+    if has_cmd('tree'):
+        with tempfile.TemporaryDirectory(prefix='peek.') as tmpdir:
+            # Create directory structure
+            for file in files:
+                full_path = os.path.join(tmpdir, file)
+                if structure_only:
+                    # In structure mode, files are directories
+                    os.makedirs(full_path, exist_ok=True)
+                else:
+                    # In normal mode, create parent dirs and touch file
+                    os.makedirs(os.path.dirname(full_path), exist_ok=True)
+                    Path(full_path).touch()
 
-        for file in "${files[@]}"; do
-            if [[ "$structure_only" == "true" ]]; then
-                # In structure mode, files are directories
-                mkdir -p "$tmpdir/$file"
-            else
-                # In normal mode, files are files
-                local dir=$(dirname "$tmpdir/$file")
-                mkdir -p "$dir"
-                touch "$tmpdir/$file"
-            fi
-        done
+            # Run tree and strip tmpdir from output
+            tree_opts = ['-C', '--noreport']
+            if structure_only:
+                tree_opts.append('-d')
 
-        if [[ "$structure_only" == "true" ]]; then
-            tree -C -d --noreport "$tmpdir" | tail -n +2 | sed 's|'"$tmpdir"'||g'
-        else
-            tree -C --noreport "$tmpdir" | tail -n +2 | sed 's|'"$tmpdir"'||g'
-        fi
-    else
+            result = subprocess.run(
+                ['tree'] + tree_opts + [tmpdir],
+                capture_output=True,
+                text=True
+            )
+            # Remove first line (tmpdir) and strip tmpdir path
+            lines = result.stdout.split('\n')[1:]
+            for line in lines:
+                print(line.replace(tmpdir, ''))
+    else:
         # Simple fallback - just list with indentation
-        printf '%s\n' "${files[@]}" | sort | while read -r file; do
-            local depth=$(echo "$file" | grep -o "/" | wc -l)
-            local indent=$(printf '%*s' $((depth * 2)) '')
-            local basename=$(basename "$file")
-            echo "${indent}${basename}"
-        done
-    fi
-}
+        for file in sorted(files):
+            depth = file.count('/')
+            indent = '  ' * depth
+            basename = os.path.basename(file)
+            print(f"{indent}{basename}")
 
-peek_tar() {
-    local file="$1"
-    local structure_only="$2"
 
-    if [[ "$structure_only" == "true" ]]; then
-        echo -e "${MAGENTA}📦 Archive structure:${RESET} $file ${GRAY}(tar)${RESET}"
-    else
-        echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(tar)${RESET}"
-    fi
-    echo ""
+def peek_directory(path: str, structure_only: bool, depth: Optional[int]) -> None:
+    """Display directory contents."""
+    # Check if directory is empty
+    try:
+        if not any(os.scandir(path)):
+            print(f"{Color.BLUE}📁 Directory:{Color.RESET} {path} {Color.GRAY}(empty){Color.RESET}")
+            return
+    except PermissionError:
+        print(f"{Color.RED}❌ Error:{Color.RESET} Cannot read {path} (permission denied)", file=sys.stderr)
+        return
 
-    if ! has_cmd "tar"; then
-        echo -e "${RED}Error:${RESET} tar command not found"
-        return 1
-    fi
+    if structure_only:
+        print(f"{Color.BLUE}📁 Directory structure:{Color.RESET} {path}")
+    else:
+        print(f"{Color.BLUE}📁 Directory:{Color.RESET} {path}")
+    print()
 
-    local files
-    if [[ "$structure_only" == "true" ]]; then
-        mapfile -t files < <(tar -tf "$file" 2>/dev/null | grep '/$' | sed 's|/$||' || true)
-    else
-        mapfile -t files < <(tar -tf "$file" 2>/dev/null | grep -v '/$' || true)
-    fi
+    # Use depth 3 as default for directories
+    tree_depth = depth if depth is not None else 3
+    # Convert 0 to unlimited (999)
+    if tree_depth == 0:
+        tree_depth = 999
 
-    if [[ ${#files[@]} -eq 0 ]]; then
-        if [[ "$structure_only" == "true" ]]; then
-            echo -e "${GRAY}(no directories)${RESET}"
-        else
-            echo -e "${GRAY}(empty or corrupted)${RESET}"
-        fi
-        return 0
-    fi
+    # Try tree first (preferred for colored output)
+    if has_cmd('tree'):
+        tree_opts = ['-C', '-L', str(tree_depth), '--dirsfirst']
+        if structure_only:
+            tree_opts.append('-d')
 
-    format_archive_tree "$structure_only" "${files[@]}"
-}
+        subprocess.run(['tree'] + tree_opts + [path])
+    else:
+        # Fallback to ls with color
+        ls_opts = ['-lAh', '--color=auto']
+        if structure_only:
+            # Try to list only directories
+            try:
+                dirs = [d.path for d in os.scandir(path) if d.is_dir()]
+                if dirs:
+                    subprocess.run(['ls'] + ls_opts + dirs)
+                else:
+                    print(f"{Color.GRAY}(no subdirectories){Color.RESET}")
+            except PermissionError:
+                print(f"{Color.RED}❌ Error:{Color.RESET} Permission denied", file=sys.stderr)
+        else:
+            subprocess.run(['ls'] + ls_opts + [path])
 
-peek_tar_gz() {
-    local file="$1"
-    local structure_only="$2"
 
-    if [[ "$structure_only" == "true" ]]; then
-        echo -e "${MAGENTA}📦 Archive structure:${RESET} $file ${GRAY}(tar.gz)${RESET}"
-    else
-        echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(tar.gz)${RESET}"
-    fi
-    echo ""
+def peek_tar(file: str, structure_only: bool, depth: Optional[int], compression: str = '') -> None:
+    """Display tar archive contents."""
+    format_name = f"tar{compression}" if compression else "tar"
 
-    if ! has_cmd "tar"; then
-        echo -e "${RED}Error:${RESET} tar command not found"
-        return 1
-    fi
+    if structure_only:
+        print(f"{Color.MAGENTA}📦 Archive structure:{Color.RESET} {file} {Color.GRAY}({format_name}){Color.RESET}")
+    else:
+        print(f"{Color.MAGENTA}📦 Archive:{Color.RESET} {file} {Color.GRAY}({format_name}){Color.RESET}")
+    print()
 
-    local files
-    if [[ "$structure_only" == "true" ]]; then
-        mapfile -t files < <(tar -tzf "$file" 2>/dev/null | grep '/$' | sed 's|/$||' || true)
-    else
-        mapfile -t files < <(tar -tzf "$file" 2>/dev/null | grep -v '/$' || true)
-    fi
+    if not has_cmd('tar'):
+        print(f"{Color.RED}Error:{Color.RESET} tar command not found")
+        return
 
-    if [[ ${#files[@]} -eq 0 ]]; then
-        if [[ "$structure_only" == "true" ]]; then
-            echo -e "${GRAY}(no directories)${RESET}"
-        else
-            echo -e "${GRAY}(empty or corrupted)${RESET}"
-        fi
-        return 0
-    fi
+    # Build tar options
+    tar_opts = ['-t']
+    if compression == '.gz':
+        tar_opts.append('z')
+    elif compression == '.bz2':
+        tar_opts.append('j')
+    elif compression == '.xz':
+        tar_opts.append('J')
+    tar_opts.append('f')
 
-    format_archive_tree "$structure_only" "${files[@]}"
-}
+    try:
+        result = subprocess.run(
+            ['tar'] + tar_opts + [file],
+            capture_output=True,
+            text=True,
+            check=True
+        )
 
-peek_tar_bz2() {
-    local file="$1"
-    local structure_only="$2"
+        lines = result.stdout.strip().split('\n')
+        if structure_only:
+            # Get only directories (entries ending with /)
+            files = [line.rstrip('/') for line in lines if line.endswith('/')]
+        else:
+            # Get only files (entries not ending with /)
+            files = [line for line in lines if not line.endswith('/')]
 
-    if [[ "$structure_only" == "true" ]]; then
-        echo -e "${MAGENTA}📦 Archive structure:${RESET} $file ${GRAY}(tar.bz2)${RESET}"
-    else
-        echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(tar.bz2)${RESET}"
-    fi
-    echo ""
+        # Apply depth filtering with default unlimited for archives
+        archive_depth = depth if depth is not None else 0
+        files = filter_by_depth(files, archive_depth)
 
-    if ! has_cmd "tar"; then
-        echo -e "${RED}Error:${RESET} tar command not found"
-        return 1
-    fi
+        if not files:
+            if structure_only:
+                print(f"{Color.GRAY}(no directories){Color.RESET}")
+            else:
+                print(f"{Color.GRAY}(empty or corrupted){Color.RESET}")
+            return
 
-    local files
-    if [[ "$structure_only" == "true" ]]; then
-        mapfile -t files < <(tar -tjf "$file" 2>/dev/null | grep '/$' | sed 's|/$||' || true)
-    else
-        mapfile -t files < <(tar -tjf "$file" 2>/dev/null | grep -v '/$' || true)
-    fi
+        format_archive_tree(files, structure_only)
+    except subprocess.CalledProcessError:
+        print(f"{Color.GRAY}(empty or corrupted){Color.RESET}")
 
-    if [[ ${#files[@]} -eq 0 ]]; then
-        if [[ "$structure_only" == "true" ]]; then
-            echo -e "${GRAY}(no directories)${RESET}"
-        else
-            echo -e "${GRAY}(empty or corrupted)${RESET}"
-        fi
-        return 0
-    fi
 
-    format_archive_tree "$structure_only" "${files[@]}"
-}
+def peek_zip(file: str, structure_only: bool, depth: Optional[int]) -> None:
+    """Display zip archive contents."""
+    if structure_only:
+        print(f"{Color.MAGENTA}📦 Archive structure:{Color.RESET} {file} {Color.GRAY}(zip){Color.RESET}")
+    else:
+        print(f"{Color.MAGENTA}📦 Archive:{Color.RESET} {file} {Color.GRAY}(zip){Color.RESET}")
+    print()
 
-peek_tar_xz() {
-    local file="$1"
-    local structure_only="$2"
+    cmd = None
+    if has_cmd('unzip'):
+        cmd = ['unzip', '-Z1', file]
+    elif has_cmd('zipinfo'):
+        cmd = ['zipinfo', '-1', file]
+    else:
+        print(f"{Color.RED}Error:{Color.RESET} unzip or zipinfo command not found")
+        return
 
-    if [[ "$structure_only" == "true" ]]; then
-        echo -e "${MAGENTA}📦 Archive structure:${RESET} $file ${GRAY}(tar.xz)${RESET}"
-    else
-        echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(tar.xz)${RESET}"
-    fi
-    echo ""
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        lines = result.stdout.strip().split('\n')
 
-    if ! has_cmd "tar"; then
-        echo -e "${RED}Error:${RESET} tar command not found"
-        return 1
-    fi
+        if structure_only:
+            files = [line.rstrip('/') for line in lines if line.endswith('/')]
+        else:
+            files = [line for line in lines if not line.endswith('/')]
 
-    local files
-    if [[ "$structure_only" == "true" ]]; then
-        mapfile -t files < <(tar -tJf "$file" 2>/dev/null | grep '/$' | sed 's|/$||' || true)
-    else
-        mapfile -t files < <(tar -tJf "$file" 2>/dev/null | grep -v '/$' || true)
-    fi
+        # Apply depth filtering with default unlimited for archives
+        archive_depth = depth if depth is not None else 0
+        files = filter_by_depth(files, archive_depth)
 
-    if [[ ${#files[@]} -eq 0 ]]; then
-        if [[ "$structure_only" == "true" ]]; then
-            echo -e "${GRAY}(no directories)${RESET}"
-        else
-            echo -e "${GRAY}(empty or corrupted)${RESET}"
-        fi
-        return 0
-    fi
+        if not files:
+            if structure_only:
+                print(f"{Color.GRAY}(no directories){Color.RESET}")
+            else:
+                print(f"{Color.GRAY}(empty or corrupted){Color.RESET}")
+            return
 
-    format_archive_tree "$structure_only" "${files[@]}"
-}
+        format_archive_tree(files, structure_only)
+    except subprocess.CalledProcessError:
+        print(f"{Color.GRAY}(empty or corrupted){Color.RESET}")
 
-peek_zip() {
-    local file="$1"
-    local structure_only="$2"
 
-    if [[ "$structure_only" == "true" ]]; then
-        echo -e "${MAGENTA}📦 Archive structure:${RESET} $file ${GRAY}(zip)${RESET}"
-    else
-        echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(zip)${RESET}"
-    fi
-    echo ""
+def peek_7z(file: str, structure_only: bool, depth: Optional[int]) -> None:
+    """Display 7z archive contents."""
+    if structure_only:
+        print(f"{Color.MAGENTA}📦 Archive structure:{Color.RESET} {file} {Color.GRAY}(7z){Color.RESET}")
+    else:
+        print(f"{Color.MAGENTA}📦 Archive:{Color.RESET} {file} {Color.GRAY}(7z){Color.RESET}")
+    print()
 
-    local files
-    if has_cmd "unzip"; then
-        if [[ "$structure_only" == "true" ]]; then
-            mapfile -t files < <(unzip -Z1 "$file" 2>/dev/null | grep '/$' | sed 's|/$||' || true)
-        else
-            mapfile -t files < <(unzip -Z1 "$file" 2>/dev/null | grep -v '/$' || true)
-        fi
-    elif has_cmd "zipinfo"; then
-        if [[ "$structure_only" == "true" ]]; then
-            mapfile -t files < <(zipinfo -1 "$file" 2>/dev/null | grep '/$' | sed 's|/$||' || true)
-        else
-            mapfile -t files < <(zipinfo -1 "$file" 2>/dev/null | grep -v '/$' || true)
-        fi
-    else
-        echo -e "${RED}Error:${RESET} unzip or zipinfo command not found"
-        return 1
-    fi
+    if not has_cmd('7z'):
+        print(f"{Color.RED}Error:{Color.RESET} 7z command not found")
+        return
 
-    if [[ ${#files[@]} -eq 0 ]]; then
-        if [[ "$structure_only" == "true" ]]; then
-            echo -e "${GRAY}(no directories)${RESET}"
-        else
-            echo -e "${GRAY}(empty or corrupted)${RESET}"
-        fi
-        return 0
-    fi
+    try:
+        result = subprocess.run(
+            ['7z', 'l', '-ba', file],
+            capture_output=True,
+            text=True,
+            check=True
+        )
 
-    format_archive_tree "$structure_only" "${files[@]}"
-}
+        lines = result.stdout.strip().split('\n')
+        if structure_only:
+            files = [line.split()[-1].rstrip('/') for line in lines if line.endswith('/')]
+        else:
+            files = [line.split()[-1] for line in lines if not line.endswith('/')]
 
-peek_7z() {
-    local file="$1"
-    local structure_only="$2"
+        # Apply depth filtering with default unlimited for archives
+        archive_depth = depth if depth is not None else 0
+        files = filter_by_depth(files, archive_depth)
 
-    if [[ "$structure_only" == "true" ]]; then
-        echo -e "${MAGENTA}📦 Archive structure:${RESET} $file ${GRAY}(7z)${RESET}"
-    else
-        echo -e "${MAGENTA}📦 Archive:${RESET} $file ${GRAY}(7z)${RESET}"
-    fi
-    echo ""
+        if not files:
+            if structure_only:
+                print(f"{Color.GRAY}(no directories){Color.RESET}")
+            else:
+                print(f"{Color.GRAY}(empty or corrupted){Color.RESET}")
+            return
 
-    if ! has_cmd "7z"; then
-        echo -e "${RED}Error:${RESET} 7z command not found"
-        return 1
-    fi
+        format_archive_tree(files, structure_only)
+    except subprocess.CalledProcessError:
+        print(f"{Color.GRAY}(empty or corrupted){Color.RESET}")
 
-    local files
-    if [[ "$structure_only" == "true" ]]; then
-        mapfile -t files < <(7z l -ba "$file" 2>/dev/null | grep '/$' | sed 's|/$||' | awk '{print $NF}' || true)
-    else
-        mapfile -t files < <(7z l -ba "$file" 2>/dev/null | grep -v '/$' | awk '{print $NF}' || true)
-    fi
 
-    if [[ ${#files[@]} -eq 0 ]]; then
-        if [[ "$structure_only" == "true" ]]; then
-            echo -e "${GRAY}(no directories)${RESET}"
-        else
-            echo -e "${GRAY}(empty or corrupted)${RESET}"
-        fi
-        return 0
-    fi
+def peek_compressed(file: str, tool: str, flag: str) -> None:
+    """Display compressed file contents."""
+    print(f"{Color.CYAN}🗜️  Compressed file:{Color.RESET} {file}")
+    print()
 
-    format_archive_tree "$structure_only" "${files[@]}"
-}
+    if not has_cmd(tool):
+        print(f"{Color.RED}Error:{Color.RESET} {tool} command not found")
+        return
 
-peek_compressed() {
-    local file="$1"
-    local tool="$2"
-    local flag="$3"
+    try:
+        # Decompress to stdout and limit to 1MB
+        result = subprocess.run(
+            [tool, flag, file],
+            capture_output=True,
+            text=True,
+            check=True
+        )
 
-    echo -e "${CYAN}🗜️  Compressed file:${RESET} $file"
-    echo ""
+        # Limit output to first 1MB
+        content = result.stdout[:1024*1024]
 
-    if ! has_cmd "$tool"; then
-        echo -e "${RED}Error:${RESET} $tool command not found"
-        return 1
-    fi
+        # Try to display with bat/batcat
+        if has_cmd('bat'):
+            proc = subprocess.Popen(
+                ['bat', '--style=plain', '--paging=never', '--color=always'],
+                stdin=subprocess.PIPE,
+                text=True
+            )
+            proc.communicate(content)
+        elif has_cmd('batcat'):
+            proc = subprocess.Popen(
+                ['batcat', '--style=plain', '--paging=never', '--color=always'],
+                stdin=subprocess.PIPE,
+                text=True
+            )
+            proc.communicate(content)
+        else:
+            print(content)
+    except subprocess.CalledProcessError:
+        print(f"{Color.RED}Error:{Color.RESET} Failed to decompress file")
 
-    # Decompress to stdout and display
-    if "$tool" "$flag" "$file" 2>/dev/null | head -c 1M > /tmp/peek_decompressed_$$; then
-        # Try to display with bat/cat
-        if has_cmd "bat"; then
-            bat --style=plain --paging=never --color=always /tmp/peek_decompressed_$$
-        elif has_cmd "batcat"; then
-            batcat --style=plain --paging=never --color=always /tmp/peek_decompressed_$$
-        else
-            cat /tmp/peek_decompressed_$$
-        fi
-        rm -f /tmp/peek_decompressed_$$
-    else
-        echo -e "${RED}Error:${RESET} Failed to decompress file"
-        rm -f /tmp/peek_decompressed_$$
-        return 1
-    fi
-}
 
-peek_file() {
-    local file="$1"
-    local size
-    size=$(du -h "$file" 2>/dev/null | cut -f1)
+def peek_file(file: str) -> None:
+    """Display regular file contents."""
+    size = subprocess.run(
+        ['du', '-h', file],
+        capture_output=True,
+        text=True
+    ).stdout.split()[0]
 
-    echo -e "${BLUE}📄 File:${RESET} $file ${GRAY}($size)${RESET}"
-    echo ""
+    print(f"{Color.BLUE}📄 File:{Color.RESET} {file} {Color.GRAY}({size}){Color.RESET}")
+    print()
 
     # Try bat/batcat first for syntax highlighting
-    if has_cmd "bat"; then
-        bat --style=plain --paging=never --color=always "$file"
-    elif has_cmd "batcat"; then
-        batcat --style=plain --paging=never --color=always "$file"
-    else
+    if has_cmd('bat'):
+        subprocess.run(['bat', '--style=plain', '--paging=never', '--color=always', file])
+    elif has_cmd('batcat'):
+        subprocess.run(['batcat', '--style=plain', '--paging=never', '--color=always', file])
+    else:
         # Fallback to cat
-        cat "$file"
-    fi
-}
+        with open(file, 'r') as f:
+            print(f.read())
 
-peek_binary() {
-    local file="$1"
-    local mime_type="$2"
 
-    echo -e "${YELLOW}🔍 Binary file:${RESET} $file ${GRAY}($mime_type)${RESET}"
-    echo ""
+def peek_binary(file: str, mime_type: str) -> None:
+    """Display binary file metadata."""
+    print(f"{Color.YELLOW}🔍 Binary file:{Color.RESET} {file} {Color.GRAY}({mime_type}){Color.RESET}")
+    print()
 
     # Try specialized tools based on MIME type
-    case "$mime_type" in
-        image/*)
-            if has_cmd "exiftool"; then
-                exiftool "$file"
-                return 0
-            elif has_cmd "identify"; then
-                identify -verbose "$file"
-                return 0
-            fi
-            ;;
-        application/pdf)
-            if has_cmd "pdfinfo"; then
-                pdfinfo "$file"
-                return 0
-            elif has_cmd "exiftool"; then
-                exiftool "$file"
-                return 0
-            fi
-            ;;
-        application/x-sqlite3|application/vnd.sqlite3)
-            if has_cmd "sqlite3"; then
-                echo -e "${CYAN}Schema:${RESET}"
-                sqlite3 "$file" ".schema" 2>/dev/null || echo -e "${RED}Failed to read SQLite database${RESET}"
-                echo ""
-                echo -e "${CYAN}Tables:${RESET}"
-                sqlite3 "$file" ".tables" 2>/dev/null || true
-                return 0
-            fi
-            ;;
-    esac
+    if mime_type.startswith('image/'):
+        if has_cmd('exiftool'):
+            subprocess.run(['exiftool', file])
+            return
+        elif has_cmd('identify'):
+            subprocess.run(['identify', '-verbose', file])
+            return
+    elif mime_type == 'application/pdf':
+        if has_cmd('pdfinfo'):
+            subprocess.run(['pdfinfo', file])
+            return
+        elif has_cmd('exiftool'):
+            subprocess.run(['exiftool', file])
+            return
+    elif mime_type in ('application/x-sqlite3', 'application/vnd.sqlite3'):
+        if has_cmd('sqlite3'):
+            print(f"{Color.CYAN}Schema:{Color.RESET}")
+            subprocess.run(['sqlite3', file, '.schema'])
+            print()
+            print(f"{Color.CYAN}Tables:{Color.RESET}")
+            subprocess.run(['sqlite3', file, '.tables'])
+            return
 
     # Fallback: use file command with detailed output
-    file -b "$file"
-}
+    result = subprocess.run(['file', '-b', file], capture_output=True, text=True)
+    print(result.stdout)
 
-# Run main
-main "$@"
+
+def detect_and_peek(target: str, structure_only: bool, depth: Optional[int]) -> None:
+    """Detect file type and route to appropriate handler."""
+    path = Path(target)
+
+    # Directory
+    if path.is_dir():
+        peek_directory(target, structure_only, depth)
+        return
+
+    # Get filename for extension matching
+    filename = path.name.lower()
+
+    # Archive detection (by extension, longest match first)
+    if filename.endswith(('.tar.gz', '.tgz')):
+        peek_tar(target, structure_only, depth, '.gz')
+        return
+    elif filename.endswith(('.tar.bz2', '.tbz2', '.tbz')):
+        peek_tar(target, structure_only, depth, '.bz2')
+        return
+    elif filename.endswith(('.tar.xz', '.txz')):
+        peek_tar(target, structure_only, depth, '.xz')
+        return
+    elif filename.endswith('.tar'):
+        peek_tar(target, structure_only, depth, '')
+        return
+    elif filename.endswith('.zip'):
+        peek_zip(target, structure_only, depth)
+        return
+    elif filename.endswith('.7z'):
+        peek_7z(target, structure_only, depth)
+        return
+    elif filename.endswith('.gz'):
+        peek_compressed(target, 'gzip', '-dc')
+        return
+    elif filename.endswith('.bz2'):
+        peek_compressed(target, 'bzip2', '-dc')
+        return
+    elif filename.endswith('.xz'):
+        peek_compressed(target, 'xz', '-dc')
+        return
+    elif filename.endswith('.lz4'):
+        peek_compressed(target, 'lz4', '-dc')
+        return
+    elif filename.endswith('.zst'):
+        peek_compressed(target, 'zstd', '-dc')
+        return
+
+    # MIME type detection for regular files
+    result = subprocess.run(
+        ['file', '--brief', '--mime-type', target],
+        capture_output=True,
+        text=True
+    )
+    mime_type = result.stdout.strip() or 'application/octet-stream'
+
+    # Text files
+    text_types = (
+        'text/', 'application/json', 'application/xml',
+        'application/javascript', 'application/x-sh',
+        'application/x-shellscript'
+    )
+
+    if any(mime_type.startswith(t) for t in text_types):
+        peek_file(target)
+    else:
+        peek_binary(target, mime_type)
+
+
+def health_check() -> int:
+    """Show available tools and capabilities."""
+    exit_code = 0
+
+    def check_tool(tool: str, description: str) -> bool:
+        if has_cmd(tool):
+            print(f"  {Color.GREEN}✓{Color.RESET} {tool}{Color.GRAY} - {description}{Color.RESET}")
+            return True
+        else:
+            print(f"  {Color.RED}✗{Color.RESET} {tool}{Color.GRAY} - {description}{Color.RESET}")
+            return False
+
+    def check_multi_tool(tool1: str, tool2: str, description: str) -> bool:
+        combined = f"{tool1}/{tool2}"
+        if has_cmd(tool1) or has_cmd(tool2):
+            print(f"  {Color.GREEN}✓{Color.RESET} {combined}{Color.GRAY} - {description}{Color.RESET}")
+            return True
+        else:
+            print(f"  {Color.RED}✗{Color.RESET} {combined}{Color.GRAY} - {description}{Color.RESET}")
+            return False
+
+    print(f"{Color.CYAN}peek health check{Color.RESET}")
+    print("=================")
+    print()
+
+    # Core utilities
+    print(f"{Color.YELLOW}Core utilities{Color.RESET}")
+    if not check_tool('file', 'File type detection (required)'):
+        exit_code = 1
+    print()
+
+    # Enhanced viewing
+    print(f"{Color.YELLOW}Enhanced viewing{Color.RESET}")
+    check_multi_tool('bat', 'batcat', 'Syntax highlighting for files')
+    check_tool('cat', 'Fallback for files')
+    print()
+
+    # Directory viewing
+    print(f"{Color.YELLOW}Directory viewing{Color.RESET}")
+    check_tool('tree', 'Colored directory tree')
+    check_tool('ls', 'Fallback directory listing')
+    print()
+
+    # Archive support
+    print(f"{Color.YELLOW}Archive support{Color.RESET}")
+    check_tool('tar', 'TAR archives (.tar, .tar.gz, .tar.bz2, .tar.xz)')
+    check_multi_tool('unzip', 'zipinfo', 'ZIP archives (.zip)')
+    check_tool('7z', '7-Zip archives (.7z)')
+    print()
+
+    # Compression support
+    print(f"{Color.YELLOW}Compression support{Color.RESET}")
+    check_tool('gzip', '.gz files')
+    check_tool('bzip2', '.bz2 files')
+    check_tool('xz', '.xz files')
+    check_tool('lz4', '.lz4 files')
+    check_tool('zstd', '.zst files')
+    print()
+
+    # Binary file inspection
+    print(f"{Color.YELLOW}Binary file inspection{Color.RESET}")
+    check_tool('exiftool', 'Image/PDF metadata')
+    check_tool('identify', 'ImageMagick image info')
+    check_tool('sqlite3', 'SQLite database inspection')
+    check_tool('pdfinfo', 'PDF information')
+    print()
+
+    print(f"{Color.GRAY}Legend: {Color.GREEN}✓{Color.GRAY} available  {Color.RED}✗{Color.GRAY} not found{Color.RESET}")
+
+    return exit_code
+
+
+def main():
+    """Main entry point."""
+    parser = argparse.ArgumentParser(
+        description='Show contents of files, directories, and archives with colored output.',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog='''
+Supported formats:
+  - Regular files (with syntax highlighting via bat)
+  - Directories (tree view)
+  - Archives: tar, tar.gz, tar.bz2, tar.xz, zip, 7z
+  - Compressed: .gz, .bz2, .xz, .lz4, .zst
+  - Binary files (metadata via specialized tools)
+
+Examples:
+  peek README.md
+  peek src/
+  peek -s src/                # Show only directory structure
+  peek -d 1 src/              # Show only top level
+  peek archive.tar.gz
+  peek -s -d 2 archive.tar.gz # Show only directories, depth 2
+        '''
+    )
+
+    parser.add_argument('path', nargs='?', help='Path to file, directory, or archive')
+    parser.add_argument('-s', '--structure', action='store_true',
+                        help='Structure only (directories only, no files)')
+    parser.add_argument('-d', '--depth', type=int, metavar='N',
+                        help='Limit depth to N levels (0 for unlimited)')
+    parser.add_argument('--health', action='store_true',
+                        help='Show available tools and capabilities')
+
+    args = parser.parse_args()
+
+    # Health check
+    if args.health:
+        sys.exit(health_check())
+
+    # Need a path
+    if not args.path:
+        parser.print_help()
+        sys.exit(0)
+
+    target = args.path
+
+    # Check if path exists
+    if not os.path.exists(target):
+        print(f"{Color.RED}❌ Error:{Color.RESET} {target} not found", file=sys.stderr)
+        sys.exit(1)
+
+    # Check if readable
+    if not os.access(target, os.R_OK):
+        print(f"{Color.RED}❌ Error:{Color.RESET} Cannot read {target} (permission denied)", file=sys.stderr)
+        sys.exit(1)
+
+    # Handle symlinks
+    if os.path.islink(target):
+        real_target = os.path.realpath(target)
+        print(f"{Color.CYAN}→ Following symlink to:{Color.RESET} {real_target}")
+        target = real_target
+
+    # Detect and peek
+    detect_and_peek(target, args.structure, args.depth)
+
+
+if __name__ == '__main__':
+    main()
