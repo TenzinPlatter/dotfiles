@@ -1,6 +1,12 @@
 return {
 	{
 		"neovim/nvim-lspconfig",
+		config = function()
+			-- Create custom LspLog command
+			vim.api.nvim_create_user_command("LspLog", function()
+				vim.cmd("edit " .. vim.lsp.get_log_path())
+			end, { desc = "Open LSP log file" })
+		end,
 		keys = {
 			-- NOTE: references, definition, implementation is done in snacks
 			 { "<C-S>", vim.diagnostic.open_float, desc = "Line Diagnostics" },
