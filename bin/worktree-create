@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-"""
-worktree-create - Create a git worktree with optional project-specific setup
-
-Usage: worktree-create <branch-name> [base-branch]
+"""Create a git worktree with optional project-specific setup.
 
 Works with both existing and new branches.
 Creates a worktree in .worktrees/ with:
@@ -14,27 +11,50 @@ Creates a worktree in .worktrees/ with:
   - Auto-configured .envrc for direnv
 """
 
-import sys
-import subprocess
+import argparse
 import shutil
+import subprocess
+import sys
 from pathlib import Path
-from typing import Tuple
+
+# Constants
+WORKTREES_DIR = ".worktrees"
+LOOKOUT_VENV_NAME = "lookout"
+LOOKOUT_CLI_PATH = "tools/lookout_cli"
+LOOKOUT_CONFIG_PATH = "packages/lookout_config"
+SECRETS_DIR = ".secrets"
+
+
+def parse_args() -> argparse.Namespace:
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Create a git worktree with optional project-specific setup",
+        epilog="""
+examples:
+  %(prog)s feature-xyz          # Create new branch from main
+  %(prog)s hotfix-123 develop   # Create new branch from develop
+  %(prog)s existing-branch      # Move existing branch to worktree
+        """,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "branch_name",
+        help="Name of the branch to create or checkout",
+    )
+    parser.add_argument(
+        "base_branch",
+        nargs="?",
+        default="main",
+        help="Base branch to create from (default: %(default)s)",
+    )
+    return parser.parse_args()
 
 
 def main() -> int:
     """Main entry point."""
-    # Parse arguments
-    if len(sys.argv) < 2:
-        print("Usage: worktree-create <branch-name> [base-branch]")
-        print("")
-        print("Examples:")
-        print("  worktree-create feature-xyz          # Create new branch from main")
-        print("  worktree-create hotfix-123 develop   # Create new branch from develop")
-        print("  worktree-create existing-branch      # Move existing branch to worktree")
-        return 1
-
-    branch_name = sys.argv[1]
-    base_branch = sys.argv[2] if len(sys.argv) > 2 else "main"
+    args = parse_args()
+    branch_name = args.branch_name
+    base_branch = args.base_branch
 
     try:
         # Get repository root
@@ -44,10 +64,10 @@ def main() -> int:
         is_lookout = is_lookout_repo(repo_root)
 
         # Determine worktree path
-        worktree_path = repo_root / ".worktrees" / branch_name
+        worktree_path = repo_root / WORKTREES_DIR / branch_name
 
         if worktree_path.exists():
-            print(f"Error: Worktree already exists at {worktree_path}")
+            print(f"Error: Worktree already exists at {worktree_path}", file=sys.stderr)
             return 1
 
         print(f"Creating worktree for branch '{branch_name}'...")
@@ -88,31 +108,57 @@ def main() -> int:
 
 
 def get_repo_root() -> Path:
-    """Get git repository root using git rev-parse."""
+    """Get git repository root using git rev-parse.
+
+    Returns:
+        Path to the git repository root directory.
+
+    Raises:
+        subprocess.CalledProcessError: If not in a git repository.
+    """
     result = subprocess.run(
         ["git", "rev-parse", "--show-toplevel"],
         capture_output=True,
         text=True,
-        check=True
+        check=True,
     )
     return Path(result.stdout.strip())
 
 
 def is_lookout_repo(repo_root: Path) -> bool:
-    """Check if repo has Lookout-specific directories."""
+    """Check if repo has Lookout-specific directories.
+
+    Args:
+        repo_root: Path to the git repository root.
+
+    Returns:
+        True if both lookout_cli and lookout_config directories exist.
+    """
     return (
-        (repo_root / "tools" / "lookout_cli").is_dir() and
-        (repo_root / "packages" / "lookout_config").is_dir()
+        (repo_root / LOOKOUT_CLI_PATH).is_dir()
+        and (repo_root / LOOKOUT_CONFIG_PATH).is_dir()
     )
 
 
-def create_worktree(repo_root: Path, branch: str, base: str, worktree_path: Path) -> None:
-    """Create git worktree for branch."""
+def create_worktree(
+    repo_root: Path, branch: str, base: str, worktree_path: Path
+) -> None:
+    """Create git worktree for branch.
+
+    Args:
+        repo_root: Path to the git repository root.
+        branch: Name of the branch to create or checkout.
+        base: Base branch to create new branch from.
+        worktree_path: Path where the worktree should be created.
+
+    Raises:
+        subprocess.CalledProcessError: If git worktree command fails.
+    """
     # Check if branch already exists
     result = subprocess.run(
         ["git", "show-ref", "--verify", "--quiet", f"refs/heads/{branch}"],
         cwd=repo_root,
-        capture_output=True
+        capture_output=True,
     )
     branch_exists = result.returncode == 0
 
@@ -121,52 +167,56 @@ def create_worktree(repo_root: Path, branch: str, base: str, worktree_path: Path
         subprocess.run(
             ["git", "worktree", "add", str(worktree_path), branch],
             cwd=repo_root,
-            check=True
+            check=True,
         )
     else:
         print(f"Creating new branch '{branch}' from '{base}'...")
         subprocess.run(
             ["git", "worktree", "add", str(worktree_path), "-b", branch, base],
             cwd=repo_root,
-            check=True
+            check=True,
         )
 
 
 def setup_lookout_env(worktree_path: Path, repo_root: Path) -> None:
-    """Setup venv, install packages, configure direnv."""
+    """Setup Lookout-specific Python environment.
+
+    Args:
+        worktree_path: Path to the worktree directory.
+        repo_root: Path to the git repository root (unused but kept for symmetry).
+
+    Raises:
+        subprocess.CalledProcessError: If venv creation, pip install, or direnv fails.
+    """
     print("Setting up Python virtual environment...")
 
     # Create venv with system site packages
     subprocess.run(
-        [sys.executable, "-m", "venv", "--system-site-packages", "./lookout"],
+        [sys.executable, "-m", "venv", "--system-site-packages", LOOKOUT_VENV_NAME],
         cwd=worktree_path,
-        check=True
+        check=True,
     )
 
     print("Installing editable packages...")
-    pip_path = worktree_path / "lookout" / "bin" / "pip"
+    pip_path = worktree_path / LOOKOUT_VENV_NAME / "bin" / "pip"
 
-    subprocess.run(
-        [str(pip_path), "install", "-q", "-e", "./tools/lookout_cli"],
-        cwd=worktree_path,
-        check=True
-    )
-    subprocess.run(
-        [str(pip_path), "install", "-q", "-e", "./packages/lookout_config"],
-        cwd=worktree_path,
-        check=True
-    )
+    for package_path in [LOOKOUT_CLI_PATH, LOOKOUT_CONFIG_PATH]:
+        subprocess.run(
+            [str(pip_path), "install", "-q", "-e", f"./{package_path}"],
+            cwd=worktree_path,
+            check=True,
+        )
 
     print("Configuring direnv...")
 
     # Create .envrc
-    envrc_content = """# Auto-generated by worktree-create
+    envrc_content = f"""# Auto-generated by worktree-create
 # Points lookout CLI wrapper to this worktree's venv
-export LOOKOUT_VENV_PATH="$(pwd)/lookout"
+export LOOKOUT_VENV_PATH="$(pwd)/{LOOKOUT_VENV_NAME}"
 
 # Optional: Auto-activate venv when entering directory
 # Uncomment if you want automatic venv activation
-# source lookout/bin/activate
+# source {LOOKOUT_VENV_NAME}/bin/activate
 """
     (worktree_path / ".envrc").write_text(envrc_content)
 
@@ -174,16 +224,21 @@ export LOOKOUT_VENV_PATH="$(pwd)/lookout"
     subprocess.run(
         ["direnv", "allow", "."],
         cwd=worktree_path,
-        check=True
+        check=True,
     )
 
 
 def copy_secrets(repo_root: Path, worktree_path: Path) -> None:
-    """Copy .secrets directory if exists."""
-    secrets_src = repo_root / ".secrets"
+    """Copy .secrets directory from repo root to worktree if it exists.
+
+    Args:
+        repo_root: Path to the git repository root.
+        worktree_path: Path to the worktree directory.
+    """
+    secrets_src = repo_root / SECRETS_DIR
     if secrets_src.is_dir():
         print("Copying secrets...")
-        secrets_dst = worktree_path / ".secrets"
+        secrets_dst = worktree_path / SECRETS_DIR
         secrets_dst.mkdir(exist_ok=True)
 
         # Copy all contents from source to destination
