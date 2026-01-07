@@ -112,6 +112,7 @@ return {
       'sidekick_terminal',
       'no-neck-pain',
       '.*code.diff.*',
+      'fidget',
     }
 
     -- Auto-install parsers and enable highlighting on FileType
