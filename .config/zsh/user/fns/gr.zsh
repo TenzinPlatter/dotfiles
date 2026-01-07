@@ -48,8 +48,8 @@ lookout() {
     # Unset the function temporarily to check for the real command
     unset -f lookout
 
-    # Source the virtual environment first
-    local venv_path="$HOME/Repositories/lookout/lookout"
+    # Use environment variable if set (direnv in worktrees), otherwise hardcoded path
+    local venv_path="${LOOKOUT_VENV_PATH:-$HOME/Repositories/lookout/lookout}"
 
     if [[ ! -f "$venv_path/bin/activate" ]]; then
         echo "Error: Virtual environment not found at $venv_path"
