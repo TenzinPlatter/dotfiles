@@ -60,7 +60,8 @@ echo "Installing editable packages..."
 # Copy secrets if they exist
 if [ -d "$REPO_ROOT/.secrets" ]; then
     echo "Copying secrets..."
-    cp -r "$REPO_ROOT/.secrets" ./.secrets
+    mkdir -p ./.secrets
+    cp -r "$REPO_ROOT/.secrets/." ./.secrets/
 fi
 
 # Create .envrc for direnv
