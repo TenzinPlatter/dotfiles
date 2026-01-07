@@ -1,6 +1,7 @@
 return {
 	{
 		"neovim/nvim-lspconfig",
+		event = "BufReadPre",
 		cmd = { "LspInfo", "LspStart", "LspStop", "LspRestart", "LspLog" },
 		keys = {
 			-- NOTE: references, definition, implementation is done in snacks
