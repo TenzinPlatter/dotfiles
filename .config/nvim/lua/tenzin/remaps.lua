@@ -63,8 +63,15 @@ vim.keymap.set("n", "_", [[<cmd>horizontal resize -2<cr>]], { desc = "Decrease w
 vim.keymap.set("v", "<C-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
 vim.keymap.set("v", "<C-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 
-vim.keymap.set("n", "<C-j>", "V:m '>+1<CR>gv=", { desc = "Move line down" })
-vim.keymap.set("n", "<C-k>", "V:m '<-2<CR>gv=", { desc = "Move line up" })
+vim.keymap.set("n", "<C-j>", function()
+	vim.cmd("move .+1")
+	vim.cmd("normal! ==")
+end, { desc = "Move line down" })
+
+vim.keymap.set("n", "<C-k>", function()
+	vim.cmd("move .-2")
+	vim.cmd("normal! ==")
+end, { desc = "Move line up" })
 
 vim.keymap.set("v", "<", "<gv", { desc = "Indent left and reselect" })
 vim.keymap.set("v", ">", ">gv", { desc = "Indent right and reselect" })
