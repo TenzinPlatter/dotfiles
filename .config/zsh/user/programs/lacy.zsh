@@ -1,1 +1,1 @@
-source <(lacy init zsh)
+eval "$(lacy init zsh)"
