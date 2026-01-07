@@ -1,6 +1,7 @@
 return {
 	{
 		"neovim/nvim-lspconfig",
+		cmd = { "LspInfo", "LspStart", "LspStop", "LspRestart", "LspLog" },
 		keys = {
 			-- NOTE: references, definition, implementation is done in snacks
 			 { "<C-S>", vim.diagnostic.open_float, desc = "Line Diagnostics" },
