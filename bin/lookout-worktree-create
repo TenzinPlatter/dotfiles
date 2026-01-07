@@ -1,11 +1,12 @@
 #!/bin/bash
 set -e
 
-# lookout-worktree-create - Create a new git worktree with isolated venv for Lookout
+# lookout-worktree-create - Create a git worktree with isolated venv for Lookout
 #
 # Usage: lookout-worktree-create <branch-name> [base-branch]
 #
-# Creates a new worktree in .worktrees/ with:
+# Works with both existing and new branches.
+# Creates a worktree in .worktrees/ with:
 # - Lightweight venv using --system-site-packages (shares base dependencies)
 # - Editable installs of lookout_cli and lookout_config
 # - Copied secrets from main checkout
@@ -17,8 +18,10 @@ BASE_BRANCH="${2:-main}"
 if [ -z "$BRANCH_NAME" ]; then
     echo "Usage: lookout-worktree-create <branch-name> [base-branch]"
     echo ""
-    echo "Example: lookout-worktree-create feature-xyz"
-    echo "         lookout-worktree-create hotfix-123 develop"
+    echo "Examples:"
+    echo "  lookout-worktree-create feature-xyz          # Create new branch from main"
+    echo "  lookout-worktree-create hotfix-123 develop   # Create new branch from develop"
+    echo "  lookout-worktree-create existing-branch      # Move existing branch to worktree"
     exit 1
 fi
 
@@ -35,8 +38,14 @@ fi
 
 echo "Creating worktree for branch '$BRANCH_NAME'..."
 
-# Create worktree with new branch based on BASE_BRANCH
-git worktree add "$WORKTREE_PATH" -b "$BRANCH_NAME" "$BASE_BRANCH"
+# Check if branch already exists
+if git show-ref --verify --quiet refs/heads/"$BRANCH_NAME"; then
+    echo "Branch '$BRANCH_NAME' exists, checking it out..."
+    git worktree add "$WORKTREE_PATH" "$BRANCH_NAME"
+else
+    echo "Creating new branch '$BRANCH_NAME' from '$BASE_BRANCH'..."
+    git worktree add "$WORKTREE_PATH" -b "$BRANCH_NAME" "$BASE_BRANCH"
+fi
 
 cd "$WORKTREE_PATH"
 
