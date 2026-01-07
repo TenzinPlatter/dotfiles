@@ -122,6 +122,28 @@ return {
 		{
 			"<leader>hs",
 			function()
+				local start_pos = vim.fn.getpos("'<")
+				local end_pos = vim.fn.getpos("'>")
+				local selection = vim.fn.getreg(start_pos, end_pos, { type = vim.fn.mode() })
+				git_pickaxe({ global = false }, selection)
+			end,
+			desc = "Git Search (Buffer)",
+			mode = { "v" },
+		},
+		{
+			"<leader>hS",
+			function()
+				local start_pos = vim.fn.getpos("'<")
+				local end_pos = vim.fn.getpos("'>")
+				local selection = vim.fn.getreg(start_pos, end_pos, { type = vim.fn.mode() })
+				git_pickaxe({ global = false }, selection)
+			end,
+			desc = "Git Search (Global)",
+			mode = { "v" },
+		},
+		{
+			"<leader>hs",
+			function()
 				git_pickaxe({ global = false })
 			end,
 			desc = "Git Search (Buffer)",
