@@ -21,7 +21,7 @@ local function walk_in_codediff(picker, item)
 	end
 end
 
-local function git_pickaxe(opts)
+local function git_pickaxe(opts, query)
 	local Snacks = require("snacks")
 	opts = opts or {}
 	local is_global = opts.global or false
@@ -33,19 +33,20 @@ local function git_pickaxe(opts)
 	end
 
 	local title_scope = is_global and "Global" or vim.fn.fnamemodify(current_file, ":t")
-	vim.ui.input({ prompt = "Git Search (-G) in " .. title_scope .. ": " }, function(query)
-		if not query or query == "" then
+
+	local function execute_search(search_query)
+		if not search_query or search_query == "" then
 			return
 		end
 
 		-- set keyword highlight within Snacks.picker
-		vim.fn.setreg("/", query)
+		vim.fn.setreg("/", search_query)
 		local old_hl = vim.opt.hlsearch
 		vim.opt.hlsearch = true
 
 		local args = {
 			"log",
-			"-G" .. query,
+			"-G" .. search_query,
 			"-i",
 			"--pretty=format:%C(yellow)%h%Creset %s %C(green)(%cr)%Creset %C(blue)<%an>%Creset",
 			"--abbrev-commit",
@@ -58,7 +59,7 @@ local function git_pickaxe(opts)
 		end
 
 		Snacks.picker({
-			title = 'Git Log: "' .. query .. '" (' .. title_scope .. ")",
+			title = 'Git Log: "' .. search_query .. '" (' .. title_scope .. ")",
 			finder = "proc",
 			cmd = "git",
 			args = args,
@@ -85,7 +86,14 @@ local function git_pickaxe(opts)
 				vim.cmd("noh")
 			end,
 		})
-	end)
+	end
+
+	-- If query is provided, execute search directly; otherwise prompt
+	if query then
+		execute_search(query)
+	else
+		vim.ui.input({ prompt = "Git Search (-G) in " .. title_scope .. ": " }, execute_search)
+	end
 end
 
 return {
