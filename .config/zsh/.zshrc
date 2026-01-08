@@ -44,4 +44,4 @@ zle -N edit-command-line
 bindkey '^ ' autosuggest-accept
 bindkey '' edit-command-line
 
-. "$HOME/.local/share/../bin/env"
+[[ -f  "$HOME/.local/share/../bin/env" ]] && . "$HOME/.local/share/../bin/env"
