@@ -103,27 +103,6 @@ return {
 			desc = "Find Git Files",
 		},
 		{
-			"<leader>gi",
-			function()
-				Snacks.picker.gh_issue()
-			end,
-			desc = "GitHub Issues (open)",
-		},
-		{
-			"<leader>gI",
-			function()
-				Snacks.picker.gh_issue({ state = "all" })
-			end,
-			desc = "GitHub Issues (all)",
-		},
-		{
-			"<leader>gp",
-			function()
-				Snacks.picker.gh_pr()
-			end,
-			desc = "GitHub Pull Requests (open)",
-		},
-		{
 			"<leader>fp",
 			function()
 				Snacks.picker.projects()
@@ -162,13 +141,6 @@ return {
 				Snacks.picker.git_branches()
 			end,
 			desc = "Git Branches",
-		},
-		{
-			"<leader>gl",
-			function()
-				Snacks.picker.git_log()
-			end,
-			desc = "Git Log",
 		},
 		{
 			"<leader>gs",

@@ -125,39 +125,41 @@ return {
 			desc = "Open prompt for VSCode-diff view",
 		},
 		{
-			"<leader>hs",
+			"<leader>gp",
 			function()
-				local selection = vim.fn.getreg('"')
+				vim.cmd('normal! "vy')
+				local selection = vim.fn.getreg("v")
 				git_pickaxe({ global = false }, selection)
 			end,
 			desc = "Git Search (Buffer)",
 			mode = { "v" },
 		},
 		{
-			"<leader>hS",
+			"<leader>gP",
 			function()
-				local selection = vim.fn.getreg('"')
+				vim.cmd('normal! "vy')
+				local selection = vim.fn.getreg("v")
 				git_pickaxe({ global = true }, selection)
 			end,
 			desc = "Git Search (Global)",
 			mode = { "v" },
 		},
 		{
-			"<leader>hs",
+			"<leader>gp",
 			function()
 				git_pickaxe({ global = false })
 			end,
 			desc = "Git Search (Buffer)",
 		},
 		{
-			"<leader>hS",
+			"<leader>gP",
 			function()
 				git_pickaxe({ global = true })
 			end,
 			desc = "Git Search (Global)",
 		},
 		{
-			"<leader>hl",
+			"<leader>gl",
 			function()
 				local Snacks = require("snacks")
 				Snacks.picker.git_log_file({
@@ -167,7 +169,7 @@ return {
 			desc = "find_git_log_file",
 		},
 		{
-			"<leader>hL",
+			"<leader>gL",
 			function()
 				local Snacks = require("snacks")
 				Snacks.picker.git_log({
