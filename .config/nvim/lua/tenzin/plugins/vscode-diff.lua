@@ -157,7 +157,6 @@ return {
 				})
 			end,
 			desc = "find_git_log_file",
-			mode = { "n", "t" },
 		},
 		{
 			"<leader>hL",
@@ -168,7 +167,6 @@ return {
 				})
 			end,
 			desc = "find_git_log",
-			mode = { "n", "t" },
 		},
 	},
 }
