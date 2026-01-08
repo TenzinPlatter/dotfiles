@@ -28,11 +28,5 @@
     "bindings": {
       "space a c": "agent::ToggleFocus"
     }
-  },
-  {
-    "context": "Workspace",
-    "bindings": {
-      "ctrl-b": null
-    }
   }
 ]
