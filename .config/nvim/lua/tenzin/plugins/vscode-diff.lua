@@ -21,7 +21,7 @@ local function walk_in_codediff(picker, item)
 	end
 end
 
-local function git_pickaxe(opts, query)
+local function git_pickaxe(opts)
 	local Snacks = require("snacks")
 	opts = opts or {}
 	local is_global = opts.global or false
@@ -33,62 +33,59 @@ local function git_pickaxe(opts, query)
 	end
 
 	local title_scope = is_global and "Global" or vim.fn.fnamemodify(current_file, ":t")
-	if query == nil then
-		vim.ui.input({ prompt = "Git Search (-G) in " .. title_scope .. ": " }, function(input)
-			query = input
-		end)
-	end
-	if not query or query == "" then
-		return
-	end
+	vim.ui.input({ prompt = "Git Search (-G) in " .. title_scope .. ": " }, function(query)
+		if not query or query == "" then
+			return
+		end
 
-	-- set keyword highlight within Snacks.picker
-	vim.fn.setreg("/", query)
-	local old_hl = vim.opt.hlsearch
-	vim.opt.hlsearch = true
+		-- set keyword highlight within Snacks.picker
+		vim.fn.setreg("/", query)
+		local old_hl = vim.opt.hlsearch
+		vim.opt.hlsearch = true
 
-	local args = {
-		"log",
-		"-G" .. query,
-		"-i",
-		"--pretty=format:%C(yellow)%h%Creset %s %C(green)(%cr)%Creset %C(blue)<%an>%Creset",
-		"--abbrev-commit",
-		"--date=short",
-	}
+		local args = {
+			"log",
+			"-G" .. query,
+			"-i",
+			"--pretty=format:%C(yellow)%h%Creset %s %C(green)(%cr)%Creset %C(blue)<%an>%Creset",
+			"--abbrev-commit",
+			"--date=short",
+		}
 
-	if not is_global then
-		table.insert(args, "--")
-		table.insert(args, current_file)
-	end
+		if not is_global then
+			table.insert(args, "--")
+			table.insert(args, current_file)
+		end
 
-	Snacks.picker({
-		title = 'Git Log: "' .. query .. '" (' .. title_scope .. ")",
-		finder = "proc",
-		cmd = "git",
-		args = args,
+		Snacks.picker({
+			title = 'Git Log: "' .. query .. '" (' .. title_scope .. ")",
+			finder = "proc",
+			cmd = "git",
+			args = args,
 
-		transform = function(item)
-			local clean_text = item.text:gsub("\27%[[0-9;]*m", "")
-			local hash = clean_text:match("^%S+")
-			if hash then
-				item.commit = hash
-				if not is_global then
-					item.file = current_file
+			transform = function(item)
+				local clean_text = item.text:gsub("\27%[[0-9;]*m", "")
+				local hash = clean_text:match("^%S+")
+				if hash then
+					item.commit = hash
+					if not is_global then
+						item.file = current_file
+					end
 				end
-			end
-			return item
-		end,
+				return item
+			end,
 
-		preview = "git_show",
-		confirm = walk_in_codediff,
-		format = "text",
+			preview = "git_show",
+			confirm = walk_in_codediff,
+			format = "text",
 
-		on_close = function()
-			-- remove keyword highlight
-			vim.opt.hlsearch = old_hl
-			vim.cmd("noh")
-		end,
-	})
+			on_close = function()
+				-- remove keyword highlight
+				vim.opt.hlsearch = old_hl
+				vim.cmd("noh")
+			end,
+		})
+	end)
 end
 
 return {
