@@ -9,6 +9,7 @@
 // My Zed settings for a minimial dark transaprent glass-like theme.
 // Modify the colors in experimental.theme_overrides to suit yourself.
 {
+  "relative_line_numbers": "enabled",
   "preview_tabs": {
     "enable_preview_from_file_finder": true
   },
