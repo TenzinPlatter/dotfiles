@@ -48,7 +48,7 @@ window-rule {
 
 window-rule {
     match app-id="dev.zed.Zed"
-    opacity 0.95
+    opacity 0.92
 }
 
 // Indicate screencasted windows with red colors.
