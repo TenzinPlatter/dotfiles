@@ -1,22 +1,8 @@
 return {
 	{
 		"neovim/nvim-lspconfig",
-		config = function()
-			-- Create custom LspLog command
-			vim.api.nvim_create_user_command("LspLog", function()
-				vim.cmd("edit " .. vim.lsp.get_log_path())
-			end, { desc = "Open LSP log file" })
-		end,
 		keys = {
-			-- NOTE: references, definition, implementation is done in snacks
-			 { "<C-S>", vim.diagnostic.open_float, desc = "Line Diagnostics" },
-			{
-			"K",
-			function()
-				require("tenzin.lsp_hover_enhanced").hover()
-			end,
-			desc = "Show hover documentation",
-		},
+			{ "<C-S>", vim.diagnostic.open_float, desc = "Line Diagnostics" },
 		},
 	},
 	{
@@ -42,11 +28,11 @@ return {
 			handlers = {
 				-- Default handler for all servers
 				function(server_name)
-					require("lspconfig")[server_name].setup({})
+					vim.lsp.config(server_name).setup({})
 				end,
 				-- Ruff: disable diagnostics, use only for formatting
 				["ruff"] = function()
-					require("lspconfig").ruff.setup({
+					vim.lsp.config("ruff").setup({
 						on_attach = function(client)
 							client.server_capabilities.diagnosticProvider = false
 						end,
