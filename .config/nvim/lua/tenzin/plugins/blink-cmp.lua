@@ -24,7 +24,12 @@ return {
 		-- C-k: Toggle signature help (if signature.enabled = true)
 		--
 		-- See :h blink-cmp-config-keymap for defining your own keymap
-		keymap = { preset = "super-tab", ["<C-Space>"] = false },
+		keymap = {
+			preset = "super-tab",
+			["<C-Space>"] = false,
+			["<C-L>"] = { "snippet_forward", "fallback" },
+			["<C-H>"] = { "snippet_backward", "fallback" },
+		},
 
 		appearance = {
 			-- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
