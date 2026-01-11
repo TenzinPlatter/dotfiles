@@ -6,24 +6,28 @@
 // To see all of Zed's default settings without changing your
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
-// My Zed settings for a minimial dark transaprent glass-like theme.
-// Modify the colors in experimental.theme_overrides to suit yourself.
 {
+  "show_completions_on_input": true,
+  "edit_predictions": {
+    "mode": "eager"
+  },
+  "features": {
+    "edit_prediction_provider": "copilot"
+  },
+  "diagnostics": {
+    "inline": {
+      "enabled": true
+    }
+  },
+  "autosave": "on_focus_change",
   "relative_line_numbers": "enabled",
-  "preview_tabs": {
-    "enable_preview_from_file_finder": true
-  },
-  "tabs": {
-    "show_diagnostics": "errors",
-    "file_icons": true
-  },
-  "git_panel": {
-    "tree_view": true
-  },
+  "format_on_save": "off",
   "vim_mode": true,
+  "ui_font_size": 16,
+  "buffer_font_size": 15,
   "theme": {
-    "mode": "dark",
-    "light": "Nordfox - blurred",
-    "dark": "Rosé Pine Moon",
-  },
+    "mode": "system",
+    "light": "One Light",
+    "dark": "Rosé Pine Moon"
+  }
 }

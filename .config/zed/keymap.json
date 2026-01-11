@@ -19,14 +19,60 @@
     }
   },
   {
+    "context": "((vim_mode == normal || vim_mode == visual) || vim_mode == operator)",
     "bindings": {
-      "ctrl-k ctrl-o": "workspace::Open"
+      "ctrl-k": "editor::MoveLineUp"
+    }
+  },
+  {
+    "context": "((vim_mode == normal || vim_mode == visual) || vim_mode == operator)",
+    "bindings": {
+      "ctrl-j": "editor::MoveLineDown"
     }
   },
   {
     "context": "Workspace && vim_mode == normal",
     "bindings": {
-      "space a c": "agent::ToggleFocus"
+      "space w": "workspace::SaveWithoutFormat"
+    }
+  },
+  {
+    "context": "Editor && vim_mode == normal",
+    "bindings": {
+      "space =": "editor::Format"
+    }
+  },
+  {
+    "context": "((os != macos && Editor) && edit_prediction_conflict)",
+    "bindings": {
+      "ctrl-l": "editor::AcceptEditPrediction"
+    }
+  },
+  {
+    "context": "(VimControl && !menu)",
+    "bindings": {
+      "z i": "editor::ToggleFold"
+    }
+  },
+  {
+    "context": "((VimControl && !menu) || (!Editor))",
+    "bindings": {
+      "alt-k": "workspace::ActivatePaneUp",
+      "alt-j": "workspace::ActivatePaneDown",
+      "alt-h": "workspace::ActivatePaneLeft",
+      "alt-l": "workspace::ActivatePaneRight"
+    }
+  },
+  {
+    "context": "(((Editor && in_snippet) && has_next_tabstop) && !showing_completions)",
+    "bindings": {
+      "ctrl-l": "editor::NextSnippetTabstop"
+    }
+  },
+  {
+    "context": "(((Editor && in_snippet) && has_previous_tabstop) && !showing_completions)",
+    "bindings": {
+      "ctrl-h": "editor::PreviousSnippetTabstop"
     }
   }
 ]
