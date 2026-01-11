@@ -1,7 +1,5 @@
 vim.keymap.set("n", "zi", "za", { desc = "Toggle fold under cursor" })
 
-vim.keymap.set("i", "<C-i>", '<C-R>"', { desc = "Paste from '\"' in insert" })
-
 vim.keymap.set("n", "<leader>w", function()
 	vim.cmd("wall")
 end, { desc = "Save all buffers" })
