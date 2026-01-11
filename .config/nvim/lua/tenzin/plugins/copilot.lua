@@ -3,39 +3,62 @@ return {
 		"zbirenbaum/copilot.lua",
 		cmd = "Copilot",
 		event = "InsertEnter",
-		config = function()
-			require("copilot").setup({
-				suggestion = {
-					auto_trigger = true,
-					enabled = true,
-					keymap = {
-						accept = "<C-Space>",
-						accept_word = "<C-Right>",
-						accept_line = "<C-L>",
-					},
+		keys = {
+			{
+				"<C-Space>",
+				function()
+					require("copilot.suggestion").accept()
+				end,
+				mode = "i",
+				desc = "Accept Copilot suggestion",
+			},
+			{
+				"<C-Right>",
+				function()
+					require("copilot.suggestion").accept_word()
+				end,
+				mode = "i",
+				desc = "Accept Copilot word",
+			},
+			{
+				"<C-L>",
+				function()
+					require("copilot.suggestion").accept_line()
+				end,
+				mode = "i",
+				desc = "Accept Copilot line",
+			},
+			{
+				"<M-L>",
+				function()
+					require("copilot-lsp.nes").apply_pending_nes()
+					require("copilot-lsp.nes").walk_cursor_end_edit()
+				end,
+				mode = { "i", "n" },
+				desc = "Accept and goto NES suggestion",
+			},
+		},
+		opts = {
+			suggestion = {
+				auto_trigger = true,
+				enabled = true,
+				keymap = {
+					accept = false,
+					accept_word = false,
+					accept_line = false,
 				},
-				panel = {
-					enabled = false,
+			},
+			panel = {
+				enabled = false,
+			},
+			nes = {
+				enabled = false,
+				keymap = {
+					accept_and_goto = false,
+					accept = false,
+					dismiss = "<Esc>",
 				},
-				nes = {
-					enabled = false,
-					keymap = {
-						accept_and_goto = false,
-						accept = false,
-						dismiss = "<Esc>",
-					},
-				},
-			})
-
-			-- Set keymaps manually
-			vim.keymap.set("i", "<C-Space>", function()
-				require("copilot.suggestion").accept()
-			end, { desc = "Accept Copilot suggestion" })
-
-			vim.keymap.set({ "i", "n" }, "<M-L>", function()
-				require("copilot-lsp.nes").apply_pending_nes()
-				require("copilot-lsp.nes").walk_cursor_end_edit()
-			end, { desc = "Accept and goto NES suggestion" })
-		end,
+			},
+		},
 	},
 }
