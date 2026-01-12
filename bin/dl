@@ -15,6 +15,7 @@ def main():
 
     parser.add_argument("-l", "--lookout", help="Use a lookout container", action="store_true")
     parser.add_argument("-g", "--gama", help="Use a gama container", action="store_true")
+    parser.add_argument("-m", "--missim", help="Use a missim container", action="store_true")
     parser.add_argument("-n", "--no-follow", help="Don't tail the logs", action="store_true")
     parser.add_argument("container", help="Container name")
 
@@ -25,6 +26,9 @@ def main():
 
     if args.gama:
         container_name = "gama_"
+
+    if args.missim:
+        container_name = "missim_"
 
     container_name += args.container
 

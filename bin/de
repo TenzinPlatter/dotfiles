@@ -4,11 +4,13 @@ import subprocess
 import sys
 import os
 
+
 def get_container_name(container: str | None, prefix: str | None = None):
     if not container:
         container = os.path.basename(os.getcwd())
 
     return f"{prefix}_{container}" if prefix else container
+
 
 def run_command(cmd, check=True):
     """Run a command and return the result."""
@@ -24,6 +26,7 @@ def run_command(cmd, check=True):
         print(f"Exception: {e}")
         return None
 
+
 def run_command_live(cmd):
     """Run a command without capturing output, showing live output."""
     try:
@@ -34,11 +37,13 @@ def run_command_live(cmd):
         print(f"Exception: {e}")
         return False
 
+
 def container_is_running(container_name):
     """Check if a container is running."""
     cmd = f"docker ps -q -f name={container_name}"
     result = run_command(cmd, check=False)
     return result and result.stdout.strip() != ""
+
 
 def will_trigger_build(container_name):
     """Check if the container image exists, which would trigger a build if missing."""
@@ -54,38 +59,54 @@ def will_trigger_build(container_name):
     if result and result.stdout.strip():
         # Service uses a pre-built image, check if it exists
         image_line = result.stdout.strip()
-        image_name = image_line.split('image:')[1].strip()
+        image_name = image_line.split("image:")[1].strip()
         cmd = f"docker images -q {image_name}"
         result = run_command(cmd, check=False)
         return not (result and result.stdout.strip())
     else:
         # Service has a build context, check if image exists
         # Try to get the built image name
-        cmd = f"docker images -q | head -1"  # Simplified check - if no recent images, likely will build
+        cmd = "docker images -q | head -1"  # Simplified check - if no recent images, likely will build
         result = run_command(cmd, check=False)
         # If this is a build-based service, assume it will build if we can't find a recent image
         return True
 
+
 def main():
-    parser = argparse.ArgumentParser(description="Docker exec helper - start container if needed and exec into it")
-    parser.add_argument("container", nargs='?', help="Container name")
-    parser.add_argument("-p", "--platform", action="store_true", 
-                       help="Prepend 'platform_' to container name")
-    parser.add_argument("-l", "--lookout", action="store_true", 
-                       help="Prepend 'lookout_' to container name")
-    parser.add_argument("-g", "--gama", action="store_true", 
-                       help="Prepend 'gama_' to container name")
-    parser.add_argument("-b", "--build", action="store_true",
-                       help="Add --build flag to docker compose up command")
-    parser.add_argument("-r", "--restart", action="store_true",
-                       help="Restart the container before exec")
-    parser.add_argument("-s", "--stop", action="store_true",
-                       help="Stop the container without restarting it")
-    parser.add_argument("-n", "--no-exec", action="store_true",
-                       help="Start/restart container but don't exec into it")
+    parser = argparse.ArgumentParser(
+        description="Docker exec helper - start container if needed and exec into it"
+    )
+    parser.add_argument("container", nargs="?", help="Container name")
+    parser.add_argument(
+        "-p", "--platform", action="store_true", help="Prepend 'platform_' to container name"
+    )
+    parser.add_argument(
+        "-l", "--lookout", action="store_true", help="Prepend 'lookout_' to container name"
+    )
+    parser.add_argument(
+        "-g", "--gama", action="store_true", help="Prepend 'gama_' to container name"
+    )
+    parser.add_argument(
+        "-m", "--missim", action="store_true", help="Prepend 'missim_' to container name"
+    )
+    parser.add_argument(
+        "-b", "--build", action="store_true", help="Add --build flag to docker compose up command"
+    )
+    parser.add_argument(
+        "-r", "--restart", action="store_true", help="Restart the container before exec"
+    )
+    parser.add_argument(
+        "-s", "--stop", action="store_true", help="Stop the container without restarting it"
+    )
+    parser.add_argument(
+        "-n",
+        "--no-exec",
+        action="store_true",
+        help="Start/restart container but don't exec into it",
+    )
 
     args = parser.parse_args()
-    
+
     # Determine container name
     if args.platform:
         container_name = get_container_name(args.container, "platform")
@@ -93,9 +114,11 @@ def main():
         container_name = get_container_name(args.container, "gama")
     elif args.lookout:
         container_name = get_container_name(args.container, "lookout")
+    elif args.missim:
+        container_name = get_container_name(args.container, "missim")
     else:
         container_name = get_container_name(args.container)
-    
+
     # Handle stop flag
     if args.stop:
         print(f"Stopping container: {container_name}")
@@ -113,7 +136,7 @@ def main():
     # Handle restart flag
     if args.restart:
         print(f"Restarting container: {container_name}")
-        
+
         # Stop the container
         down_cmd = f"docker compose down {container_name}"
         success = run_command_live(down_cmd)
@@ -140,7 +163,7 @@ def main():
 
     elif not container_is_running(container_name):
         print(f"Starting container: {container_name}")
-        
+
         # Build docker compose up command
         compose_cmd = f"docker compose up -d {container_name}"
         will_build = args.build or will_trigger_build(container_name)
@@ -170,6 +193,7 @@ def main():
     # Use os.system instead of subprocess to maintain interactive session
     exit_code = os.system(exec_cmd)
     sys.exit(exit_code >> 8)  # Convert to normal exit code
+
 
 if __name__ == "__main__":
     main()
