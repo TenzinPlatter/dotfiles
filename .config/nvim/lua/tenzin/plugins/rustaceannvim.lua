@@ -18,8 +18,11 @@ return {
 				end,
 				default_settings = {
 					-- rust-analyzer language server configuration
-					-- needs to be empty for rustaceanvim plugin
-					["rust-analyzer"] = {},
+					["rust-analyzer"] = {
+						rust = {
+							analyzerTargetDir = true,
+						},
+					},
 				},
 			},
 		}
