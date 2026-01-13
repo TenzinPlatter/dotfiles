@@ -7,6 +7,20 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "ssh_connections": [
+    {
+      "host": "gr-clanker",
+      "username": "gr",
+      "args": [],
+      "projects": [
+        {
+          "paths": [
+            "/home/gr/Repositories/gama"
+          ]
+        }
+      ]
+    }
+  ],
   "show_completions_on_input": true,
   "edit_predictions": {
     "mode": "eager"
