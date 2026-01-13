@@ -73,7 +73,7 @@ inr() {
 }
 
 sr() {
-    distro="jazzy"
+    distro="kilted"
 
     if [[ "$1" == "-k" ]]; then
         distro="kilted"
@@ -93,6 +93,8 @@ sr() {
     if [[ -f /opt/greenroom/$dir_name/install/setup.bash ]]; then
         source /opt/greenroom/$dir_name/install/setup.bash
     fi
+
+    [[ -f /opt/greeroom/setup.zsh ]] && source /opt/greenroom/setup.zsh
 
     if [[ -f ./install/setup.zsh ]]; then
         source ./install/setup.zsh
@@ -277,7 +279,7 @@ nvl() {
 }
 
 tmux-window-name() {
-	($TMUX_PLUGIN_MANAGER_PATH/tmux-window-name/scripts/rename_session_windows.py &)
+    ($TMUX_PLUGIN_MANAGER_PATH/tmux-window-name/scripts/rename_session_windows.py &)
 }
 
 add-zsh-hook chpwd tmux-window-name
