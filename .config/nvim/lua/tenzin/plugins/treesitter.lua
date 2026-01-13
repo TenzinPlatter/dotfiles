@@ -142,8 +142,14 @@ return {
           table.insert(parsers_pending, { buf = buf, lang = lang })
         end
 
-        -- Auto-install missing parsers (async, no-op if already installed)
-        pcall(ts.install, { lang })
+        -- Auto-install missing parsers only if not already installed
+        local parser_available = pcall(vim.treesitter.language.add, lang)
+        if not parser_available then
+          -- Install in background to avoid blocking
+          vim.schedule(function()
+            pcall(ts.install, { lang })
+          end)
+        end
       end,
     })
   end,
