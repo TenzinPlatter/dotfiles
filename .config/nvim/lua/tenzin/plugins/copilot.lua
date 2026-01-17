@@ -21,14 +21,6 @@ return {
 				desc = "Accept Copilot word",
 			},
 			{
-				"<C-L>",
-				function()
-					require("copilot.suggestion").accept_line()
-				end,
-				mode = "i",
-				desc = "Accept Copilot line",
-			},
-			{
 				"<M-L>",
 				function()
 					require("copilot-lsp.nes").apply_pending_nes()
