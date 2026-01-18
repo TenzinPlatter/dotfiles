@@ -1,6 +1,11 @@
 include "monitors.kdl"
 include "window-rules.kdl"
 include "keybinds.kdl"
+include "dms/cursor.kdl"
+include "dms/wpblur.kdl"
+include "dms/colors.kdl"
+include "dms/alttab.kdl"
+include "dms/outputs.kdl"
 
 // INPUT
 // ════════════════════════════════════════════════════════════════
