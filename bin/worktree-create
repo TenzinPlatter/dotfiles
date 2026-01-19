@@ -189,6 +189,7 @@ def setup_lookout_env(worktree_path: Path, repo_root: Path) -> None:
         subprocess.CalledProcessError: If venv creation, pip install, or direnv fails.
     """
     print("Setting up Python virtual environment...")
+    venv_name = worktree_path.base_name()
 
     # Create venv with system site packages
     subprocess.run(
