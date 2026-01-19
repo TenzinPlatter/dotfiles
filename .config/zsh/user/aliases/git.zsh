@@ -16,9 +16,27 @@ alias pcr="pre-commit run"
 
 # Clone a repo and cd into the directory
 gcd() {
-  if [ $# -lt 2 ]; then
-    echo "Usage: gccd <repo-url> <directory-name>"
+  if [ $# -lt 1 ]; then
+    echo "Usage: gcd <repo-url>"
     return 1
   fi
-  git clone "$1" "$2" && cd "$2"
+
+  # Get list of directories before cloning
+  local before=$(ls -1d */ 2>/dev/null)
+
+  # Clone the repo
+  git clone "$1" || return 1
+
+  # Get list of directories after cloning
+  local after=$(ls -1d */ 2>/dev/null)
+
+  # Find the new directory
+  local new_dir=$(comm -13 <(echo "$before") <(echo "$after") | head -n1)
+
+  if [ -n "$new_dir" ]; then
+    cd "$new_dir"
+  else
+    echo "Error: Could not determine cloned directory"
+    return 1
+  fi
 }
