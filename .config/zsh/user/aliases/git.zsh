@@ -10,7 +10,15 @@ alias gcob='git checkout -b '
 alias gk='gitk --all&'
 alias gx='gitx --all'
 alias gc='git clone'
-alias gcl='git clone'
 alias pca="pre-commit run --all"
 alias pcf="pre-commit run --files"
 alias pcr="pre-commit run"
+
+# Clone a repo and cd into the directory
+gcd() {
+  if [ $# -lt 2 ]; then
+    echo "Usage: gccd <repo-url> <directory-name>"
+    return 1
+  fi
+  git clone "$1" "$2" && cd "$2"
+}
