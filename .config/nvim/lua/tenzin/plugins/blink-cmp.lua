@@ -2,43 +2,44 @@ return {
 	"saghen/blink.cmp",
 	dependencies = { "rafamadriz/friendly-snippets" },
 	version = "1.*",
-	config = function ()
+	config = function()
+		vim.api.nvim_set_hl(0, "Pmenu", { fg = "#cccccc", bg = "#181818" })
 		require("blink.cmp").setup({
-	opts = {
-		keymap = {
-			preset = "super-tab",
-			["<C-Space>"] = false,
-			["<C-L>"] = { "snippet_forward", "fallback" },
-			["<C-H>"] = { "snippet_backward", "fallback" },
-		},
+			opts = {
+				keymap = {
+					preset = "super-tab",
+					["<C-Space>"] = false,
+					["<C-L>"] = { "snippet_forward", "fallback" },
+					["<C-H>"] = { "snippet_backward", "fallback" },
+				},
 
-		appearance = {
-			-- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-			-- Adjusts spacing to ensure icons are aligned
-			nerd_font_variant = "mono",
-		},
+				appearance = {
+					-- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+					-- Adjusts spacing to ensure icons are aligned
+					nerd_font_variant = "mono",
+				},
 
-		-- (Default) Only show the documentation popup when manually triggered
-		completion = { documentation = { auto_show = true } },
+				-- (Default) Only show the documentation popup when manually triggered
+				completion = { documentation = { auto_show = true } },
 
-		-- Disable snippet placeholder highlights
-		snippets = {
-			active_item = { enabled = false },
-		},
+				-- Disable snippet placeholder highlights
+				snippets = {
+					active_item = { enabled = false },
+				},
 
-		-- Default list of enabled providers defined so that you can extend it
-		-- elsewhere in your config, without redefining it, due to `opts_extend`
-		sources = {
-			default = { "lsp", "path", "snippets", "buffer" },
-		},
+				-- Default list of enabled providers defined so that you can extend it
+				-- elsewhere in your config, without redefining it, due to `opts_extend`
+				sources = {
+					default = { "lsp", "path", "snippets", "buffer" },
+				},
 
-		-- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
-		-- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
-		-- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust_with_warning"`
-		--
-		-- See the fuzzy documentation for more information
-		fuzzy = { implementation = "prefer_rust_with_warning" },
-	},
+				-- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+				-- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
+				-- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust_with_warning"`
+				--
+				-- See the fuzzy documentation for more information
+				fuzzy = { implementation = "prefer_rust_with_warning" },
+			},
 		})
 	end,
 	opts_extend = { "sources.default" },
