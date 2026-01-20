@@ -38,49 +38,7 @@ return {
       return ok
     end
 
-    -- Install core parsers after lazy.nvim finishes loading all plugins
-    vim.api.nvim_create_autocmd('User', {
-      pattern = 'LazyDone',
-      once = true,
-      callback = function()
-        ts.install({
-          'bash',
-          'comment',
-          'css',
-          'diff',
-          'fish',
-          'git_config',
-          'git_rebase',
-          'gitcommit',
-          'gitignore',
-          'html',
-          'javascript',
-          'json',
-          'latex',
-          'lua',
-          'luadoc',
-          'make',
-          'markdown',
-          'markdown_inline',
-          'norg',
-          'python',
-          'query',
-          'regex',
-          'scss',
-          'svelte',
-          'toml',
-          'tsx',
-          'typescript',
-          'typst',
-          'vim',
-          'vimdoc',
-          'vue',
-          'xml',
-        }, {
-          max_jobs = 8,
-        })
-      end,
-    })
+    -- Don't auto-install parsers on startup - they will be installed on-demand by FileType autocmd below
 
     -- Decoration provider for async parser loading
     vim.api.nvim_set_decoration_provider(ns, {
