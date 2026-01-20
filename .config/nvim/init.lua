@@ -37,6 +37,7 @@ vim.api.nvim_set_hl(0, "Visual", { bg = "#666666" })
 vim.cmd("hi Search guibg=#FEFFA7")
 -- vim.cmd('hi CursorLineNr guibg=White')
 vim.cmd("hi ColorColumn guibg=Black")
+vim.api.nvim_set_hl(0, '@lsp.mod.mutable', { underline = true })
 
 -- set nvim tree background transparent
 -- vim.cmd("hi NvimTreeNormal guibg=None ctermbg=None")
