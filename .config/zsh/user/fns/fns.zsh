@@ -1,5 +1,10 @@
 #!/usr/bin/env zsh
 
+container_from_pid() {
+    local pid=$1
+    cat /proc/$pid/cgroup | grep -oP '(?<=docker/)[a-f0-9]{64}' | head -1 | xargs docker inspect --format '{{.Name}}'
+  }
+
 mkdirc() {
     mkdir -p $1
     cd $1
