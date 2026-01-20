@@ -2,10 +2,10 @@ return {
 	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
 	opts = {
 		bullet = {
-			right_pad = 1
+			right_pad = 1,
 		},
-		highlight = {
-			code = "NONE",
+		code = {
+			disable_background = true,
 		},
 	},
 }
