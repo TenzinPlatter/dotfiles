@@ -4,5 +4,8 @@ return {
 		bullet = {
 			right_pad = 1
 		},
+		highlight = {
+			code = "NONE",
+		},
 	},
 }
