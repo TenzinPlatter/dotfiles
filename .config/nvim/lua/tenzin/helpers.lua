@@ -260,4 +260,55 @@ function M.goto_definition_in_split(direction, vertical)
   vim.lsp.buf.definition()
 end
 
+-- Inlay hint preferences persistence
+function M.load_inlay_hint_preferences()
+  local data_path = vim.fn.stdpath('data') .. '/inlay-hints.json'
+  local file = io.open(data_path, 'r')
+
+  if not file then
+    return {}
+  end
+
+  local content = file:read('*all')
+  file:close()
+
+  local ok, decoded = pcall(vim.fn.json_decode, content)
+  if ok and type(decoded) == 'table' then
+    return decoded
+  end
+
+  return {}
+end
+
+function M.save_inlay_hint_preference(filetype, enabled)
+  local data_path = vim.fn.stdpath('data') .. '/inlay-hints.json'
+  local preferences = M.load_inlay_hint_preferences()
+
+  preferences[filetype] = enabled
+
+  -- Ensure directory exists
+  local data_dir = vim.fn.stdpath('data')
+  vim.fn.mkdir(data_dir, 'p')
+
+  local ok, encoded = pcall(vim.fn.json_encode, preferences)
+  if not ok then
+    vim.notify('Failed to encode inlay hint preferences', vim.log.levels.ERROR)
+    return
+  end
+
+  local file = io.open(data_path, 'w')
+  if not file then
+    vim.notify('Failed to save inlay hint preferences', vim.log.levels.ERROR)
+    return
+  end
+
+  file:write(encoded)
+  file:close()
+end
+
+function M.get_inlay_hint_preference(filetype)
+  local preferences = M.load_inlay_hint_preferences()
+  return preferences[filetype]
+end
+
 return M

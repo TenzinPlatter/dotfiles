@@ -6,8 +6,14 @@ return {
 			{
 				"<leader>th",
 				function()
+					local helpers = require("tenzin.helpers")
 					vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-					if vim.lsp.inlay_hint.is_enabled() then
+					local is_enabled = vim.lsp.inlay_hint.is_enabled()
+
+					-- Save preference for current filetype
+					helpers.save_inlay_hint_preference(vim.bo.filetype, is_enabled)
+
+					if is_enabled then
 						print("Enabled inlay hints")
 					else
 						print("Disabled inlay hints")
@@ -15,6 +21,20 @@ return {
 				end,
 			},
 		},
+		init = function()
+			-- Auto-load inlay hint preferences on LSP attach
+			vim.api.nvim_create_autocmd("LspAttach", {
+				callback = function(args)
+					local helpers = require("tenzin.helpers")
+					local filetype = vim.bo[args.buf].filetype
+					local preference = helpers.get_inlay_hint_preference(filetype)
+
+					if preference ~= nil then
+						vim.lsp.inlay_hint.enable(preference, { bufnr = args.buf })
+					end
+				end,
+			})
+		end,
 	},
 	{
 		"mason-org/mason.nvim",
