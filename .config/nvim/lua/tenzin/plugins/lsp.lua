@@ -3,6 +3,17 @@ return {
 		"neovim/nvim-lspconfig",
 		keys = {
 			{ "<C-S>", vim.diagnostic.open_float, desc = "Line Diagnostics" },
+			{
+				"<leader>th",
+				function()
+					vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+					if vim.lsp.inlay_hint.is_enabled() then
+						print("Enabled inlay hints")
+					else
+						print("Disabled inlay hints")
+					end
+				end,
+			},
 		},
 	},
 	{
