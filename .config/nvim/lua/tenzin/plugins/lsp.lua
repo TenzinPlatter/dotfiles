@@ -7,13 +7,16 @@ return {
 				"<leader>th",
 				function()
 					local helpers = require("tenzin.helpers")
-					vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-					local is_enabled = vim.lsp.inlay_hint.is_enabled()
+					local bufnr = vim.api.nvim_get_current_buf()
+					local current_state = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
+					local new_state = not current_state
+
+					vim.lsp.inlay_hint.enable(new_state, { bufnr = bufnr })
 
 					-- Save preference for current filetype
-					helpers.save_inlay_hint_preference(vim.bo.filetype, is_enabled)
+					helpers.save_inlay_hint_preference(vim.bo.filetype, new_state)
 
-					if is_enabled then
+					if new_state then
 						print("Enabled inlay hints")
 					else
 						print("Disabled inlay hints")
