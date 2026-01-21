@@ -38,6 +38,7 @@ vim.cmd("hi Search guibg=#FEFFA7")
 -- vim.cmd('hi CursorLineNr guibg=White')
 vim.cmd("hi ColorColumn guibg=Black")
 vim.api.nvim_set_hl(0, '@lsp.mod.mutable', { underline = true })
+vim.api.nvim_set_hl(0, "@lsp.mod.usedAsMutableReference.cpp", { underline = true })
 
 vim.cmd("hi SnippetTabstop guibg=None")
 
