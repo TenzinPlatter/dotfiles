@@ -22,13 +22,13 @@ gcd() {
   fi
 
   # Get list of directories before cloning
-  local before=$(ls -1d */ 2>/dev/null)
+  local before=$(ls -1d */ 2>/dev/null | sort)
 
   # Clone the repo
   git clone "$1" || return 1
 
   # Get list of directories after cloning
-  local after=$(ls -1d */ 2>/dev/null)
+  local after=$(ls -1d */ 2>/dev/null | sort)
 
   # Find the new directory
   local new_dir=$(comm -13 <(echo "$before") <(echo "$after") | head -n1)
