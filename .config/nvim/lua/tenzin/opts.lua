@@ -27,6 +27,10 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.linebreak = true
 
+-- borders between splits
+vim.opt.fillchars = { vert = "│", horiz = "─", horizup = "┴", horizdown = "┬", vertleft = "┤", vertright = "├", verthoriz = "┼" }
+vim.api.nvim_set_hl(0, "WinSeparator", { link = "FloatBorder" })
+
 -- folds
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
