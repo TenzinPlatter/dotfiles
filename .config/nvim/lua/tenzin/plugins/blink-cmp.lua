@@ -12,6 +12,8 @@ return {
 			["<C-U>"] = { "scroll_documentation_up", "fallback" },
 			["<C-F>"] = { "scroll_documentation_down", "fallback" },
 			["<C-B>"] = { "scroll_documentation_up", "fallback" },
+			["<C-J>"] = { "scroll_signature_down", "fallback" },
+			["<C-K>"] = { "scroll_signature_up", "fallback" },
 		},
 
 		appearance = {
