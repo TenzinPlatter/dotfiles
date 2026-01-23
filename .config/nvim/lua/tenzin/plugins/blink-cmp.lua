@@ -8,8 +8,10 @@ return {
 			["<C-Space>"] = false,
 			["<C-L>"] = { "snippet_forward", "fallback" },
 			["<C-H>"] = { "snippet_backward", "fallback" },
-			["<C-D>"] = { "scroll_signature_down", "fallback" },
-			["<C-U>"] = { "scroll_signature_up", "fallback" },
+			["<C-D>"] = { "scroll_documentation_down", "fallback" },
+			["<C-U>"] = { "scroll_documentation_up", "fallback" },
+			["<C-F>"] = { "scroll_documentation_down", "fallback" },
+			["<C-B>"] = { "scroll_documentation_up", "fallback" },
 		},
 
 		appearance = {
