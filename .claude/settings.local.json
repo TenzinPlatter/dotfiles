@@ -1,10 +1,1 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(ls:*)",
-      "Bash(journalctl:*)",
-      "Read(//etc/**)"
-    ],
-    "deny": []
-  }
-}
+../.dotfiles/.claude/settings.local.json
