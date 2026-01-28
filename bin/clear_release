@@ -1,0 +1,1 @@
+/home/tenzin/Repositories/platform/tools/clear_release.py
