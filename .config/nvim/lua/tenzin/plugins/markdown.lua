@@ -6,6 +6,8 @@ return {
 		},
 		code = {
 			disable_background = true,
+			style = "normal",
+			border = "thick",
 		},
 	},
 }
