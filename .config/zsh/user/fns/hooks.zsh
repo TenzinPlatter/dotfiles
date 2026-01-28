@@ -54,6 +54,10 @@ resume() {
     zle accept-line
 }
 
+copy-cmd() {
+    echo "$BUFFER" | wl-copy
+}
+
 forward-word-dir () {
     local WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>'
     zle forward-word
@@ -75,6 +79,8 @@ bindkey '' resume
 
 zle -N sudo-command-line
 zle -N set-cd
+zle -N copy-cmd
 
 bindkey '\e\e' sudo-command-line
 bindkey  set-cd
+bindkey  copy-cmd
