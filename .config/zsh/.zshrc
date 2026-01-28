@@ -45,5 +45,3 @@ bindkey '^ ' autosuggest-accept
 bindkey '' edit-command-line
 
 [[ -f  "$HOME/.local/share/../bin/env" ]] && . "$HOME/.local/share/../bin/env"
-
-
