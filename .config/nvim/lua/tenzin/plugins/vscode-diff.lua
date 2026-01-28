@@ -99,6 +99,11 @@ end
 return {
 	"esmuellert/vscode-diff.nvim",
 	dependencies = { "MunifTanjim/nui.nvim" },
+	opts = {
+		explorer = {
+			view_mode = "tree",
+		},
+	},
 	keys = {
 		{
 			"<leader>cd",
