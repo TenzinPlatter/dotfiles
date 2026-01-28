@@ -44,4 +44,6 @@ zle -N edit-command-line
 bindkey '^ ' autosuggest-accept
 bindkey '' edit-command-line
 
+stty -ixon
+
 [[ -f  "$HOME/.local/share/../bin/env" ]] && . "$HOME/.local/share/../bin/env"

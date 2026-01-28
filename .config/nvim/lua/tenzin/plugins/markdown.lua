@@ -8,6 +8,10 @@ return {
 			disable_background = true,
 			style = "normal",
 			border = "thick",
+			highlight_border = "Normal",
+			language_border = ' ',
+			language_left = '',
+			language_right = '',
 		},
 	},
 }
