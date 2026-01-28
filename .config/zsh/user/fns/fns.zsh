@@ -80,10 +80,6 @@ inr() {
 sr() {
     distro="kilted"
 
-    if [[ "$1" == "-k" ]]; then
-        distro="kilted"
-    fi
-
     if ! command -v ros2 &> /dev/null; then
         source /opt/ros/$distro/setup.zsh
         echo "Sourced global overlay at /opt/ros/$distro"
