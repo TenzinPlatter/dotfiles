@@ -11,9 +11,9 @@ sudo-command-line () {
         if [[ -z "$EDITOR" ]]
         then
             case "$BUFFER" in
-                (sudo\ -e\ *) __sudo-replace-buffer "sudo -e" "" ;;
-                (sudo\ *) __sudo-replace-buffer "sudo" "" ;;
-                (*) LBUFFER="sudo $LBUFFER"  ;;
+                    (sudo\ -e\ *) __sudo-replace-buffer "sudo -e" "" ;;
+                    (sudo\ *) __sudo-replace-buffer "sudo" "" ;;
+                    (*) LBUFFER="sudo $LBUFFER"  ;;
             esac
             return
         fi
@@ -26,25 +26,25 @@ sudo-command-line () {
             return
         fi
         case "$BUFFER" in
-            ($editorcmd\ *) __sudo-replace-buffer "$editorcmd" "sudo -e" ;;
-            (\$EDITOR\ *) __sudo-replace-buffer '$EDITOR' "sudo -e" ;;
-            (sudo\ -e\ *) __sudo-replace-buffer "sudo -e" "$EDITOR" ;;
-            (sudo\ *) __sudo-replace-buffer "sudo" "" ;;
-            (*) LBUFFER="sudo $LBUFFER"  ;;
+                ($editorcmd\ *) __sudo-replace-buffer "$editorcmd" "sudo -e" ;;
+                (\$EDITOR\ *) __sudo-replace-buffer '$EDITOR' "sudo -e" ;;
+                (sudo\ -e\ *) __sudo-replace-buffer "sudo -e" "$EDITOR" ;;
+                (sudo\ *) __sudo-replace-buffer "sudo" "" ;;
+                (*) LBUFFER="sudo $LBUFFER"  ;;
         esac
-    } always {
+        } always {
         LBUFFER="${WHITESPACE}${LBUFFER}"
         zle && zle redisplay
     }
 }
 
 set-cd() {
-	if [[ -z $BUFFER ]]; then
-		LBUFFER="cd "
-	else
-		BUFFER="cd $BUFFER"
-		zle accept-line
-	fi
+    if [[ -z $BUFFER ]]; then
+        LBUFFER="cd "
+    else
+        BUFFER="cd $BUFFER"
+        zle accept-line
+    fi
 }
 
 resume() {
@@ -52,6 +52,10 @@ resume() {
     zle push-input
     BUFFER=""
     zle accept-line
+}
+
+copy-cmd() {
+    printf "$BUFFER" | wl-copy 
 }
 
 forward-word-dir () {
@@ -75,6 +79,8 @@ bindkey '' resume
 
 zle -N sudo-command-line
 zle -N set-cd
+zle -N copy-cmd
 
 bindkey '\e\e' sudo-command-line
 bindkey  set-cd
+bindkey  copy-cmd

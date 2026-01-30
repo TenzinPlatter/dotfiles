@@ -80,10 +80,6 @@ inr() {
 sr() {
     distro="kilted"
 
-    if [[ "$1" == "-k" ]]; then
-        distro="kilted"
-    fi
-
     if ! command -v ros2 &> /dev/null; then
         source /opt/ros/$distro/setup.zsh
         echo "Sourced global overlay at /opt/ros/$distro"
@@ -282,9 +278,3 @@ swap() {
 nvl() {
     eval "$(fc -ln -1)" | nvim -
 }
-
-tmux-window-name() {
-    ($TMUX_PLUGIN_MANAGER_PATH/tmux-window-name/scripts/rename_session_windows.py &)
-}
-
-add-zsh-hook chpwd tmux-window-name

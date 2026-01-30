@@ -8,6 +8,12 @@ return {
 			["<C-Space>"] = false,
 			["<C-L>"] = { "snippet_forward", "fallback" },
 			["<C-H>"] = { "snippet_backward", "fallback" },
+			["<C-D>"] = { "scroll_documentation_down", "fallback" },
+			["<C-U>"] = { "scroll_documentation_up", "fallback" },
+			["<C-F>"] = { "scroll_documentation_down", "fallback" },
+			["<C-B>"] = { "scroll_documentation_up", "fallback" },
+			["<C-J>"] = { "scroll_signature_down", "fallback" },
+			["<C-K>"] = { "scroll_signature_up", "fallback" },
 		},
 
 		appearance = {
@@ -17,9 +23,31 @@ return {
 		},
 
 		-- (Default) Only show the documentation popup when manually triggered
-		completion = { documentation = { auto_show = true } },
+		completion = {
+			documentation = {
+			auto_show = true,
+			window = {
+				border = "rounded",
+				winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+			},
+		},
+		menu = {
+			border = "rounded",
+			winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+		},
+			ghost_text = {
+				enabled = true,
+			}
+		},
 
-		-- Default list of enabled providers defined so that you can extend it
+		signature = {
+		window = {
+			border = "rounded",
+			winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+		},
+	},
+
+	-- Default list of enabled providers defined so that you can extend it
 		-- elsewhere in your config, without redefining it, due to `opts_extend`
 		sources = {
 			default = { "lsp", "path", "snippets", "buffer" },
