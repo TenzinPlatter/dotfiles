@@ -383,56 +383,56 @@ return {
 		{
 			"gdvh",
 			function()
-				require('tenzin.helpers').goto_definition_in_split('h', true)
+				require("tenzin.helpers").goto_definition_in_split("h", true)
 			end,
 			desc = "Goto Definition vsplit left window",
 		},
 		{
 			"gdvj",
 			function()
-				require('tenzin.helpers').goto_definition_in_split('j', true)
+				require("tenzin.helpers").goto_definition_in_split("j", true)
 			end,
 			desc = "Goto Definition vsplit bottom window",
 		},
 		{
 			"gdvk",
 			function()
-				require('tenzin.helpers').goto_definition_in_split('k', true)
+				require("tenzin.helpers").goto_definition_in_split("k", true)
 			end,
 			desc = "Goto Definition vsplit top window",
 		},
 		{
 			"gdvl",
 			function()
-				require('tenzin.helpers').goto_definition_in_split('l', true)
+				require("tenzin.helpers").goto_definition_in_split("l", true)
 			end,
 			desc = "Goto Definition vsplit right window",
 		},
 		{
 			"gdsh",
 			function()
-				require('tenzin.helpers').goto_definition_in_split('h', false)
+				require("tenzin.helpers").goto_definition_in_split("h", false)
 			end,
 			desc = "Goto Definition split left window",
 		},
 		{
 			"gdsj",
 			function()
-				require('tenzin.helpers').goto_definition_in_split('j', false)
+				require("tenzin.helpers").goto_definition_in_split("j", false)
 			end,
 			desc = "Goto Definition split bottom window",
 		},
 		{
 			"gdsk",
 			function()
-				require('tenzin.helpers').goto_definition_in_split('k', false)
+				require("tenzin.helpers").goto_definition_in_split("k", false)
 			end,
 			desc = "Goto Definition split top window",
 		},
 		{
 			"gdsl",
 			function()
-				require('tenzin.helpers').goto_definition_in_split('l', false)
+				require("tenzin.helpers").goto_definition_in_split("l", false)
 			end,
 			desc = "Goto Definition split right window",
 		},

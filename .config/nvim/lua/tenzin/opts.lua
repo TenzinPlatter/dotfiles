@@ -44,6 +44,7 @@ vim.opt.rnu = true
 vim.opt.nu = true
 
 vim.opt.ignorecase = true
+vim.opt.wrap = true
 
 -- disables netrw
 -- vim.g.loaded_netrw = 1

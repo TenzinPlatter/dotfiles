@@ -2,8 +2,6 @@
 
 alias cpwd="pwd | tr -d '\n' | wl-copy"
 
-alias tc="toad -a claude"
-
 alias cl="claude"
 alias wp="wallpaper-picker.sh"
 
@@ -53,3 +51,5 @@ alias .5='cd ../../../../..'
 
 alias zb="zen-browser"
 alias icat="kitten icat"
+
+alias cw="y .worktrees "

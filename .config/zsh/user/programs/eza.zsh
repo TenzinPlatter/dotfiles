@@ -1,4 +1,4 @@
-alias l='eza -lh --icons auto' # long list
+alias l='eza -lh --icons auto -a' # long list
 alias ls='eza -1 --icons auto -a' # short list
 alias sl='ls'
 alias ll='eza -lha --icons auto --sort name --group-directories-first' # long list all

@@ -2,7 +2,14 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		keys = {
-			{ "<C-S>", vim.diagnostic.open_float, desc = "Line Diagnostics" },
+			{
+			"<C-S>",
+			function()
+				vim.diagnostic.open_float({ border = "rounded" })
+			end,
+			desc = "Line Diagnostics",
+		},
+			-- { "gtd", vim.lsp.buf.type_definition, desc = "Goto Type Definition" },
 			{
 				"<leader>th",
 				function()

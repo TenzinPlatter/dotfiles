@@ -22,6 +22,18 @@ return {
 			vim.g.gitblame_display_virtual_text = 0
 			require("lualine").setup({
 				sections = {
+					lualine_a = {
+						"mode",
+						{
+							function()
+								local reg = vim.fn.reg_recording()
+								if reg ~= "" then
+									return "REC @" .. reg
+								end
+								return ""
+							end,
+						},
+					},
 					lualine_c = { { git_blame.get_current_blame_text, cond = git_blame.is_blame_text_available } },
 					lualine_x = {
 						{ prose.word_count, cond = prose.is_available },
