@@ -61,8 +61,9 @@ def main() -> int:
         # Check if this is a Lookout repository
         is_lookout = is_lookout_repo(repo_root)
 
-        # Determine worktree path
-        worktree_path = repo_root / WORKTREES_DIR / branch_name
+        # Determine worktree path (slugify branch name for directory)
+        dir_name = branch_name.replace("/", "-")
+        worktree_path = repo_root / WORKTREES_DIR / dir_name
 
         if worktree_path.exists():
             print(f"Error: Worktree already exists at {worktree_path}", file=sys.stderr)
