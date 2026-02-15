@@ -45,6 +45,12 @@ examples:
         default="main",
         help="Base branch to create from (default: %(default)s)",
     )
+    parser.add_argument(
+        "-n",
+        "--name",
+        default=None,
+        help="Optional worktree name",
+    )
     return parser.parse_args()
 
 
@@ -62,7 +68,7 @@ def main() -> int:
         is_lookout = is_lookout_repo(repo_root)
 
         # Determine worktree path (slugify branch name for directory)
-        dir_name = branch_name.replace("/", "-")
+        dir_name = args.name if args.name else branch_name.replace("/", "-")
         worktree_path = repo_root / WORKTREES_DIR / dir_name
 
         if worktree_path.exists():
