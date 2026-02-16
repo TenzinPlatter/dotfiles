@@ -205,6 +205,7 @@ def setup_lookout_env(worktree_path: Path, repo_root: Path) -> None:
 
     print("Installing editable packages...")
     pip_path = worktree_path / venv_name / "bin" / "pip"
+    pyproject_paths = ["tools/lookout_cli", "packages/lookout_config"]
 
     for package_path in [LOOKOUT_CLI_PATH, LOOKOUT_CONFIG_PATH]:
         subprocess.run(
