@@ -216,7 +216,7 @@ def setup_lookout_env(worktree_path: Path, repo_root: Path) -> None:
 
     for path in pyproject_paths:
         subprocess.run(
-            [str(pip_path), "install", "-q", "."],
+            [str(pip_path), "download", "-q", "."],
             cwd=path,
             check=True,
         )
