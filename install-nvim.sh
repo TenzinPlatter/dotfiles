@@ -23,5 +23,6 @@ fi
 
 if command -v apt &>/dev/null; then
     sudo apt-get update || echo "Warning: update failed, continuing..."
-    sudo apt-get install -y unzip python3-venv python3 ripgrep tree-sitter-cli || echo "Warning: Some apt packages failed to install, continuing..."
+    sudo apt-get install -y unzip python3-venv python3 ripgrep || echo "Warning: Some apt packages failed to install, continuing..."
+    sudo npm install -g tree-sitter-cli || echo "Warning: Failed to install tree-sitter-cli"
 fi
