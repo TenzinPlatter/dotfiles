@@ -214,6 +214,13 @@ def setup_lookout_env(worktree_path: Path, repo_root: Path) -> None:
             check=True,
         )
 
+    for path in pyproject_paths:
+        subprocess.run(
+            [str(pip_path), "install", "-q", "."],
+            cwd=path,
+            check=True,
+        )
+
     print("Configuring direnv...")
 
     # Create .envrc
