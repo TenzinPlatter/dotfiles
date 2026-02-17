@@ -11,23 +11,23 @@ vim.keymap.set("n", "<leader>w", function()
 end, { desc = "Save all buffers" })
 
 -- Smart quit with session save (ZZ)
-vim.keymap.set("n", "ZZ", function()
-  -- Save session
-  require("persistence").save()
-
-  -- Save and close all non-terminal buffers
-  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype ~= "terminal" then
-      if vim.bo[buf].modified then
-        vim.api.nvim_buf_call(buf, function()
-          vim.cmd("write")
-        end)
-      end
-      vim.api.nvim_buf_delete(buf, { force = false })
-    end
-  end
-  vim.cmd("quit")
-end, { desc = "Save session, close all buffers and quit" })
+-- vim.keymap.set("n", "ZZ", function()
+--   -- Save session
+--   require("persistence").save()
+--
+--   -- Save and close all non-terminal buffers
+--   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+--     if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype ~= "terminal" then
+--       if vim.bo[buf].modified then
+--         vim.api.nvim_buf_call(buf, function()
+--           vim.cmd("write")
+--         end)
+--       end
+--       vim.api.nvim_buf_delete(buf, { force = false })
+--     end
+--   end
+--   vim.cmd("quit")
+-- end, { desc = "Save session, close all buffers and quit" })
 
 -- Character swap
 vim.keymap.set("n", "<C-l>", "xp", { desc = "Swap character with next" })
