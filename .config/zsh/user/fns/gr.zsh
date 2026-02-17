@@ -147,8 +147,9 @@ pbc() {
     # Get platform module from current directory
     local platform_module="${PWD:t}"
 
-    # Always source ROS environment
-    sr || return 1
+    if !command -v ros2 &>/dev/null; then
+      sr || return 1
+    fi
 
     if [[ -n "$install" ]]; then
         platform pkg install-deps || return 1
