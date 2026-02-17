@@ -67,4 +67,53 @@ return {
       },
     },
   },
+  { "akinsho/bufferline.nvim", enabled = false },
+  {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      local harpoon = require("harpoon")
+      harpoon:setup()
+
+      -- Custom tabline showing harpooned files
+      function _G.harpoon_tabline()
+        local list = harpoon:list()
+        local current = vim.api.nvim_buf_get_name(0)
+        local parts = {}
+
+        for i = 1, list:length() do
+          local item = list:get(i)
+          if item then
+            local name = vim.fn.fnamemodify(item.value, ":t")
+            local is_active = current == vim.fn.fnamemodify(item.value, ":p")
+            if is_active then
+              table.insert(parts, "%#TabLineSel# " .. i .. " " .. name .. " %#TabLine#")
+            else
+              table.insert(parts, "%#TabLine# " .. i .. " " .. name .. " ")
+            end
+          end
+        end
+
+        if #parts == 0 then
+          return "%#TabLine# harpoon: <leader>a to add %#TabLineFill#"
+        end
+        return table.concat(parts, "│") .. "%#TabLineFill#"
+      end
+
+      vim.o.showtabline = 2
+      vim.o.tabline = "%!v:lua.harpoon_tabline()"
+
+      -- Keymaps
+      vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end, { desc = "Harpoon add file" })
+      vim.keymap.set("n", "<leader>h", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "Harpoon menu" })
+
+      for i = 1, 5 do
+        vim.keymap.set("n", "<leader>" .. i, function() harpoon:list():select(i) end, { desc = "Harpoon file " .. i })
+      end
+
+      vim.keymap.set("n", "<leader>H", function() harpoon:list():prev() end, { desc = "Harpoon prev" })
+      vim.keymap.set("n", "<leader>L", function() harpoon:list():next() end, { desc = "Harpoon next" })
+    end,
+  },
 }
