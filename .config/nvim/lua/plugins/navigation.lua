@@ -14,10 +14,38 @@ return {
       "TmuxNavigatorProcessList",
     },
     keys = {
-      { "<M-h>", function() vim.cmd("TmuxNavigateLeft") end, mode = {"n", "t"}, desc = "Navigate left" },
-      { "<M-j>", function() vim.cmd("TmuxNavigateDown") end, mode = {"n", "t"}, desc = "Navigate down" },
-      { "<M-k>", function() vim.cmd("TmuxNavigateUp") end, mode = {"n", "t"}, desc = "Navigate up" },
-      { "<M-l>", function() vim.cmd("TmuxNavigateRight") end, mode = {"n", "t"}, desc = "Navigate right" },
+      {
+        "<M-h>",
+        function()
+          vim.cmd("TmuxNavigateLeft")
+        end,
+        mode = { "n", "t" },
+        desc = "Navigate left",
+      },
+      {
+        "<M-j>",
+        function()
+          vim.cmd("TmuxNavigateDown")
+        end,
+        mode = { "n", "t" },
+        desc = "Navigate down",
+      },
+      {
+        "<M-k>",
+        function()
+          vim.cmd("TmuxNavigateUp")
+        end,
+        mode = { "n", "t" },
+        desc = "Navigate up",
+      },
+      {
+        "<M-l>",
+        function()
+          vim.cmd("TmuxNavigateRight")
+        end,
+        mode = { "n", "t" },
+        desc = "Navigate right",
+      },
     },
   },
   {
@@ -61,7 +89,9 @@ return {
     keys = {
       {
         "<leader>ss",
-        function() require("rip-substitute").sub() end,
+        function()
+          require("rip-substitute").sub()
+        end,
         mode = { "n", "x" },
         desc = "Rip substitute",
       },
@@ -104,20 +134,49 @@ return {
       vim.o.showtabline = 2
       vim.o.tabline = "%!v:lua.harpoon_tabline()"
 
-      -- Keymaps
-      vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end, { desc = "Harpoon add file" })
-      vim.keymap.set("n", "<leader>h", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "Harpoon menu" })
-
       for i = 1, 5 do
-        vim.keymap.set("n", "<leader>" .. i, function() harpoon:list():select(i) end, { desc = "Harpoon file " .. i })
+        vim.keymap.set("n", "<leader>" .. i, function()
+          harpoon:list():select(i)
+        end, { desc = "Harpoon file " .. i })
       end
 
       vim.api.nvim_create_autocmd("VimEnter", {
         callback = function()
-          vim.keymap.set("n", "H", function() harpoon:list():prev() end, { desc = "Harpoon prev" })
-          vim.keymap.set("n", "L", function() harpoon:list():next() end, { desc = "Harpoon next" })
+          vim.keymap.set("n", "L", function()
+            harpoon:list():next()
+          end, { desc = "Harpoon next" })
         end,
       })
     end,
+    keys = {
+      {
+        "<leader>a",
+        function()
+          harpoon:list():add()
+        end,
+        { desc = "Harpoon add file" },
+      },
+      {
+        "<leader>h",
+        function()
+          harpoon.ui:toggle_quick_menu(harpoon:list())
+        end,
+        { desc = "Harpoon menu" },
+      },
+      {
+        "H",
+        function()
+          harpoon:list():prev()
+        end,
+        { desc = "Harpoon prev" },
+      },
+      {
+        "L",
+        function()
+          harpoon:list():next()
+        end,
+        { desc = "Harpoon next" },
+      }
+    },
   },
 }
