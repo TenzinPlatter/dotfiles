@@ -55,6 +55,7 @@ return {
         -- Show full file path
         { "filename", path = 1 },
       },
+      lualine_z = {},
     })
 
     -- Enable global statusline
