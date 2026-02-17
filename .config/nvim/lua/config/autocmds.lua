@@ -16,14 +16,23 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
--- Autosave after 1 second of inactivity
-vim.opt.updatetime = 1000 -- 1 second
-vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+-- Autosave after 1 second of no file changes
+local autosave_timer = nil
+vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
   group = vim.api.nvim_create_augroup("autosave", { clear = true }),
   callback = function()
-    if vim.bo.modified and vim.bo.buftype == "" and vim.bo.modifiable then
-      vim.cmd("silent! write")
+    -- Cancel existing timer if any
+    if autosave_timer then
+      autosave_timer:stop()
+      autosave_timer:close()
     end
+
+    -- Create new timer that triggers after 1 second
+    autosave_timer = vim.defer_fn(function()
+      if vim.bo.modified and vim.bo.buftype == "" and vim.bo.modifiable then
+        vim.cmd("silent! write")
+      end
+    end, 1000) -- 1 second delay
   end,
 })
 
