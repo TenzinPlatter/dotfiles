@@ -126,7 +126,7 @@ pbc() {
     local extra_flags=()
 
     # Parse options
-    zparseopts -D -E -F i=install -install=install d=deps -deps=deps || return 1
+    zparseopts -D -E -F i=install -install=install d=deps -deps=deps e=env -env=env || return 1
 
     # Check for '--' separator to split packages from extra flags
     local packages=()
@@ -147,8 +147,8 @@ pbc() {
     # Get platform module from current directory
     local platform_module="${PWD:t}"
 
-    if !command -v ros2 &>/dev/null; then
-      sr || return 1
+    if [[ -z "$env" ]]; then
+      sr
     fi
 
     if [[ -n "$install" ]]; then
