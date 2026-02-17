@@ -23,6 +23,7 @@ return {
           end,
         },
       },
+      lualine_b = {},
       lualine_c = {
         -- Git blame in statusline (truncated if too long)
         {
