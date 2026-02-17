@@ -141,13 +141,6 @@ return {
         end, { desc = "Harpoon file " .. i })
       end
 
-      vim.api.nvim_create_autocmd("VimEnter", {
-        callback = function()
-          vim.keymap.set("n", "L", function()
-            harpoon:list():next()
-          end, { desc = "Harpoon next" })
-        end,
-      })
     end,
     keys = {
       {
