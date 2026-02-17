@@ -54,3 +54,6 @@ vim.opt.nu = true
 -- Search
 vim.opt.ignorecase = true
 vim.opt.wrap = true
+
+-- override lazyvim
+vim.opt.clipboard = ""
