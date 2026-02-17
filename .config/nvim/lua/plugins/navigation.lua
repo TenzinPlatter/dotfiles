@@ -152,28 +152,28 @@ return {
       {
         "<leader>a",
         function()
-          harpoon:list():add()
+          require("harpoon"):list():add()
         end,
         { desc = "Harpoon add file" },
       },
       {
         "<leader>h",
         function()
-          harpoon.ui:toggle_quick_menu(harpoon:list())
+          require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
         end,
         { desc = "Harpoon menu" },
       },
       {
         "H",
         function()
-          harpoon:list():prev()
+          require("harpoon"):list():prev()
         end,
         { desc = "Harpoon prev" },
       },
       {
         "L",
         function()
-          harpoon:list():next()
+          require("harpoon"):list():next()
         end,
         { desc = "Harpoon next" },
       }
