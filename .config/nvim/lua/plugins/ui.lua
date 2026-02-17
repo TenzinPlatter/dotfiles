@@ -1,15 +1,11 @@
 return {
   {
-    "rcarriga/nvim-notify",
-    opts = {
-      background_colour = "#000000",
-      timeout = 3000,
-    },
-  },
-  {
     "folke/noice.nvim",
     event = "VeryLazy",
     opts = {
+      notify = {
+        enabled = false,
+      },
       lsp = {
         override = {
           ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
@@ -31,7 +27,6 @@ return {
     },
     dependencies = {
       "MunifTanjim/nui.nvim",
-      "rcarriga/nvim-notify",
     },
   },
   {

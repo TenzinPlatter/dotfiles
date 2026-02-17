@@ -29,7 +29,7 @@ return {
     input = { enabled = true },
     gh = { enabled = true },
     notifier = {
-      enabled = false, -- Disabled - using Noice for notifications instead
+      enabled = true,
     },
     picker = {
       prompt = "🪿 ",
@@ -64,8 +64,7 @@ return {
     { "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
     { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers" },
     { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History" },
-    { "<leader>nh", function() vim.cmd("Noice history") end, desc = "Notification History" },
-    { "<leader>e", function() Snacks.explorer() end, desc = "File Explorer" },
+{ "<leader>e", function() Snacks.explorer() end, desc = "File Explorer" },
 
     -- Find
     { "<leader>ff", function() Snacks.picker.files({ ignored = false, follow = true }) end, desc = "Find Files" },
