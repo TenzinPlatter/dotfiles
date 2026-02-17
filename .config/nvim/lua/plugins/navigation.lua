@@ -112,8 +112,12 @@ return {
         vim.keymap.set("n", "<leader>" .. i, function() harpoon:list():select(i) end, { desc = "Harpoon file " .. i })
       end
 
-      vim.keymap.set("n", "H", function() harpoon:list():prev() end, { desc = "Harpoon prev" })
-      vim.keymap.set("n", "L", function() harpoon:list():next() end, { desc = "Harpoon next" })
+      vim.api.nvim_create_autocmd("VimEnter", {
+        callback = function()
+          vim.keymap.set("n", "H", function() harpoon:list():prev() end, { desc = "Harpoon prev" })
+          vim.keymap.set("n", "L", function() harpoon:list():next() end, { desc = "Harpoon next" })
+        end,
+      })
     end,
   },
 }
