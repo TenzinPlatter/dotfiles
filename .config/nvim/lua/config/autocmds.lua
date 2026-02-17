@@ -16,13 +16,22 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
--- Autosave on leaving insert mode
-vim.api.nvim_create_autocmd("InsertLeave", {
+-- Autosave with delay after leaving insert mode
+local autosave_timer = nil
+local autosave_delay = 1000
+vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
   group = vim.api.nvim_create_augroup("autosave", { clear = true }),
   callback = function()
-    if vim.bo.modified and vim.bo.buftype == "" and vim.bo.modifiable then
-      vim.cmd("silent! write")
+    if autosave_timer and not autosave_timer:is_closing() then
+      autosave_timer:stop()
+      autosave_timer:close()
     end
+
+    autosave_timer = vim.defer_fn(function()
+      if vim.bo.modified and vim.bo.buftype == "" and vim.bo.modifiable then
+        vim.cmd("silent! write")
+      end
+    end, autosave_delay)
   end,
 })
 
