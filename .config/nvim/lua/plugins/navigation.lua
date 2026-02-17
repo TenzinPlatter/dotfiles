@@ -112,8 +112,8 @@ return {
         vim.keymap.set("n", "<leader>" .. i, function() harpoon:list():select(i) end, { desc = "Harpoon file " .. i })
       end
 
-      vim.keymap.set("n", "<leader>H", function() harpoon:list():prev() end, { desc = "Harpoon prev" })
-      vim.keymap.set("n", "<leader>L", function() harpoon:list():next() end, { desc = "Harpoon next" })
+      vim.keymap.set("n", "H", function() harpoon:list():prev() end, { desc = "Harpoon prev" })
+      vim.keymap.set("n", "L", function() harpoon:list():next() end, { desc = "Harpoon next" })
     end,
   },
 }
