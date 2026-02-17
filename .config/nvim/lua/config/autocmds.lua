@@ -22,7 +22,7 @@ vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
   group = vim.api.nvim_create_augroup("autosave", { clear = true }),
   callback = function()
     -- Cancel existing timer if any
-    if autosave_timer then
+    if autosave_timer and not autosave_timer:is_closing() then
       autosave_timer:stop()
       autosave_timer:close()
     end
