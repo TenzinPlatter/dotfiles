@@ -1,48 +1,30 @@
-vim.g.mapleader = " "
-vim.opt.termguicolors = true
+-- bootstrap lazy.nvim, LazyVim and your plugins
+require("config.lazy")
 
--- Tab settings: always use 2 spaces
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.softtabstop = 2
-vim.opt.expandtab = true
+-- Custom highlights applied after colorscheme loads
+vim.api.nvim_create_autocmd("ColorScheme", {
+  pattern = "*",
+  callback = function()
+    -- Transparent backgrounds
+    vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+    vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+    vim.api.nvim_set_hl(0, "CursorLine", { bg = "Black" })
 
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
-end
-vim.opt.rtp:prepend(lazypath)
+    -- Window separator
+    vim.api.nvim_set_hl(0, "WinSeparator", { link = "FloatBorder" })
 
-require("lazy").setup("tenzin.plugins", {})
+    -- Custom visual selection
+    vim.api.nvim_set_hl(0, "Visual", { bg = "#666666" })
 
-local lua_files = vim.fn.glob(vim.fn.stdpath("config") .. "/lua/tenzin/*.lua", false, true)
-for _, file_path in ipairs(lua_files) do
-  local file_name = vim.fn.fnamemodify(file_path, ":t:r")
-  require("tenzin." .. file_name)
-end
+    -- Custom search highlight
+    vim.api.nvim_set_hl(0, "Search", { bg = "#FEFFA7", fg = "#000000" })
 
--- colorizer has to be setup after other plugins
-require("colorizer").setup()
+    -- ColorColumn
+    vim.api.nvim_set_hl(0, "ColorColumn", { bg = "Black" })
+  end,
+})
 
--- set highlight colours
-vim.api.nvim_set_hl(0, "Visual", { bg = "#666666" })
--- vim.cmd('hi MatchParen guibg=White')
-vim.cmd("hi Search guibg=#FEFFA7")
--- vim.cmd('hi CursorLineNr guibg=White')
-vim.cmd("hi ColorColumn guibg=Black")
-vim.api.nvim_set_hl(0, '@lsp.mod.mutable', { underline = true })
-vim.api.nvim_set_hl(0, "@lsp.mod.usedAsMutableReference.cpp", { underline = true })
-
-vim.cmd("hi SnippetTabstop guibg=None")
-
--- set nvim tree background transparent
--- vim.cmd("hi NvimTreeNormal guibg=None ctermbg=None")
-
-vim.cmd("set mouse=a")
+-- Apply highlights immediately
+vim.schedule(function()
+  vim.cmd("doautocmd ColorScheme")
+end)
