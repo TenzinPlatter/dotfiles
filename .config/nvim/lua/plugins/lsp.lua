@@ -1,7 +1,7 @@
 return {
   {
     "neovim/nvim-lspconfig",
-    opts = { autoformat = false },
+    opts = { autoformat = false, inlay_hints = { enabled = false } },
     keys = {
       {
         "<C-S>",
@@ -32,7 +32,7 @@ return {
         function()
           require("lsp_signature").toggle_float_win()
         end,
-        { desc = "toggle signature", mode = {"i"} },
+        { desc = "toggle signature", mode = { "i" } },
       },
     },
   },
