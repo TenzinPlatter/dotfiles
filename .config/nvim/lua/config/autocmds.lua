@@ -18,6 +18,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 
 -- Autosave after 1 second of no file changes
 local autosave_timer = nil
+local autosave_delay = 500
 vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
   group = vim.api.nvim_create_augroup("autosave", { clear = true }),
   callback = function()
@@ -32,7 +33,7 @@ vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
       if vim.bo.modified and vim.bo.buftype == "" and vim.bo.modifiable then
         vim.cmd("silent! write")
       end
-    end, 1000) -- 1 second delay
+    end, autosave_delay)
   end,
 })
 
