@@ -27,11 +27,18 @@ vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
       autosave_timer:close()
     end
 
-    autosave_timer = vim.defer_fn(function()
-      if vim.bo.modified and vim.bo.buftype == "" and vim.bo.modifiable then
+    if vim.bo.modified and vim.bo.buftype == "" and vim.bo.modifiable then
+      if vim.bo.filetype == "rust" then
         vim.cmd("silent! write")
+        return
       end
-    end, autosave_delay)
+
+      autosave_timer = vim.defer_fn(function()
+        if vim.bo.modified and vim.bo.buftype == "" and vim.bo.modifiable then
+          vim.cmd("silent! write")
+        end
+      end, autosave_delay)
+    end
   end,
 })
 

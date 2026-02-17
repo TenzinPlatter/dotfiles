@@ -102,6 +102,7 @@ return {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",
     dependencies = { "nvim-lua/plenary.nvim" },
+    event = "FileOpen",
     config = function()
       local harpoon = require("harpoon")
       harpoon:setup()
