@@ -10,6 +10,17 @@ return {
         end,
         desc = "Line Diagnostics",
       },
+      -- Disable LazyVim defaults in favour of Neovim 0.10+ gr-prefix bindings
+      { "gr", false },
+      { "gI", false },
+      { "<leader>cr", false },
+      { "<leader>ca", false },
+      { "<leader>cA", false },
+      -- Neovim 0.10+ default LSP bindings
+      { "grr", vim.lsp.buf.references, desc = "References" },
+      { "gri", vim.lsp.buf.implementation, desc = "Go to Implementation" },
+      { "grn", vim.lsp.buf.rename, desc = "Rename" },
+      { "gra", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" } },
     },
   },
   {
