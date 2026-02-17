@@ -16,6 +16,11 @@ sr() {
         source /opt/greenroom/$dir_name/install/setup.bash
     fi
 
+    if [[ -n "${PLATFORM_MODULE}" && "${PLATFORM_MODULE}" != "${dir_name}" && -f /opt/greenroom/${PLATFORM_MODULE}/install/setup.bash ]]; then
+        source /opt/greenroom/$dir_name/install/setup.bash
+    fi
+
+
     [[ -f /opt/greeroom/setup.zsh ]] && source /opt/greenroom/setup.zsh
 
     if [[ -f ./install/setup.zsh ]]; then
