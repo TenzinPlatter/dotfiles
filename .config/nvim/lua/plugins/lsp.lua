@@ -32,7 +32,8 @@ return {
         function()
           require("lsp_signature").toggle_float_win()
         end,
-        { desc = "toggle signature", mode = { "i" } },
+        mode = "i",
+        { desc = "toggle signature" },
       },
     },
   },
