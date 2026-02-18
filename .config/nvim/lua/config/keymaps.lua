@@ -117,7 +117,22 @@ vim.keymap.set('n', '<leader>wvl', function()
   require('config.helpers').split_window_with_current_buffer('l', true)
 end, { desc = 'VSplit right window with current buffer' })
 
--- LSP keybindings
+-- LSP keybindings (override LazyVim + Neovim 0.10+ defaults on attach)
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local buf = args.buf
+    -- Remove LazyVim defaults
+    for _, key in ipairs({ "gr", "gI", "<leader>cr", "<leader>ca", "<leader>cA" }) do
+      pcall(vim.keymap.del, "n", key, { buffer = buf })
+    end
+    -- Neovim 0.10+ gr-prefix bindings (overwrite built-ins with explicit buffer maps)
+    vim.keymap.set("n", "grr", vim.lsp.buf.references, { buffer = buf, desc = "References" })
+    vim.keymap.set("n", "gri", vim.lsp.buf.implementation, { buffer = buf, desc = "Go to Implementation" })
+    vim.keymap.set("n", "grn", vim.lsp.buf.rename, { buffer = buf, desc = "Rename" })
+    vim.keymap.set({ "n", "v" }, "gra", vim.lsp.buf.code_action, { buffer = buf, desc = "Code Action" })
+  end,
+})
+
 vim.keymap.set("n", "<leader>th", function()
   local helpers = require("config.helpers")
   local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = 0 })

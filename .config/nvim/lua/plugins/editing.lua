@@ -26,4 +26,15 @@ return {
     event = "VeryLazy",
     opts = {},
   },
+  {
+    "git@github.com:tpope/vim-sleuth.git",
+    init = function()
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "lua",
+        callback = function()
+          vim.b.sleuth_automatic = 0
+        end,
+      })
+    end,
+  }
 }
