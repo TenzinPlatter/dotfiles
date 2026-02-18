@@ -3,7 +3,7 @@
 alias cpwd="pwd | tr -d '\n' | wl-copy"
 
 alias cl="claude"
-alias wp="wallpaper-picker.sh"
+alias yz="yazi"
 
 alias capson="sudo systemctl enable --now udevmon"
 alias capsoff="sudo systemctl disable --now udevmon"

@@ -107,32 +107,7 @@ return {
       local harpoon = require("harpoon")
       harpoon:setup()
 
-      -- Custom tabline showing harpooned files
-      function _G.harpoon_tabline()
-        local list = harpoon:list()
-        local current = vim.api.nvim_buf_get_name(0)
-        local parts = {}
-
-        for i = 1, list:length() do
-          local item = list:get(i)
-          if item then
-            local name = vim.fn.fnamemodify(item.value, ":t")
-            local is_active = current == vim.fn.fnamemodify(item.value, ":p")
-            if is_active then
-              table.insert(parts, "%#TabLineSel# " .. i .. " " .. name .. " %#TabLine#")
-            else
-              table.insert(parts, "%#TabLine# " .. i .. " " .. name .. " ")
-            end
-          end
-        end
-
-        if #parts == 0 then
-          return "%#TabLine# harpoon: <leader>a to add %#TabLineFill#"
-        end
-        return table.concat(parts, "│") .. "%#TabLineFill#"
-      end
-
-      local helpers = require("helpers")
+      local helpers = require("config.helpers")
       if helpers.in_codediff() then
         vim.o.showtabline = 2
         vim.o.tabline = "%!v:lua.harpoon_tabline()"
