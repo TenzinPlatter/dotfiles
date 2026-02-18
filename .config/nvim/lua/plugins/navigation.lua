@@ -132,15 +132,17 @@ return {
         return table.concat(parts, "│") .. "%#TabLineFill#"
       end
 
-      vim.o.showtabline = 2
-      vim.o.tabline = "%!v:lua.harpoon_tabline()"
+      local helpers = require("lua.plugins.helpers")
+      if helpers.in_codediff() then
+        vim.o.showtabline = 2
+        vim.o.tabline = "%!v:lua.harpoon_tabline()"
+      end
 
       for i = 1, 5 do
         vim.keymap.set("n", "<leader>" .. i, function()
           harpoon:list():select(i)
         end, { desc = "Harpoon file " .. i })
       end
-
     end,
     keys = {
       {
@@ -170,7 +172,7 @@ return {
           require("harpoon"):list():next()
         end,
         { desc = "Harpoon next" },
-      }
+      },
     },
   },
 }
