@@ -125,6 +125,7 @@ return {
         "<leader>a",
         function()
           require("harpoon"):list():add()
+          vim.cmd.redrawtabline()
         end,
         { desc = "Harpoon add file" },
       },
