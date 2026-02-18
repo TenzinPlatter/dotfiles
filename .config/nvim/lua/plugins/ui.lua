@@ -6,6 +6,9 @@ return {
       notify = {
         enabled = false,
       },
+      routes = {
+        { filter = { event = "msg_show", find = "written" }, opts = { skip = true } },
+      },
       lsp = {
         override = {
           ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
