@@ -57,3 +57,6 @@ vim.opt.wrap = true
 
 -- override lazyvim
 vim.opt.clipboard = ""
+
+-- Suppress "written" messages when saving a buffer
+vim.opt.shortmess:append("W")
