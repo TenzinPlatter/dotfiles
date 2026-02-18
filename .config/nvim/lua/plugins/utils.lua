@@ -15,7 +15,14 @@ return {
     },
     keys = {
       { "s", mode = { "n", "x", "o" }, false },
-      { "gs", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+      {
+        "gs",
+        mode = { "n", "x", "o" },
+        function()
+          require("flash").jump()
+        end,
+        desc = "Flash",
+      },
     },
   },
 }
