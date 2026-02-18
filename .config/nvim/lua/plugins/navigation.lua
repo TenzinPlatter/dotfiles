@@ -114,7 +114,7 @@ return {
         vim.o.tabline = "%!v:lua.harpoon_tabline()"
       end
 
-      for i = 1, 5 do
+      for i = 1, 9 do
         vim.keymap.set("n", "<leader>" .. i, function()
           harpoon:list():select(i)
         end, { desc = "Harpoon file " .. i })
