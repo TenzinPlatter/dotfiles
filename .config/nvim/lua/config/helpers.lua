@@ -1,6 +1,7 @@
 local M = {}
 
 function M.harpoon_tabline()
+  local harpoon = require("harpoon")
   local list = harpoon:list()
   local current = vim.api.nvim_buf_get_name(0)
   local parts = {}
