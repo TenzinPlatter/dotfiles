@@ -30,22 +30,25 @@ return {
     },
   },
   {
-  {
-    "saghen/blink.cmp",
-    opts = {
-      sources = {
-        default = { "lazydev", "lsp", "path", "snippets", "buffer" },
-        providers = {
-          lazydev = {
-            name = "LazyDev",
-            module = "lazydev.integrations.blink",
-            -- make lazydev completions top priority (see `:h blink.cmp`)
-            score_offset = 100,
+    {
+      "saghen/blink.cmp",
+      opts = function(_, opts)
+        opts.sources = vim.tbl_deep_extend("force", opts.sources or {}, {
+          providers = {
+            lazydev = {
+              name = "LazyDev",
+              module = "lazydev.integrations.blink",
+              score_offset = 100,
+            },
           },
-        },
-      },
+        })
+
+        -- prepend to the default sources list
+        opts.sources.default = vim.list_extend({ "lazydev" }, opts.sources.default or {})
+
+        return opts
+      end,
     },
-  },
   },
   {
     "ray-x/lsp_signature.nvim",
