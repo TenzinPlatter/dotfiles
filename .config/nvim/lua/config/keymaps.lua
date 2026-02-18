@@ -138,3 +138,7 @@ end, { desc = "Insert self/this reference" })
 vim.keymap.set("i", "t", function()
   require("config.helpers").insert_async_before_function()
 end, { desc = "Insert 't' and add async if typing 'await'" })
+
+vim.keymap.set("n", "zz", function ()
+  vim.cmd("wqall!")
+end)
