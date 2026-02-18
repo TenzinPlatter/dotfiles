@@ -132,7 +132,7 @@ return {
         return table.concat(parts, "│") .. "%#TabLineFill#"
       end
 
-      local helpers = require("lua.plugins.helpers")
+      local helpers = require("helpers")
       if helpers.in_codediff() then
         vim.o.showtabline = 2
         vim.o.tabline = "%!v:lua.harpoon_tabline()"
