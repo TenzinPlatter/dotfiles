@@ -1,35 +1,54 @@
 return {
 	"ThePrimeagen/harpoon",
+	branch = "harpoon2",
+	dependencies = { "nvim-lua/plenary.nvim" },
+	event = "BufEnter",
+	config = function()
+		local harpoon = require("harpoon")
+		harpoon:setup()
+
+		local helpers = require("tenzin.helpers")
+		_G.harpoon_tabline = helpers.harpoon_tabline
+		if not helpers.in_codediff() then
+			vim.o.showtabline = 2
+			vim.o.tabline = "%!v:lua.harpoon_tabline()"
+		end
+
+		for i = 1, 9 do
+			vim.keymap.set("n", "<leader>" .. i, function()
+				harpoon:list():select(i)
+			end, { desc = "Harpoon file " .. i })
+		end
+	end,
 	keys = {
 		{
 			"<leader>a",
 			function()
-				require("harpoon.mark").add_file()
+				require("harpoon"):list():add()
+				vim.cmd.redrawtabline()
 			end,
+			desc = "Harpoon add file",
 		},
 		{
-			"<leader>1",
+			"<leader>h",
 			function()
-				require("harpoon.ui").nav_file(1)
+				require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
 			end,
+			desc = "Harpoon menu",
 		},
 		{
-			"<leader>2",
+			"H",
 			function()
-				require("harpoon.ui").nav_file(2)
+				require("harpoon"):list():prev()
 			end,
+			desc = "Harpoon prev",
 		},
 		{
-			"<leader>3",
+			"L",
 			function()
-				require("harpoon.ui").nav_file(3)
+				require("harpoon"):list():next()
 			end,
-		},
-		{
-			"<leader>m",
-			function()
-				require("harpoon.ui").toggle_quick_menu()
-			end,
+			desc = "Harpoon next",
 		},
 	},
 }

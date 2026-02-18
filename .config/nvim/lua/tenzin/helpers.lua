@@ -311,4 +311,35 @@ function M.get_inlay_hint_preference(filetype)
   return preferences[filetype]
 end
 
+function M.harpoon_tabline()
+  local harpoon = require("harpoon")
+  local list = harpoon:list()
+  local current = vim.api.nvim_buf_get_name(0)
+  local parts = {}
+
+  for i = 1, list:length() do
+    local item = list:get(i)
+    if item then
+      local name = vim.fn.fnamemodify(item.value, ":t")
+      local is_active = current == vim.fn.fnamemodify(item.value, ":p")
+      if is_active then
+        table.insert(parts, "%#TabLineSel# " .. i .. " " .. name .. " %#TabLine#")
+      else
+        table.insert(parts, "%#TabLine# " .. i .. " " .. name .. " ")
+      end
+    end
+  end
+
+  if #parts == 0 then
+    return "%#TabLine# harpoon: <leader>a to add %#TabLineFill#"
+  end
+  return table.concat(parts, "│") .. "%#TabLineFill#"
+end
+
+function M.in_codediff()
+  local codediff_lifecycle = require("codediff.ui.lifecycle")
+  local current_tab = vim.api.nvim_get_current_tabpage()
+  return codediff_lifecycle.get_session(current_tab)
+end
+
 return M

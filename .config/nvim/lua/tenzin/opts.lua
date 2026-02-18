@@ -1,8 +1,19 @@
 -- disable deprecated messages on startup
 vim.deprecate = function() end
--- inline diagnositcs
--- vim.diagnostic.config({ virtual_lines = true })
-vim.diagnostic.config({ virtual_text = true })
+-- Diagnostics: inline virtual text + circle signs in the gutter
+vim.diagnostic.config({
+	virtual_text = {
+		prefix = "●",
+	},
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = " ",
+			[vim.diagnostic.severity.WARN] = " ",
+			[vim.diagnostic.severity.HINT] = " ",
+			[vim.diagnostic.severity.INFO] = " ",
+		},
+	},
+})
 
 -- transparent background
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })

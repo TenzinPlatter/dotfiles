@@ -1,21 +1,28 @@
--- Autosave on exit of insert if text has been changed
--- remove space below to comment out autosave while editing config
---[[
+-- Autosave after 1 second of no text changes
+local autosave_timer = nil
+local autosave_delay = 1000
 vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
-  pattern = "*",
-  nested = true,
-  callback = function()
-    if vim.bo.buftype ~= "" then
-      return
-    end
+	group = vim.api.nvim_create_augroup("autosave", { clear = true }),
+	callback = function()
+		if autosave_timer and not autosave_timer:is_closing() then
+			autosave_timer:stop()
+			autosave_timer:close()
+		end
 
-    if vim.bo.modifiable then
-      vim.cmd("w")
-      -- vim.lsp.buf.format({ bufnr = 0, async = false })
-    end
-  end,
+		if vim.bo.modified and vim.bo.buftype == "" and vim.bo.modifiable then
+			if vim.bo.filetype == "rust" then
+				vim.cmd("silent! write")
+				return
+			end
+
+			autosave_timer = vim.defer_fn(function()
+				if vim.bo.modified and vim.bo.buftype == "" and vim.bo.modifiable then
+					vim.cmd("silent! write")
+				end
+			end, autosave_delay)
+		end
+	end,
 })
--- ]]
 
 -- Highlight Yanked area
 vim.api.nvim_create_autocmd("TextYankPost", {
