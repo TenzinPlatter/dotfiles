@@ -1,1 +1,7 @@
-../.dotfiles/.claude/settings.local.json
+{
+  "permissions": {
+    "allow": [
+      "Bash(git ls-tree:*)"
+    ]
+  }
+}
