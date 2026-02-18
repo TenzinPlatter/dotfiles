@@ -94,6 +94,18 @@ end
 
 return {
   {
+    "lewis6991/gitsigns.nvim",
+    event = "BufReadPre",
+    opts = {},
+    keys = {
+      {
+        "<leader>gbl",
+        function() require("gitsigns").blame_line({ full = true }) end,
+        desc = "Git blame line (popup)",
+      },
+    },
+  },
+  {
     "f-person/git-blame.nvim",
     event = "VeryLazy",
     init = function()
