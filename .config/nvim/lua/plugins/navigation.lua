@@ -108,6 +108,7 @@ return {
       harpoon:setup()
 
       local helpers = require("config.helpers")
+      _G.harpoon_tabline = helpers.harpoon_tabline
       if !helpers.in_codediff() then
         vim.o.showtabline = 2
         vim.o.tabline = "%!v:lua.harpoon_tabline()"
