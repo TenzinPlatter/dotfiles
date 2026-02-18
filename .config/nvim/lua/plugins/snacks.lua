@@ -85,7 +85,6 @@ return {
     },
 
     -- Git
-    { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git Branches" },
     { "<leader>gs", function() Snacks.picker.git_status() end, desc = "Git Status" },
     { "<leader>gll", function() Snacks.picker.git_log_line() end, desc = "Git Log Line" },
     { "<leader>gS", function() Snacks.picker.git_stash() end, desc = "Git Stash" },
