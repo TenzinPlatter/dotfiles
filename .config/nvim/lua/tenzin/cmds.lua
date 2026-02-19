@@ -105,6 +105,14 @@ vim.api.nvim_create_user_command("LspLog", function()
 	vim.cmd("edit " .. vim.lsp.get_log_path())
 end, { desc = "Open LSP log file" })
 
+-- Start treesitter for every buffer
+vim.api.nvim_create_autocmd("BufEnter", {
+	group = vim.api.nvim_create_augroup("treesitter_start", { clear = true }),
+	callback = function()
+		pcall(vim.treesitter.start)
+	end,
+})
+
 -- Tmux window renaming on Vim enter/leave
 local uv = vim.uv
 vim.api.nvim_create_autocmd({ "VimEnter", "VimLeave" }, {
