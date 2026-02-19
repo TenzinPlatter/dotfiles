@@ -5,23 +5,24 @@ import sys
 import shutil
 import yaml
 
+
 def copy_nvim_script():
     """Copy ~/install-nvim.sh to .assets directory."""
     home_script = os.path.expanduser("~/install-nvim.sh")
     assets_dir = "./.assets"
     assets_script = os.path.join(assets_dir, "install-nvim.sh")
-    
+
     if not os.path.exists(home_script):
         print(f"Warning: {home_script} not found")
         return False
-    
+
     # Create .assets directory if it doesn't exist
     os.makedirs(assets_dir, exist_ok=True)
-    
+
     if os.path.exists(assets_script):
         print("install-nvim.sh already exists in .assets directory")
         return True
-    
+
     try:
         shutil.copy2(home_script, assets_script)
         print(f"Copied {home_script} to .assets directory")
@@ -30,10 +31,11 @@ def copy_nvim_script():
         print(f"Error copying script: {e}")
         return False
 
+
 def get_dockerfile_from_service(data, service_name):
     """Get the dockerfile path from a compose service if specified."""
-    service_config = data['services'].get(service_name, {})
-    build_config = service_config.get('build')
+    service_config = data["services"].get(service_name, {})
+    build_config = service_config.get("build")
 
     if not build_config:
         return None
@@ -44,14 +46,15 @@ def get_dockerfile_from_service(data, service_name):
         return None
     elif isinstance(build_config, dict):
         # Check if dockerfile is specified
-        dockerfile = build_config.get('dockerfile')
-        context = build_config.get('context', '.')
+        dockerfile = build_config.get("dockerfile")
+        context = build_config.get("context", ".")
 
         if dockerfile:
             # Combine context and dockerfile paths
             return os.path.join(context, dockerfile)
 
     return None
+
 
 def add_nvim_to_compose(compose_file=None, target_service=None):
     """Add nvim volume mount to docker-compose file if it exists."""
@@ -68,33 +71,33 @@ def add_nvim_to_compose(compose_file=None, target_service=None):
     elif not os.path.exists(compose_file):
         print(f"Specified compose file '{compose_file}' not found")
         return False, None
-    
+
     nvim_volumes = [
         "~/.config/nvim:/home/ros/.config/nvim",
-        "~/.local/share/nvim:/home/ros/.local/share/nvim"
+        "~/.local/share/nvim:/home/ros/.local/share/nvim",
     ]
-    
+
     try:
-        with open(compose_file, 'r') as f:
+        with open(compose_file, "r") as f:
             data = yaml.safe_load(f)
-        
-        if not data or 'services' not in data:
+
+        if not data or "services" not in data:
             print(f"Invalid compose file format in {compose_file}")
             return False, None
-        
-        services = list(data['services'].keys())
+
+        services = list(data["services"].keys())
         current_dir = os.path.basename(os.getcwd())
-        
+
         # Check if nvim volumes already exist in any service
-        for service_name, service_config in data['services'].items():
-            if 'volumes' in service_config:
-                existing_volumes = service_config['volumes']
+        for service_name, service_config in data["services"].items():
+            if "volumes" in service_config:
+                existing_volumes = service_config["volumes"]
                 if all(vol in existing_volumes for vol in nvim_volumes):
                     print(f"Nvim volume mounts already exist in {service_name} service")
                     # Still return the dockerfile path if it exists
                     dockerfile_from_service = get_dockerfile_from_service(data, service_name)
                     return True, dockerfile_from_service
-        
+
         # Use provided target service or determine automatically
         if not target_service:
             # Try to match current directory name
@@ -105,19 +108,19 @@ def add_nvim_to_compose(compose_file=None, target_service=None):
                 # Prompt user to choose
                 print(f"Available services: {', '.join(services)}")
                 target_service = input("Which service should get the nvim volume mount? ").strip()
-        
+
         if target_service not in services:
             print(f"Service '{target_service}' not found in compose file")
             return False, None
-        
+
         # Add nvim volumes to the target service
-        if 'volumes' not in data['services'][target_service]:
-            data['services'][target_service]['volumes'] = []
-        
-        data['services'][target_service]['volumes'].extend(nvim_volumes)
-        
+        if "volumes" not in data["services"][target_service]:
+            data["services"][target_service]["volumes"] = []
+
+        data["services"][target_service]["volumes"].extend(nvim_volumes)
+
         # Write back to file
-        with open(compose_file, 'w') as f:
+        with open(compose_file, "w") as f:
             yaml.dump(data, f, default_flow_style=False, indent=2)
 
         print(f"Added nvim volume mounts to {target_service} service in {compose_file}")
@@ -131,71 +134,129 @@ def add_nvim_to_compose(compose_file=None, target_service=None):
         return False, None
 
 
-def add_nvim_to_dockerfile(dockerfile_path):
-    """Add nvim installation lines to the end of a Dockerfile."""
-    
+MOLD_URL = (
+    "https://github.com/rui314/mold/releases/download/v2.40.4/mold-2.40.4-x86_64-linux.tar.gz"
+)
+
+
+def add_mold_to_dockerfile(dockerfile_path):
+    """Add mold linker installation and LDFLAGS to bashrc in the Dockerfile."""
+
     if not os.path.exists(dockerfile_path):
         print(f"Error: Dockerfile not found at {dockerfile_path}")
         return False
-    
+
+    setup_lines = [
+        f"RUN curl -L {MOLD_URL} | sudo tar -xz -C /usr/local --strip-components=1",
+        "RUN echo 'export LDFLAGS=\"-fuse-ld=mold\"' >> /home/ros/.bashrc",
+    ]
+
+    try:
+        with open(dockerfile_path, "r") as f:
+            content = f.read()
+
+        lines_to_add = [line for line in setup_lines if line not in content]
+
+        if not lines_to_add:
+            print("All mold setup lines already exist in the Dockerfile")
+            return True
+
+        if content and not content.endswith("\n"):
+            content += "\n"
+
+        content += "\n".join(lines_to_add) + "\n"
+
+        with open(dockerfile_path, "w") as f:
+            f.write(content)
+
+        print(f"Successfully added {len(lines_to_add)} mold setup line(s) to {dockerfile_path}")
+        return True
+
+    except Exception as e:
+        print(f"Error modifying Dockerfile: {e}")
+        return False
+
+
+def add_nvim_to_dockerfile(dockerfile_path):
+    """Add nvim installation lines to the end of a Dockerfile."""
+
+    if not os.path.exists(dockerfile_path):
+        print(f"Error: Dockerfile not found at {dockerfile_path}")
+        return False
+
     setup_lines = [
         "COPY ./.assets/install-nvim.sh /tmp/install-nvim.sh",
-        "RUN sudo chmod +x /tmp/install-nvim.sh && /tmp/install-nvim.sh && sudo rm /tmp/install-nvim.sh"
+        "RUN sudo chmod +x /tmp/install-nvim.sh && /tmp/install-nvim.sh && sudo rm /tmp/install-nvim.sh",
     ]
-    
+
     try:
-        with open(dockerfile_path, 'r') as f:
+        with open(dockerfile_path, "r") as f:
             content = f.read()
-        
-        
+
         # Check which lines are missing
         lines_to_add = []
         for line in setup_lines:
             if line not in content:
                 lines_to_add.append(line)
-        
+
         if not lines_to_add:
             print("All development setup lines already exist in the Dockerfile")
             return True
-        
+
         # Add newline if file doesn't end with one
-        if content and not content.endswith('\n'):
-            content += '\n'
-        
+        if content and not content.endswith("\n"):
+            content += "\n"
+
         # Add only the missing lines
-        content += '\n'.join(lines_to_add) + '\n'
-        
-        with open(dockerfile_path, 'w') as f:
+        content += "\n".join(lines_to_add) + "\n"
+
+        with open(dockerfile_path, "w") as f:
             f.write(content)
-        
-        print(f"Successfully added {len(lines_to_add)} development setup line(s) to {dockerfile_path}")
+
+        print(
+            f"Successfully added {len(lines_to_add)} development setup line(s) to {dockerfile_path}"
+        )
         return True
-        
+
     except Exception as e:
         print(f"Error modifying Dockerfile: {e}")
         return False
 
+
 def main():
-    parser = argparse.ArgumentParser(description="Add nvim installation to Dockerfile and docker-compose")
-    parser.add_argument("dockerfile", nargs='?', default="Dockerfile", 
-                       help="Path to Dockerfile (default: ./Dockerfile)")
-    parser.add_argument("-c", "--compose", 
-                       help="Compose file (or <composefile>:<service> to specify both file and service)")
-    
+    parser = argparse.ArgumentParser(
+        description="Add nvim installation to Dockerfile and docker-compose"
+    )
+    parser.add_argument(
+        "dockerfile",
+        nargs="?",
+        default="Dockerfile",
+        help="Path to Dockerfile (default: ./Dockerfile)",
+    )
+    parser.add_argument(
+        "-c",
+        "--compose",
+        help="Compose file (or <composefile>:<service> to specify both file and service)",
+    )
+
     args = parser.parse_args()
-    
+
     # Parse compose file and service if provided
     compose_file = None
     target_service = None
     if args.compose:
-        if ':' in args.compose:
-            compose_file, target_service = args.compose.split(':', 1)
+        if ":" in args.compose:
+            compose_file, target_service = args.compose.split(":", 1)
         else:
             compose_file = args.compose
-    
+
     # Use provided path or look in current directory
-    dockerfile_path = args.dockerfile if args.dockerfile != "Dockerfile" else os.path.join(os.getcwd(), "Dockerfile")
-    
+    dockerfile_path = (
+        args.dockerfile
+        if args.dockerfile != "Dockerfile"
+        else os.path.join(os.getcwd(), "Dockerfile")
+    )
+
     # Copy the nvim script first
     script_success = copy_nvim_script()
 
@@ -207,11 +268,14 @@ def main():
         print(f"Using Dockerfile from compose service: {dockerfile_from_service}")
         dockerfile_path = dockerfile_from_service
 
-    # Add to Dockerfile (now with the correct path)
+    # Add to Dockerfile
     dockerfile_success = add_nvim_to_dockerfile(dockerfile_path)
 
-    success = script_success and dockerfile_success and compose_success
+    mold_success = add_mold_to_dockerfile(dockerfile_path)
+
+    success = script_success and dockerfile_success and compose_success and mold_success
     sys.exit(0 if success else 1)
+
 
 if __name__ == "__main__":
     main()
