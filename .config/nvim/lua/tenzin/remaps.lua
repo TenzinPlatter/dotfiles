@@ -1,7 +1,7 @@
 vim.keymap.set("n", "zi", "za", { desc = "Toggle fold under cursor" })
 
 vim.keymap.set("n", "<leader>w", function()
-	vim.cmd("wall")
+	vim.notify("Don't press space w !!!!")
 end, { desc = "Save all buffers" })
 
 vim.keymap.set("n", "ZZ", function()
