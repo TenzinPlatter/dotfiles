@@ -140,7 +140,7 @@ MOLD_URL = (
 
 
 def add_mold_to_dockerfile(dockerfile_path):
-    """Add mold linker installation and LDFLAGS to bashrc in the Dockerfile."""
+    """Add mold linker installation after the last FROM in the Dockerfile."""
 
     if not os.path.exists(dockerfile_path):
         print(f"Error: Dockerfile not found at {dockerfile_path}")
@@ -148,7 +148,7 @@ def add_mold_to_dockerfile(dockerfile_path):
 
     setup_lines = [
         f"RUN curl -L {MOLD_URL} | sudo tar -xz -C /usr/local --strip-components=1",
-        "RUN echo 'export LDFLAGS=\"-fuse-ld=mold\"' >> /home/ros/.bashrc",
+        'ENV LDFLAGS="-fuse-ld=mold"',
     ]
 
     try:
@@ -161,15 +161,28 @@ def add_mold_to_dockerfile(dockerfile_path):
             print("All mold setup lines already exist in the Dockerfile")
             return True
 
-        if content and not content.endswith("\n"):
-            content += "\n"
+        file_lines = content.splitlines()
 
-        content += "\n".join(lines_to_add) + "\n"
+        last_from_idx = -1
+        for i, line in enumerate(file_lines):
+            if line.strip().upper().startswith("FROM"):
+                last_from_idx = i
+
+        if last_from_idx == -1:
+            print("No FROM instruction found in Dockerfile, appending to end")
+            if not content.endswith("\n"):
+                content += "\n"
+            content += "\n".join(lines_to_add) + "\n"
+        else:
+            insert_idx = last_from_idx + 1
+            mold_block = [""] + lines_to_add
+            file_lines = file_lines[:insert_idx] + mold_block + file_lines[insert_idx:]
+            content = "\n".join(file_lines) + "\n"
 
         with open(dockerfile_path, "w") as f:
             f.write(content)
 
-        print(f"Successfully added {len(lines_to_add)} mold setup line(s) to {dockerfile_path}")
+        print(f"Successfully added {len(lines_to_add)} mold setup line(s) after last FROM in {dockerfile_path}")
         return True
 
     except Exception as e:
