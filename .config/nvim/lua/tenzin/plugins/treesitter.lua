@@ -17,10 +17,7 @@ return {
   config = function()
     local ts = require('nvim-treesitter')
 
-    -- Configure parser installation directory (must be persistent, not in plugin dir)
-    ts.setup({
-      install_dir = vim.fn.stdpath('data') .. '/site',
-    })
+    ts.setup({})
 
     -- State tracking for async parser loading
     local parsers_loaded = {}
