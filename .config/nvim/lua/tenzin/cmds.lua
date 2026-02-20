@@ -1,29 +1,3 @@
--- Autosave after 1 second of no text changes
-local autosave_timer = nil
-local autosave_delay = 1000
-vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
-	group = vim.api.nvim_create_augroup("autosave", { clear = true }),
-	callback = function()
-		if autosave_timer and not autosave_timer:is_closing() then
-			autosave_timer:stop()
-			autosave_timer:close()
-		end
-
-		if vim.bo.modified and vim.bo.buftype == "" and vim.bo.modifiable then
-			if vim.bo.filetype == "rust" then
-				vim.cmd("silent! write")
-				return
-			end
-
-			autosave_timer = vim.defer_fn(function()
-				if vim.bo.modified and vim.bo.buftype == "" and vim.bo.modifiable then
-					vim.cmd("silent! write")
-				end
-			end, autosave_delay)
-		end
-	end,
-})
-
 -- Highlight Yanked area
 vim.api.nvim_create_autocmd("TextYankPost", {
 	group = vim.api.nvim_create_augroup("highlight_yank", {}),
