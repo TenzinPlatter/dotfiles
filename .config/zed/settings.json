@@ -7,6 +7,8 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "ui_font_family": "JetBrainsMono Nerd Font",
+  "buffer_font_family": "JetBrainsMono Nerd Font",
   "ssh_connections": [
     {
       "host": "gr-clanker",
@@ -25,9 +27,6 @@
   "edit_predictions": {
     "mode": "eager"
   },
-  "features": {
-    "edit_prediction_provider": "copilot"
-  },
   "diagnostics": {
     "inline": {
       "enabled": true
@@ -37,11 +36,11 @@
   "relative_line_numbers": "enabled",
   "format_on_save": "off",
   "vim_mode": true,
-  "ui_font_size": 16,
-  "buffer_font_size": 15,
+  "ui_font_size": 18.0,
+  "buffer_font_size": 14.0,
   "theme": {
     "mode": "system",
     "light": "One Light",
-    "dark": "Nordfox - blurred"
+    "dark": "Nordfox - opaque"
   }
 }
