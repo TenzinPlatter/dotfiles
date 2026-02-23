@@ -45,8 +45,8 @@
   "relative_line_numbers": "enabled",
   "format_on_save": "off",
   "vim_mode": true,
-  "ui_font_size": 18.0,
-  "buffer_font_size": 14.0,
+  "ui_font_size": 20.0,
+  "buffer_font_size": 18.0,
   "theme": {
     "mode": "system",
     "light": "One Light",
