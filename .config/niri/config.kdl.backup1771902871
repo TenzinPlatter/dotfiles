@@ -1,7 +1,6 @@
 include "monitors.kdl"
 include "window-rules.kdl"
 include "keybinds.kdl"
-include "dms.kdl"
 
 // INPUT
 // ════════════════════════════════════════════════════════════════
