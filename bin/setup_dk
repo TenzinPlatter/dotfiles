@@ -74,7 +74,6 @@ def add_nvim_to_compose(compose_file=None, target_service=None):
 
     nvim_volumes = [
         "~/.config/nvim:/home/ros/.config/nvim",
-        "~/.local/share/nvim:/home/ros/.local/share/nvim",
     ]
 
     try:
