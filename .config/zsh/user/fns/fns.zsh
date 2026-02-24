@@ -79,7 +79,7 @@ inr() {
 
 foxglove() {
     if ! command -v "ros2" >/dev/null 2>&1; then
-        source /opt/ros/jazzy/setup.zsh
+        sr
     fi
 
     cmd="ros2 launch foxglove_bridge foxglove_bridge_launch.xml"
