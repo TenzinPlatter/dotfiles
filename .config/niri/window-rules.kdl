@@ -46,10 +46,10 @@ window-rule {
     open-floating true
 }
 
-// window-rule {
-//     match app-id="dev.zed.Zed"
-//     opacity 0.92
-// }
+window-rule {
+    match title="Settings"
+    open-floating true
+}
 
 // Indicate screencasted windows with red colors.
 window-rule {
