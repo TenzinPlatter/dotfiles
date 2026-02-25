@@ -1,9 +1,7 @@
 sr() {
-    distro="kilted"
-
     if ! command -v ros2 &> /dev/null; then
-        source /opt/ros/$distro/setup.zsh
-        echo "Sourced global overlay at /opt/ros/$distro"
+        source /opt/ros/kilted/setup.zsh
+        echo "Sourced global overlay at /opt/ros/kilted"
     fi
 
     if [[ ! "$(which rosdep)" = "/home/tenzin/Repositories/rosdep/install/rosdep/bin/rosdep" ]]; then
