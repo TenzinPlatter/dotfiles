@@ -12,12 +12,12 @@ sr() {
     fi
 
     local dir_name="${PWD:t}"
-    if [[ -f /opt/greenroom/$dir_name/install/setup.zsh ]]; then
-        source /opt/greenroom/$dir_name/install/setup.zsh
+    if [[ -f /opt/greenroom/$dir_name/setup.zsh ]]; then
+        source /opt/greenroom/$dir_name/setup.zsh
     fi
 
-    if [[ -n "${PLATFORM_MODULE}" && "${PLATFORM_MODULE}" != "${dir_name}" && -f /opt/greenroom/${PLATFORM_MODULE}/install/setup.zsh ]]; then
-        source /opt/greenroom/$dir_name/install/setup.zsh
+    if [[ -n "${PLATFORM_MODULE}" && "${PLATFORM_MODULE}" != "${dir_name}" && -f /opt/greenroom/${PLATFORM_MODULE}/setup.zsh ]]; then
+        source /opt/greenroom/$dir_name/setup.zsh
     fi
 
 
