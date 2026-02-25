@@ -2,17 +2,17 @@
 vim.deprecate = function() end
 -- Diagnostics: inline virtual text + circle signs in the gutter
 vim.diagnostic.config({
-	virtual_text = {
-		prefix = "●",
-	},
-	signs = {
-		text = {
-			[vim.diagnostic.severity.ERROR] = " ",
-			[vim.diagnostic.severity.WARN] = " ",
-			[vim.diagnostic.severity.HINT] = " ",
-			[vim.diagnostic.severity.INFO] = " ",
-		},
-	},
+  virtual_text = {
+    prefix = "●",
+  },
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = " ",
+      [vim.diagnostic.severity.WARN] = " ",
+      [vim.diagnostic.severity.HINT] = " ",
+      [vim.diagnostic.severity.INFO] = " ",
+    },
+  },
 })
 
 -- transparent background
@@ -39,7 +39,15 @@ vim.opt.splitbelow = true
 vim.opt.linebreak = true
 
 -- borders between splits
-vim.opt.fillchars = { vert = "│", horiz = "─", horizup = "┴", horizdown = "┬", vertleft = "┤", vertright = "├", verthoriz = "┼" }
+vim.opt.fillchars = {
+  vert = "│",
+  horiz = "─",
+  horizup = "┴",
+  horizdown = "┬",
+  vertleft = "┤",
+  vertright = "├",
+  verthoriz = "┼",
+}
 vim.api.nvim_set_hl(0, "WinSeparator", { link = "FloatBorder" })
 
 -- folds

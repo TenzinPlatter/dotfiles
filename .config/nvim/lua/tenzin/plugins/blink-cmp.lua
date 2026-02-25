@@ -1,71 +1,71 @@
 return {
-	"saghen/blink.cmp",
-	dependencies = { "rafamadriz/friendly-snippets" },
-	version = "1.*",
-	opts = {
-		keymap = {
-			preset = "super-tab",
-			["<C-Space>"] = false,
-			["<C-L>"] = { "snippet_forward", "fallback" },
-			["<C-H>"] = { "snippet_backward", "fallback" },
-			["<C-D>"] = { "scroll_documentation_down", "fallback" },
-			["<C-U>"] = { "scroll_documentation_up", "fallback" },
-			["<C-F>"] = { "scroll_documentation_down", "fallback" },
-			["<C-B>"] = { "scroll_documentation_up", "fallback" },
-			["<C-J>"] = { "scroll_signature_down", "fallback" },
-			["<C-K>"] = { "scroll_signature_up", "fallback" },
-		},
+  "saghen/blink.cmp",
+  dependencies = { "rafamadriz/friendly-snippets" },
+  version = "1.*",
+  opts = {
+    keymap = {
+      preset = "super-tab",
+      ["<C-Space>"] = false,
+      ["<C-L>"] = { "snippet_forward", "fallback" },
+      ["<C-H>"] = { "snippet_backward", "fallback" },
+      ["<C-D>"] = { "scroll_documentation_down", "fallback" },
+      ["<C-U>"] = { "scroll_documentation_up", "fallback" },
+      ["<C-F>"] = { "scroll_documentation_down", "fallback" },
+      ["<C-B>"] = { "scroll_documentation_up", "fallback" },
+      ["<C-J>"] = { "scroll_signature_down", "fallback" },
+      ["<C-K>"] = { "scroll_signature_up", "fallback" },
+    },
 
-		appearance = {
-			-- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-			-- Adjusts spacing to ensure icons are aligned
-			nerd_font_variant = "mono",
-		},
+    appearance = {
+      -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+      -- Adjusts spacing to ensure icons are aligned
+      nerd_font_variant = "mono",
+    },
 
-		-- (Default) Only show the documentation popup when manually triggered
-		completion = {
-			documentation = {
-			auto_show = true,
-			window = {
-				border = "rounded",
-				winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
-			},
-		},
-		menu = {
-			border = "rounded",
-			winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
-		},
-			ghost_text = {
-				enabled = true,
-			}
-		},
+    -- (Default) Only show the documentation popup when manually triggered
+    completion = {
+      documentation = {
+        auto_show = true,
+        window = {
+          border = "rounded",
+          winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+        },
+      },
+      menu = {
+        border = "rounded",
+        winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+      },
+      ghost_text = {
+        enabled = true,
+      },
+    },
 
-		signature = {
-		window = {
-			border = "rounded",
-			winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
-		},
-	},
+    signature = {
+      window = {
+        border = "rounded",
+        winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+      },
+    },
 
-	-- Default list of enabled providers defined so that you can extend it
-		-- elsewhere in your config, without redefining it, due to `opts_extend`
-		sources = {
-			default = { "lazydev", "lsp", "path", "snippets", "buffer" },
-			providers = {
-				lazydev = {
-					name = "LazyDev",
-					module = "lazydev.integrations.blink",
-					score_offset = 100,
-				},
-			},
-		},
+    -- Default list of enabled providers defined so that you can extend it
+    -- elsewhere in your config, without redefining it, due to `opts_extend`
+    sources = {
+      default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+      providers = {
+        lazydev = {
+          name = "LazyDev",
+          module = "lazydev.integrations.blink",
+          score_offset = 100,
+        },
+      },
+    },
 
-		-- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
-		-- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
-		-- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust_with_warning"`
-		--
-		-- See the fuzzy documentation for more information
-		fuzzy = { implementation = "prefer_rust_with_warning" },
-	},
-	opts_extend = { "sources.default" },
+    -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+    -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
+    -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust_with_warning"`
+    --
+    -- See the fuzzy documentation for more information
+    fuzzy = { implementation = "prefer_rust_with_warning" },
+  },
+  opts_extend = { "sources.default" },
 }

@@ -1,19 +1,19 @@
 return {
-	"mrcjkb/rustaceanvim",
-	lazy = false,
-	config = function()
-		vim.g.rustaceanvim = {
-			tools = {},
-			server = {
-				default_settings = {
-					-- rust-analyzer language server configuration
-					["rust-analyzer"] = {
-						rust = {
-							analyzerTargetDir = true,
-						},
-					},
-				},
-			},
-		}
-	end,
+  "mrcjkb/rustaceanvim",
+  lazy = false,
+  config = function()
+    vim.g.rustaceanvim = {
+      tools = {},
+      server = {
+        default_settings = {
+          -- rust-analyzer language server configuration
+          ["rust-analyzer"] = {
+            rust = {
+              analyzerTargetDir = true,
+            },
+          },
+        },
+      },
+    }
+  end,
 }

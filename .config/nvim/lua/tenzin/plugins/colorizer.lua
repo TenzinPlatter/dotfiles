@@ -1,3 +1,3 @@
 return {
-	"https://github.com/norcalli/nvim-colorizer.lua",
+  "https://github.com/norcalli/nvim-colorizer.lua",
 }

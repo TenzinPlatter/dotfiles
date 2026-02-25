@@ -1,3 +1,3 @@
 return {
-	"skwee357/nvim-prose",
+  "skwee357/nvim-prose",
 }

@@ -1,7 +1,6 @@
 vim.g.mapleader = " "
 vim.opt.termguicolors = true
 
-
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   vim.fn.system({
@@ -32,7 +31,7 @@ vim.api.nvim_set_hl(0, "Visual", { bg = "#666666" })
 vim.cmd("hi Search guibg=#FEFFA7")
 -- vim.cmd('hi CursorLineNr guibg=White')
 vim.cmd("hi ColorColumn guibg=Black")
-vim.api.nvim_set_hl(0, '@lsp.mod.mutable', { underline = true })
+vim.api.nvim_set_hl(0, "@lsp.mod.mutable", { underline = true })
 vim.api.nvim_set_hl(0, "@lsp.mod.usedAsMutableReference.cpp", { underline = true })
 
 vim.cmd("hi SnippetTabstop guibg=None")

@@ -1,3 +1,3 @@
 return {
-	"https://github.com/lambdalisue/vim-suda"
+  "https://github.com/lambdalisue/vim-suda",
 }

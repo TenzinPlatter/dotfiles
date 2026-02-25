@@ -1,3 +1,3 @@
 return {
-	"https://github.com/MTDL9/vim-log-highlighting"
+  "https://github.com/MTDL9/vim-log-highlighting",
 }

@@ -19,7 +19,7 @@ describe("insert_async_before_function", function()
     local lines = {
       "pub fn foo() {",
       "    awai",
-      "}"
+      "}",
     }
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
 
@@ -48,13 +48,13 @@ describe("insert_async_before_function", function()
     -- Let me just test with the line having "awai" at the end, no leading spaces
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, {
       "pub fn foo() {",
-      "    let x = awai",  -- Changed: "awai" now at end
-      "}"
+      "    let x = awai", -- Changed: "awai" now at end
+      "}",
     })
     -- Now cursor should be after 'i' in "awai", which is at position 16 (0-indexed)
     -- "    let x = awai" has 16 characters, cursor at position 16 is after 'i'
     local line2 = vim.api.nvim_buf_get_lines(bufnr, 1, 2, false)[1]
-    vim.api.nvim_win_set_cursor(win, { 2, #line2 })  -- Position at end of line
+    vim.api.nvim_win_set_cursor(win, { 2, #line2 }) -- Position at end of line
 
     -- Call the function
     helpers.insert_async_before_function()
@@ -85,7 +85,7 @@ describe("insert_async_before_function", function()
     local lines = {
       "pub(crate) fn foo() {",
       "    let x = awai",
-      "}"
+      "}",
     }
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
 
@@ -121,7 +121,7 @@ describe("insert_async_before_function", function()
     local lines = {
       "pub unsafe fn foo() {",
       "    let x = awai",
-      "}"
+      "}",
     }
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
 
@@ -151,7 +151,7 @@ describe("insert_async_before_function", function()
     local lines = {
       "pub async fn foo() {",
       "    let x = awai",
-      "}"
+      "}",
     }
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
 

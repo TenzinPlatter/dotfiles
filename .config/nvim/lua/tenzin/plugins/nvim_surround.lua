@@ -1,9 +1,8 @@
 return {
-	'https://github.com/kylechui/nvim-surround',
-	version = "*",
-	event = "VeryLazy",
-	config = function ()
-		require("nvim-surround").setup({
-		})
-	end
+  "https://github.com/kylechui/nvim-surround",
+  version = "*",
+  event = "VeryLazy",
+  config = function()
+    require("nvim-surround").setup({})
+  end,
 }

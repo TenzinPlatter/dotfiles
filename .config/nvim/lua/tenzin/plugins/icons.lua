@@ -1,3 +1,3 @@
 return {
-	"DaikyXendo/nvim-material-icon"
+  "DaikyXendo/nvim-material-icon",
 }
