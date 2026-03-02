@@ -84,3 +84,19 @@ window-rule {
         blur true
     }
 } 
+
+window-rule {
+    match is-focused=true
+    opacity 0.9
+    background-effect {
+        blur true
+    }
+}
+
+window-rule {
+    match is-focused=false
+    opacity 0.8
+    background-effect {
+        blur true
+    }
+}
