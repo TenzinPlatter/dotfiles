@@ -23,6 +23,9 @@ window-rule {
     match app-id="kitty"
     draw-border-with-background false
     opacity 1.0
+    background-effect {
+        blur true
+    }
 }
 
 window-rule {
@@ -77,4 +80,7 @@ window-rule {
 window-rule {
     match app-id="dev.zed.*"
     opacity 0.8
+    background-effect {
+        blur true
+    }
 } 
