@@ -54,15 +54,15 @@
       "z i": "editor::ToggleFold"
     }
   },
-  {
-    "context": "((VimControl && !menu) || (!Editor))",
-    "bindings": {
-      "alt-k": "workspace::ActivatePaneUp",
-      "alt-j": "workspace::ActivatePaneDown",
-      "alt-h": "workspace::ActivatePaneLeft",
-      "alt-l": "workspace::ActivatePaneRight"
-    }
-  },
+  // {
+  //   "context": "((VimControl && !menu) || (!Editor))",
+  //   "bindings": {
+  //     "alt-k": "workspace::ActivatePaneUp",
+  //     "alt-j": "workspace::ActivatePaneDown",
+  //     "alt-h": "workspace::ActivatePaneLeft",
+  //     "alt-l": "workspace::ActivatePaneRight"
+  //   }
+  // },
   {
     "context": "(((Editor && in_snippet) && has_next_tabstop) && !showing_completions)",
     "bindings": {

@@ -73,3 +73,8 @@ window-rule {
         inactive-color "#7d0d2d"
     }
 }
+
+window-rule {
+    match app-id="dev.zed.*"
+    opacity 0.8
+} 
