@@ -40,6 +40,7 @@
   ],
   "show_completions_on_input": true,
   "edit_predictions": {
+    "provider": "copilot",
     "mode": "eager"
   },
   "diagnostics": {
