@@ -4,15 +4,16 @@
 
 window-rule {
     match is-focused=true
-    opacity 0.9
-    background-effect {
-        blur true
-    }
+    opacity 0.94
 }
 
 window-rule {
     match is-focused=false
-    opacity 0.8
+    opacity 0.85
+}
+
+window-rule {
+    match app-id=".*"
     background-effect {
         blur true
     }
@@ -33,27 +34,6 @@ window-rule {
     geometry-corner-radius 12
     clip-to-geometry true
     draw-border-with-background false
-}
-
-window-rule {
-    match app-id="kitty"
-    draw-border-with-background false
-    opacity 0.8
-    background-effect {
-        blur true
-    }
-}
-
-window-rule {
-    match app-id="kitty"
-    match is-active=true
-    opacity 0.7
-}
-
-window-rule {
-    match app-id="kitty"
-    match is-active=false
-    opacity 0.6
 }
 
 window-rule {
@@ -107,8 +87,17 @@ window-rule {
 
 window-rule {
     match app-id="dev.zed.*"
-    opacity 0.8
-    background-effect {
-        blur true
-    }
+    opacity 0.85
 } 
+
+window-rule {
+    match app-id="kitty"
+    match is-focused=true
+    opacity 0.87
+}
+
+window-rule {
+    match app-id="kitty"
+    match is-focused=false
+    opacity 0.82
+}
