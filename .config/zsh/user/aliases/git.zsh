@@ -17,7 +17,7 @@ alias pcr="pre-commit run"
 # Clone a repo and cd into the directory
 gcd() {
   if [ $# -lt 1 ]; then
-    echo "Usage: gcd <repo-url>"
+    echo "Usage: gcd <repo-url> [dir]"
     return 1
   fi
 
@@ -25,7 +25,13 @@ gcd() {
   local before=$(ls -1d */ 2>/dev/null | sort)
 
   # Clone the repo
-  git clone "$1" || return 1
+  if [[ -z "$2" ]]; then
+    git clone "$1" "$2" || return 1
+    cd "$2"
+    return 0
+  else
+    git clone "$1" "$2" || return 1
+  fi
 
   # Get list of directories after cloning
   local after=$(ls -1d */ 2>/dev/null | sort)
