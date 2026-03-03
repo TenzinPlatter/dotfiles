@@ -13,7 +13,6 @@ window-rule {
 }
 
 window-rule {
-    match app-id=".*"
     background-effect {
         blur true
     }
