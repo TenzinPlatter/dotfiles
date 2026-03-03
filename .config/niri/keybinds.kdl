@@ -186,6 +186,7 @@ binds {
     Mod+Shift+V { switch-focus-between-floating-and-tiling; }
 
     Mod+W { toggle-window-floating; }
+    Mod+O repeat=false hotkey-overlay-title="Toggle Window Opacity" { toggle-window-rule-opacity; }
 
     Print { screenshot; }
     Ctrl+Print { screenshot-screen; }
