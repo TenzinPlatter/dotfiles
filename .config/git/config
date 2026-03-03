@@ -33,6 +33,9 @@
   excludesFile = /home/tenzin/.gitignore_global
   pager = delta
 
+[delta]
+  side-by-side = true
+  line-numbers = true
 
 [url "git@github.com:TenzinPlatter/"]
   insteadOf = "tp:"
