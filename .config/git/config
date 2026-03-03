@@ -36,6 +36,8 @@
 [delta]
   side-by-side = true
   line-numbers = true
+  line-numbers-left-format  = "{nm:>1}│"
+  line-numbers-right-format = "{np:>1}│"
 
 [url "git@github.com:TenzinPlatter/"]
   insteadOf = "tp:"
