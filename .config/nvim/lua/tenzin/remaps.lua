@@ -71,6 +71,12 @@ vim.keymap.set("n", "<C-k>", function()
   vim.cmd("normal! ==")
 end, { desc = "Move line up" })
 
+-- Terminal window navigation
+vim.keymap.set("t", "<C-w>h", "<C-\\><C-n><C-w>h", { desc = "Navigate left from terminal" })
+vim.keymap.set("t", "<C-w>j", "<C-\\><C-n><C-w>j", { desc = "Navigate down from terminal" })
+vim.keymap.set("t", "<C-w>k", "<C-\\><C-n><C-w>k", { desc = "Navigate up from terminal" })
+vim.keymap.set("t", "<C-w>l", "<C-\\><C-n><C-w>l", { desc = "Navigate right from terminal" })
+
 vim.keymap.set("v", "<", "<gv", { desc = "Indent left and reselect" })
 vim.keymap.set("v", ">", ">gv", { desc = "Indent right and reselect" })
 
