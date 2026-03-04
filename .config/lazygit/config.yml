@@ -27,3 +27,4 @@ git:
   paging:
     colorArg: always
     pager: delta --side-by-side --line-numbers --paging=never
+    externalDiffCommand: difft --display=side-by-side-show-both --color=always
