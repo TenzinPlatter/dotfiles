@@ -31,7 +31,7 @@
     }
   },
   {
-    "context": "Workspace && vim_mode == normal",
+    "context": "(vim_mode == normal)",
     "bindings": {
       "space w": "workspace::SaveWithoutFormat"
     }
