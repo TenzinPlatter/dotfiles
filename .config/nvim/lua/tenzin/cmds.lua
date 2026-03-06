@@ -1,3 +1,13 @@
+-- Force redraw on InsertLeave to clear floating window artifacts
+vim.api.nvim_create_autocmd("InsertLeave", {
+  group = vim.api.nvim_create_augroup("redraw_on_insert_leave", {}),
+  callback = function()
+    vim.schedule(function()
+      vim.cmd("redraw")
+    end)
+  end,
+})
+
 -- Highlight Yanked area
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = vim.api.nvim_create_augroup("highlight_yank", {}),
