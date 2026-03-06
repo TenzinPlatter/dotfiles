@@ -28,12 +28,12 @@ return {
         auto_show = true,
         window = {
           border = "rounded",
-          winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+          winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder",
         },
       },
       menu = {
         border = "rounded",
-        winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+        winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder",
       },
       ghost_text = {
         enabled = true,
@@ -43,7 +43,7 @@ return {
     signature = {
       window = {
         border = "rounded",
-        winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+        winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder",
       },
     },
 
