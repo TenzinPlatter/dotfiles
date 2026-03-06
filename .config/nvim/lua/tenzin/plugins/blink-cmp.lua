@@ -41,6 +41,7 @@ return {
     },
 
     signature = {
+      enabled = true,
       window = {
         border = "rounded",
         winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder",
