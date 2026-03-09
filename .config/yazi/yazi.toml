@@ -1,6 +1,6 @@
 [opener]
 imgopen = [
-  { run = 'swayimg "$@"', orphan = true, for = "unix" },
+  { run = 'zen-browser "$@"', orphan = true, for = "unix" },
 ]
 
 [open]
