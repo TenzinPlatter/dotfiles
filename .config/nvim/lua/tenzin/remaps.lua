@@ -1,5 +1,9 @@
 vim.keymap.set("n", "zi", "za", { desc = "Toggle fold under cursor" })
 
+vim.keymap.set("n", "<leader>w", function ()
+  vim.cmd("wall")
+end)
+
 vim.keymap.set("n", "ZZ", function()
   -- Close all sidekick terminals if any are open
   local Terminal = require("sidekick.cli.terminal")
