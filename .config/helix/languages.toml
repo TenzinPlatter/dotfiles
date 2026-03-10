@@ -10,6 +10,11 @@ formatter = {command = "dprint", args = ["fmt", "--stdin", "md"]}
 name = "cpp"
 formatter = {command = "clang-format"}
 auto-format = true
+language-servers = [{name = "clangd"}]
+
+[language-server.clangd]
+command = "clangd"
+args = ["--query-driver=/usr/bin/*,/opt/ros/kilted/bin/*"]
 
 [[language]]
 name = "python"
