@@ -50,43 +50,6 @@ return {
       vim.notify = notify.make_notify()
 
 
-      -- Sessions (replaces persistence.nvim)
-      require("mini.sessions").setup({
-        autoread = false,
-        autowrite = true,
-      })
-
-      vim.keymap.set("n", "<leader>ql", function()
-        MiniSessions.read()
-      end, { desc = "Load session for current directory" })
-
-      vim.keymap.set("n", "<leader>qS", function()
-        local names = vim.tbl_keys(MiniSessions.detected)
-        if #names == 0 then
-          vim.notify("No sessions found", vim.log.levels.WARN)
-          return
-        end
-        vim.ui.select(names, { prompt = "Select session:" }, function(choice)
-          if choice then MiniSessions.read(choice) end
-        end)
-      end, { desc = "Select a session to load" })
-
-      vim.keymap.set("n", "<leader>qL", function()
-        local latest, latest_time = nil, 0
-        for name, data in pairs(MiniSessions.detected) do
-          if data.modify_time > latest_time then
-            latest_time = data.modify_time
-            latest = name
-          end
-        end
-        if latest then MiniSessions.read(latest)
-        else vim.notify("No sessions found", vim.log.levels.WARN) end
-      end, { desc = "Load the last session" })
-
-      vim.keymap.set("n", "<leader>qd", function()
-        vim.g.minisessions_disable = true
-        vim.notify("mini.sessions: autowrite disabled", vim.log.levels.INFO)
-      end, { desc = "Stop session saving" })
 
       -- Diff (replaces gitsigns.nvim)
       require("mini.diff").setup({
