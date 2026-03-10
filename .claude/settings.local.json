@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(git ls-tree:*)",
-      "Bash(pgrep:*)"
+      "Bash(pgrep:*)",
+      "WebSearch",
+      "WebFetch(domain:zellij.dev)"
     ]
   }
 }
