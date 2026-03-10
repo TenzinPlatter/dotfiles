@@ -137,8 +137,6 @@ return {
               { hl = "MiniStatuslineFilename", strings = { filename } },
             })
           end,
-        },
-        content = {
           inactive = function()
             local bufname = vim.api.nvim_buf_get_name(0)
             local name = bufname ~= "" and vim.fn.fnamemodify(bufname, ":t") or "[No Name]"
