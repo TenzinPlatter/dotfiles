@@ -24,30 +24,12 @@ vim.api.nvim_set_hl(0, "CursorLine", { bg = "Black" })
 -- for obsidian.nvim
 vim.opt.conceallevel = 1
 
-vim.opt.cursorline = true
--- vim.opt.cursorlineopt = 'number'
-vim.opt.smartcase = true
-
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 
 vim.opt.colorcolumn = "100"
-vim.opt.splitright = true
-vim.opt.splitbelow = true
-vim.opt.linebreak = true
-
--- borders between splits
-vim.opt.fillchars = {
-  vert = "│",
-  horiz = "─",
-  horizup = "┴",
-  horizdown = "┬",
-  vertleft = "┤",
-  vertright = "├",
-  verthoriz = "┼",
-}
 vim.api.nvim_set_hl(0, "WinSeparator", { link = "FloatBorder" })
 
 -- folds
@@ -60,9 +42,6 @@ vim.opt.foldlevel = 99
 -- vim.opt.foldlevelstart = 1
 
 vim.opt.rnu = true
-vim.opt.nu = true
-
-vim.opt.ignorecase = true
 vim.opt.wrap = true
 
 -- disables netrw

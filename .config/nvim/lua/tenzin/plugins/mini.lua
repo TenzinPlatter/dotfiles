@@ -174,7 +174,7 @@ return {
             if prose.is_available() then words = prose.word_count() end
 
             local lsp = ""
-            local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+            local clients = vim.lsp.get_clients({ bufnr = 0 })
             if #clients > 0 then lsp = "LSP:" .. #clients end
 
             local filename = statusline.section_filename({ trunc_width = 140 })
