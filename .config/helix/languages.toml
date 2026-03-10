@@ -8,7 +8,7 @@ formatter = {command = "dprint", args = ["fmt", "--stdin", "md"]}
 
 [[language]]
 name = "cpp"
-language-server = { command = "clangd", args=["--compile-commands-dir=build"] }
+language-servers = [{ command = "clangd", args=["--compile-commands-dir=build"] }]
 formatter = {command = "clang-format"}
 auto-format = true
 
