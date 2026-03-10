@@ -2,6 +2,7 @@
 
 alias cpwd="pwd | tr -d '\n' | wl-copy"
 alias yz="yazi"
+alias dash="gh dash"
 
 alias cl="claude"
 alias yz="yazi"
