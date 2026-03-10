@@ -10,7 +10,7 @@ return {
           signs = {
             add = "▎",
             change = "▎",
-            delete "",
+            delete = "",
           },
         },
       })
