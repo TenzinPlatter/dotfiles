@@ -7,6 +7,22 @@ return {
     dashboard = {
       enabled = true,
       preset = {
+        keys = {
+          { icon = " ", key = "f", desc = "Find File",       action = function() require("neural-open").open() end },
+          { icon = " ", key = "n", desc = "New File",        action = ":ene | startinsert" },
+          { icon = " ", key = "g", desc = "Find Text",       action = ":lua Snacks.dashboard.pick('live_grep')" },
+          { icon = " ", key = "r", desc = "Recent Files",    action = ":lua Snacks.dashboard.pick('oldfiles')" },
+          { icon = " ", key = "s", desc = "Restore Session", action = function()
+            local session_name = vim.fn.getcwd():gsub("/", "%%") .. ".vim"
+            if MiniSessions.detected[session_name] then
+              MiniSessions.read(session_name)
+            else
+              vim.notify("No session for current directory", vim.log.levels.WARN)
+            end
+          end },
+          { icon = "󰒲 ", key = "l", desc = "Lazy",            action = ":Lazy" },
+          { icon = " ", key = "q", desc = "Quit",            action = ":qa" },
+        },
         header = [[
                                                          _________________________
                     /\      _____          _____       |   |     |     |    | |  \
