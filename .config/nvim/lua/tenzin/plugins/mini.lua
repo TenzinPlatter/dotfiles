@@ -138,9 +138,18 @@ return {
             })
           end,
         },
+        content = {
+          inactive = function()
+            local bufname = vim.api.nvim_buf_get_name(0)
+            local name = bufname ~= "" and vim.fn.fnamemodify(bufname, ":t") or "[No Name]"
+            return "%#MiniStatuslineInactive# " .. name .. " %="
+          end,
+        },
         use_icons = true,
         set_vim_settings = true,
       })
+
+      vim.api.nvim_set_hl(0, "MiniStatuslineInactive", { fg = "#cdd6f4", bg = "#313244", bold = true })
     end,
   },
 }
