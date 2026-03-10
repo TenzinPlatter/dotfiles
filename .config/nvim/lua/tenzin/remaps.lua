@@ -7,7 +7,7 @@ end, { desc = "Save all buffers" })
 vim.keymap.set("n", "ZZ", function()
   -- Close all sidekick terminals if any are open
   local Terminal = require("sidekick.cli.terminal")
-  require("persistence").save()
+  MiniSessions.write(nil, { force = true })
   for _, term in pairs(Terminal.terminals) do
     term:close()
   end

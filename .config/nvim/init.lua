@@ -22,9 +22,6 @@ for _, file_path in ipairs(lua_files) do
   require("tenzin." .. file_name)
 end
 
--- colorizer has to be setup after other plugins
-require("colorizer").setup()
-
 -- set highlight colours
 vim.api.nvim_set_hl(0, "Visual", { bg = "#666666" })
 -- vim.cmd('hi MatchParen guibg=White')
