@@ -186,7 +186,17 @@ return {
             local clients = vim.lsp.get_clients({ bufnr = 0 })
             if #clients > 0 then lsp = "LSP:" .. #clients end
 
-            local filename = statusline.section_filename({ trunc_width = 140 })
+            local filename = ""
+            local bufname = vim.api.nvim_buf_get_name(0)
+            if bufname ~= "" then
+              local root = vim.fs.root(0, { ".git", ".hg", ".svn" }) or vim.fn.getcwd()
+              local rel = vim.fn.fnamemodify(bufname, ":~:.")
+              local from_root = bufname:sub(#root + 2)
+              if from_root ~= "" then rel = from_root end
+              if vim.bo.modified then rel = rel .. " [+]" end
+              if vim.bo.readonly then rel = rel .. " [-]" end
+              filename = rel
+            end
 
             return statusline.combine_groups({
               { hl = mode_hl,                  strings = { mode, rec } },
