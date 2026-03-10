@@ -51,6 +51,25 @@ return {
 
 
 
+      -- AI text objects — adds 'z' for folds: vaz, daz, ciz, etc.
+      require("mini.ai").setup({
+        custom_textobjects = {
+          z = function()
+            local cur_line = vim.fn.line(".")
+            local cur_col = vim.fn.col(".")
+            vim.cmd("normal! [z")
+            local start_line = vim.fn.line(".")
+            vim.cmd("normal! ]z")
+            local end_line = vim.fn.line(".")
+            vim.fn.cursor(cur_line, cur_col)
+            return {
+              from = { line = start_line, col = 1 },
+              to = { line = end_line, col = #vim.fn.getline(end_line) },
+            }
+          end,
+        },
+      })
+
       -- Diff (replaces gitsigns.nvim)
       require("mini.diff").setup({
         view = {
