@@ -57,12 +57,7 @@ return {
       })
 
       vim.keymap.set("n", "<leader>ql", function()
-        local session_name = vim.fn.getcwd():gsub("/", "%%")
-        if MiniSessions.detected[session_name] then
-          MiniSessions.read(session_name)
-        else
-          vim.notify("No session for current directory", vim.log.levels.WARN)
-        end
+        MiniSessions.read()
       end, { desc = "Load session for current directory" })
 
       vim.keymap.set("n", "<leader>qS", function()
