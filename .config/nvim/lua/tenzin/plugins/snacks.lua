@@ -14,11 +14,7 @@ return {
           { icon = " ", key = "r", desc = "Recent Files",    action = ":lua Snacks.dashboard.pick('oldfiles')" },
           { icon = " ", key = "s", desc = "Restore Session", action = function()
             local session_name = vim.fn.getcwd():gsub("/", "%%") .. ".vim"
-            if MiniSessions.detected[session_name] then
-              MiniSessions.read(session_name)
-            else
-              vim.notify("No session for current directory", vim.log.levels.WARN)
-            end
+            MiniSessions.read(session_name)
           end },
           { icon = "󰒲 ", key = "l", desc = "Lazy",            action = ":Lazy" },
           { icon = " ", key = "q", desc = "Quit",            action = ":qa" },

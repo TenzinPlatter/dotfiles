@@ -3,8 +3,8 @@ vim.keymap.set("n", "zi", "za", { desc = "Toggle fold under cursor" })
 vim.keymap.set("n", "ZZ", function()
   -- Close all sidekick terminals if any are open
   local Terminal = require("sidekick.cli.terminal")
-  local session_name = vim.fn.getcwd():gsub("/", "%%") .. ".vim"
-  MiniSessions.write(session_name, { force = true })
+  -- local session_name = vim.fn.getcwd():gsub("/", "%%") .. ".vim"
+  -- MiniSessions.write(session_name, { force = true })
   for _, term in pairs(Terminal.terminals) do
     term:close()
   end
