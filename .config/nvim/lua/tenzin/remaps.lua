@@ -1,8 +1,5 @@
 vim.keymap.set("n", "zi", "za", { desc = "Toggle fold under cursor" })
 
-vim.keymap.set("n", "<leader>w", function()
-  vim.cmd("wall")
-end, { desc = "Save all buffers" })
 
 vim.keymap.set("n", "ZZ", function()
   -- Close all sidekick terminals if any are open
@@ -47,8 +44,6 @@ vim.keymap.set("n", "<leader>qf", function()
   vim.cmd("copen")
 end, { desc = "Open quickfix list" })
 
-vim.keymap.set("n", "j", "gj", { desc = "Move down by display line" })
-vim.keymap.set("n", "k", "gk", { desc = "Move up by display line" })
 
 vim.keymap.set("n", "<C-c>", function()
   vim.cmd("nohlsearch")

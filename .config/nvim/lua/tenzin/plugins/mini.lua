@@ -17,6 +17,15 @@ return {
     version = false,
     dependencies = { "f-person/git-blame.nvim", "skwee357/nvim-prose" },
     config = function()
+      -- Basics (sets common options, j/k display-line motion, yank highlight, etc.)
+      require("mini.basics").setup({
+        options = { win_borders = "single" },
+        mappings = { basic = true, option_toggle_prefix = [[\]] },
+        autocommands = { basic = true },
+      })
+      -- mini.basics sets wrap=false; override to keep wrapping on
+      vim.opt.wrap = true
+
       -- Cursorword
       require("mini.cursorword").setup()
       local function set_cursorword_hl()
