@@ -2,6 +2,7 @@ return {
   "epwalsh/obsidian.nvim",
   dependencies = {
     "hrsh7th/nvim-cmp",
+    "nvim-telescope/telescope.nvim",
     "nvim-lua/plenary.nvim",
   },
   version = "*", -- recommended, use latest release instead of latest commit

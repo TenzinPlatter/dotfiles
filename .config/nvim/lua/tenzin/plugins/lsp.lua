@@ -3,7 +3,7 @@ return {
     "neovim/nvim-lspconfig",
     keys = {
       {
-        "<leader>k",
+        "<C-S>",
         function()
           vim.diagnostic.open_float({ border = "rounded" })
         end,
