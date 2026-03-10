@@ -35,8 +35,6 @@ return {
       set_cursorword_hl()
       vim.api.nvim_create_autocmd("ColorScheme", { callback = set_cursorword_hl })
 
-      -- Surround (replaces nvim-surround): sa/sd/sr/sf/sh
-      require("mini.surround").setup()
 
       -- Pairs (replaces nvim-autopairs)
       require("mini.pairs").setup()
