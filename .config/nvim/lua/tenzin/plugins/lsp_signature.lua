@@ -8,7 +8,7 @@ return {
   },
   keys = {
     {
-      "<C-s>",
+      "<leader>k",
       function()
         require("lsp_signature").toggle_float_win()
       end,
