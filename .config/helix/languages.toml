@@ -12,7 +12,7 @@ language-servers = ["clangd"]
 formatter = {command = "clang-format"}
 auto-format = true
 
-[[language-erver.clangd]]
+[[language-server.clangd]]
 command = "clangd"
 args=["--compile-commands-dir=build"]
 
