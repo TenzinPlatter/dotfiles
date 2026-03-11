@@ -4,7 +4,6 @@ return {
   opts = {
     routes = {
       { filter = { event = "msg_show", kind = "", find = "written" }, opts = { skip = true } },
-      { filter = { event = "notify", find = "written" }, view = "mini" },
     },
     lsp = {
       -- override markdown rendering so that **cmp** and other plugins use **Treesitter**

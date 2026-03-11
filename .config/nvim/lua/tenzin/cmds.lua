@@ -1,6 +1,6 @@
 vim.api.nvim_create_autocmd("BufWritePost", {
   callback = function()
-    vim.notify(vim.fn.expand("%:t") .. " written", vim.log.levels.INFO)
+    require("fidget").notify(vim.fn.expand("%:t") .. " written", vim.log.levels.INFO)
   end,
 })
 
