@@ -30,7 +30,7 @@ gcd() {
     cd "$2"
     return 0
   else
-    git clone "$1" "$2" || return 1
+    git clone "$1" || return 1
   fi
 
   # Get list of directories after cloning
