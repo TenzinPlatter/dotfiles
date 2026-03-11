@@ -23,6 +23,13 @@ return {
       inc_rename = false, -- enables an input dialog for inc-rename.nvim
       lsp_doc_border = false, -- add a border to hover docs and signature help
     },
+    views = {
+      mini = {
+        win_options = {
+          winhighlight = "Normal:Normal,FloatBorder:Normal",
+        },
+      },
+    },
     popupmenu = {
       enabled = false,
       backend = "nui",
