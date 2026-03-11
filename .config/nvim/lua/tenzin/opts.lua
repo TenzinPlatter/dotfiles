@@ -18,6 +18,12 @@ vim.diagnostic.config({
 -- transparent background
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+vim.api.nvim_set_hl(0, "NoiceMini", { bg = "none" })
+vim.api.nvim_create_autocmd("ColorScheme", {
+  callback = function()
+    vim.api.nvim_set_hl(0, "NoiceMini", { bg = "none" })
+  end,
+})
 vim.api.nvim_set_hl(0, "CursorLine", { bg = "Black" })
 -- vim.api.nvim_set_hl(0, 'Cursor', { bg = '#666666', fg = '#ffffff' })
 

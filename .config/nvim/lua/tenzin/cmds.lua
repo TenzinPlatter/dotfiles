@@ -1,3 +1,9 @@
+vim.api.nvim_create_autocmd("BufWritePost", {
+  callback = function()
+    vim.notify(vim.fn.expand("%:t") .. " written", vim.log.levels.INFO)
+  end,
+})
+
 -- Force redraw on InsertLeave to clear floating window artifacts
 vim.api.nvim_create_autocmd("InsertLeave", {
   group = vim.api.nvim_create_augroup("redraw_on_insert_leave", {}),
