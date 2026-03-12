@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(git ls-tree:*)",
-      "Bash(pgrep:*)"
-    ]
-  }
-}
