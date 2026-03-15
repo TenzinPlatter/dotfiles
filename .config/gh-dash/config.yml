@@ -72,7 +72,8 @@ keybindings:
               'nvim -c
               ":silent Octo pr edit {{.PrNumber}}"'
 
-repoPaths: {}
+repoPaths:
+    greenroom-robotics/*: ~/Repositories/
 theme:
     ui:
         sectionsShowCount: true
