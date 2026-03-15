@@ -73,7 +73,7 @@ keybindings:
               ":silent Octo pr edit {{.PrNumber}}"'
 
 repoPaths:
-    greenroom-robotics/*: ~/Repositories/
+    greenroom-robotics/*: ~/Repositories/platform/packages/*
 theme:
     ui:
         sectionsShowCount: true
