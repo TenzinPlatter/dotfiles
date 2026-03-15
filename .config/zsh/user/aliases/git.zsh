@@ -25,7 +25,7 @@ gcd() {
   local before=$(ls -1d */ 2>/dev/null | sort)
 
   # Clone the repo
-  if [[ -z "$2" ]]; then
+  if [[ -n "$2" ]]; then
     git clone "$1" "$2" || return 1
     cd "$2"
     return 0
