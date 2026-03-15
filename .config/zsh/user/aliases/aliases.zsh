@@ -3,6 +3,7 @@
 alias cpwd="pwd | tr -d '\n' | wl-copy"
 alias yz="yazi"
 alias dash="gh dash"
+alias nvc="cd ~/.config; nv; cd -"
 
 alias cl="claude"
 alias yz="yazi"
