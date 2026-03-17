@@ -35,6 +35,7 @@ export LD_FLAGS="-fuse-ld=mold"
 export MANPAGER='nvim +Man!'   
 
 setopt NO_AUTO_CD
+setopt hist_ignore_all_dups
 
 autoload -z edit-command-line
 
