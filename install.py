@@ -72,16 +72,14 @@ def sudo_keepalive() -> None:
 
 
 def run(cmd: str, check: bool = True, **kwargs) -> subprocess.CompletedProcess:
-    # Detach from controlling TTY so nothing can write to it
     kwargs.setdefault("stdin", _devnull)
     kwargs.setdefault("stdout", _devnull)
     kwargs.setdefault("stderr", _devnull)
-    kwargs.setdefault("start_new_session", True)
     return subprocess.run(cmd, shell=True, check=check, **kwargs)
 
 
 def run_capture(cmd: str) -> str:
-    """Run a command and return its stdout, fully detached from TTY."""
+    """Run a command and return its stdout."""
     result = subprocess.run(
         cmd,
         shell=True,
@@ -89,7 +87,6 @@ def run_capture(cmd: str) -> str:
         stdin=_devnull,
         stdout=subprocess.PIPE,
         stderr=_devnull,
-        start_new_session=True,
         text=True,
     )
     return result.stdout.strip()
