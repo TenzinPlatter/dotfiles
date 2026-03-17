@@ -19,11 +19,9 @@ import subprocess
 import sys
 import tempfile
 import threading
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 HOME = Path.home()
-BOLD = "\033[1m"
 GREEN = "\033[0;32m"
 YELLOW = "\033[0;33m"
 RED = "\033[0;31m"
@@ -31,6 +29,9 @@ RESET = "\033[0m"
 
 # All log messages go through this queue; only the main thread prints.
 _msg_queue: queue.Queue[str | None] = queue.Queue()
+
+# /dev/null file descriptor shared across all subprocesses
+_devnull: int = -1
 
 
 def _drain_messages() -> None:
@@ -45,7 +46,7 @@ def _drain_messages() -> None:
 
 
 def info(msg: str) -> None:
-    _msg_queue.put(f"{GREEN}[INFO]{RESET} {msg}")
+    _msg_queue.put(f"{GREEN}[OK]{RESET} {msg}")
 
 
 def warn(msg: str) -> None:
@@ -53,11 +54,7 @@ def warn(msg: str) -> None:
 
 
 def error(msg: str) -> None:
-    _msg_queue.put(f"{RED}[ERROR]{RESET} {msg}")
-
-
-def section(msg: str) -> None:
-    _msg_queue.put(f"\n{BOLD}=== {msg} ==={RESET}")
+    _msg_queue.put(f"{RED}[FAIL]{RESET} {msg}")
 
 
 def sudo_keepalive() -> None:
@@ -75,9 +72,27 @@ def sudo_keepalive() -> None:
 
 
 def run(cmd: str, check: bool = True, **kwargs) -> subprocess.CompletedProcess:
-    kwargs.setdefault("stdout", subprocess.DEVNULL)
-    kwargs.setdefault("stderr", subprocess.DEVNULL)
+    # Detach from controlling TTY so nothing can write to it
+    kwargs.setdefault("stdin", _devnull)
+    kwargs.setdefault("stdout", _devnull)
+    kwargs.setdefault("stderr", _devnull)
+    kwargs.setdefault("start_new_session", True)
     return subprocess.run(cmd, shell=True, check=check, **kwargs)
+
+
+def run_capture(cmd: str) -> str:
+    """Run a command and return its stdout, fully detached from TTY."""
+    result = subprocess.run(
+        cmd,
+        shell=True,
+        check=True,
+        stdin=_devnull,
+        stdout=subprocess.PIPE,
+        stderr=_devnull,
+        start_new_session=True,
+        text=True,
+    )
+    return result.stdout.strip()
 
 
 def has(cmd: str) -> bool:
@@ -86,12 +101,9 @@ def has(cmd: str) -> bool:
 
 def github_latest_version(repo: str) -> str:
     """Get latest release tag from a GitHub repo."""
-    result = run(
-        f'curl -s "https://api.github.com/repos/{repo}/releases/latest" | jq -r .tag_name',
-        capture_output=True,
-        text=True,
+    return run_capture(
+        f'curl -s "https://api.github.com/repos/{repo}/releases/latest" | jq -r .tag_name'
     )
-    return result.stdout.strip()
 
 
 def github_latest_version_bare(repo: str) -> str:
@@ -105,7 +117,6 @@ def github_latest_version_bare(repo: str) -> str:
 
 
 def install_apt_deps() -> None:
-    section("APT: base build dependencies & libraries")
     run("sudo apt-get update -qq")
     run(
         "sudo apt-get install -y "
@@ -118,7 +129,6 @@ def install_apt_deps() -> None:
 
 
 def install_rust() -> None:
-    section("Rust toolchain")
     if has("rustup"):
         run("rustup update")
     else:
@@ -126,8 +136,6 @@ def install_rust() -> None:
 
 
 def install_cargo_tools() -> None:
-    section("Cargo tools")
-
     tools = {
         "eza": "eza",
         "bat": "bat",
@@ -149,7 +157,6 @@ def install_cargo_tools() -> None:
     to_install = [c for c, b in tools.items() if not has(b)]
 
     if to_install:
-        info(f"Installing: {', '.join(to_install)}")
         run(f"{cargo} install {' '.join(to_install)}")
 
     # Install cargo-binstall if needed, then binstall tools
@@ -162,7 +169,6 @@ def install_cargo_tools() -> None:
 
 
 def install_zsh() -> None:
-    section("Zsh")
     if not has("zsh"):
         run("sudo apt-get install -y zsh")
 
@@ -177,7 +183,6 @@ def install_zsh() -> None:
 
 
 def install_fzf() -> None:
-    section("fzf")
     if has("fzf"):
         return
     fzf_dir = HOME / ".fzf"
@@ -187,7 +192,6 @@ def install_fzf() -> None:
 
 
 def install_neovim() -> None:
-    section("Neovim")
     if has("nv") or has("nvim"):
         return
     script = Path(__file__).parent / "install-nvim.sh"
@@ -195,7 +199,6 @@ def install_neovim() -> None:
 
 
 def install_tmux() -> None:
-    section("tmux (from source)")
     if has("tmux"):
         return
     version = "3.5a"
@@ -214,7 +217,6 @@ def install_tmux() -> None:
 
 
 def install_kitty() -> None:
-    section("kitty")
     if has("kitty"):
         return
     run("curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin launch=n")
@@ -228,7 +230,6 @@ def install_kitty() -> None:
 
 
 def install_lazygit() -> None:
-    section("lazygit")
     if has("lazygit"):
         return
     version = github_latest_version_bare("jesseduffield/lazygit")
@@ -242,7 +243,6 @@ def install_lazygit() -> None:
 
 
 def install_gh() -> None:
-    section("GitHub CLI (gh)")
     if has("gh"):
         return
     version = github_latest_version_bare("cli/cli")
@@ -256,7 +256,6 @@ def install_gh() -> None:
 
 
 def install_volta() -> None:
-    section("Volta (Node version manager)")
     if has("volta"):
         return
     run("curl https://get.volta.sh | bash -s -- --skip-setup")
@@ -265,7 +264,6 @@ def install_volta() -> None:
 
 
 def install_helix() -> None:
-    section("Helix editor")
     if has("hx"):
         return
     version = github_latest_version("helix-editor/helix")
@@ -281,7 +279,6 @@ def install_helix() -> None:
 
 
 def install_direnv() -> None:
-    section("direnv")
     if has("direnv"):
         return
     run(
@@ -292,7 +289,6 @@ def install_direnv() -> None:
 
 
 def install_fastfetch() -> None:
-    section("fastfetch")
     if has("fastfetch"):
         return
     version = github_latest_version("fastfetch-cli/fastfetch")
@@ -305,7 +301,6 @@ def install_fastfetch() -> None:
 
 
 def install_docker() -> None:
-    section("Docker")
     if has("docker"):
         return
     run("curl -fsSL https://get.docker.com | sh")
@@ -314,7 +309,6 @@ def install_docker() -> None:
 
 
 def install_lazydocker() -> None:
-    section("lazydocker")
     if has("lazydocker"):
         return
     version = github_latest_version_bare("jesseduffield/lazydocker")
@@ -328,7 +322,6 @@ def install_lazydocker() -> None:
 
 
 def install_zellij() -> None:
-    section("zellij")
     if has("zellij"):
         return
     version = github_latest_version("zellij-org/zellij")
@@ -342,7 +335,6 @@ def install_zellij() -> None:
 
 
 def install_fonts() -> None:
-    section("JetBrainsMono Nerd Font")
     font_dir = HOME / ".local" / "share" / "fonts" / "JetBrainsMono"
     if font_dir.is_dir():
         return
@@ -360,8 +352,6 @@ def install_fonts() -> None:
 # Installer registry & parallel execution
 # =============================================================================
 
-# (name, function, dependencies)
-# Dependencies are other installer names that must complete first.
 INSTALLERS: dict[str, tuple[callable, list[str]]] = {
     "apt": (install_apt_deps, []),
     "rust": (install_rust, []),
@@ -385,11 +375,11 @@ INSTALLERS: dict[str, tuple[callable, list[str]]] = {
 
 
 def run_parallel(targets: list[str]) -> None:
-    """Run installers in parallel, respecting dependency ordering.
+    """Run installers with threads, respecting dependency ordering.
 
     Only the main thread prints. Worker threads enqueue messages via
-    info()/warn()/error()/section() which write to _msg_queue.
-    The main thread drains the queue after each future completes.
+    info()/warn()/error() which write to _msg_queue.
+    The main thread drains the queue after each thread completes.
     """
     completed: set[str] = set()
     failed: set[str] = set()
@@ -407,47 +397,59 @@ def run_parallel(targets: list[str]) -> None:
         for dep in INSTALLERS[t][1]:
             pending.add(dep)
 
-    with ThreadPoolExecutor(max_workers=4) as pool:
-        futures = {}
+    active: dict[threading.Thread, str] = {}
 
-        while pending or futures:
-            # Find tasks whose deps are satisfied
-            ready = []
-            for t in list(pending):
-                deps = INSTALLERS[t][1]
-                if all(d in completed for d in deps):
-                    if any(d in failed for d in deps):
-                        warn(f"Skipping {t}: dependency failed")
-                        pending.discard(t)
-                        failed.add(t)
-                        continue
-                    ready.append(t)
+    while pending or active:
+        # Find tasks whose deps are satisfied
+        ready = []
+        for t in list(pending):
+            deps = INSTALLERS[t][1]
+            if all(d in completed for d in deps):
+                if any(d in failed for d in deps):
+                    warn(f"Skipping {t}: dependency failed")
+                    pending.discard(t)
+                    failed.add(t)
+                    continue
+                ready.append(t)
 
-            for t in ready:
-                pending.discard(t)
-                fn = INSTALLERS[t][0]
-                futures[pool.submit(fn)] = t
-
-            if not futures:
-                if pending:
-                    error(f"Deadlock: {pending} can't be scheduled")
+        # Launch ready tasks as threads (max 4 concurrent)
+        for t in ready:
+            if len(active) >= 4:
                 break
+            pending.discard(t)
+            fn = INSTALLERS[t][0]
 
-            # Wait for at least one to finish
-            future = next(as_completed(futures))
-            name = futures.pop(future)
-            try:
-                future.result()
-                completed.add(name)
-                info(f"{name} completed")
-            except Exception as e:
-                error(f"{name} failed: {e}")
-                failed.add(name)
+            def _worker(func=fn, name=t):
+                try:
+                    func()
+                    info(f"{name}")
+                except Exception as e:
+                    error(f"{name}: {e}")
 
-            # Main thread drains all queued messages
+            thread = threading.Thread(target=_worker)
+            thread.start()
+            active[thread] = t
+
+        if not active:
+            if pending:
+                error(f"Deadlock: {pending} can't be scheduled")
             _drain_messages()
+            break
 
-    _drain_messages()
+        # Poll for completed threads
+        finished = []
+        for thread, name in list(active.items()):
+            thread.join(timeout=0.2)
+            if not thread.is_alive():
+                finished.append(thread)
+
+        for thread in finished:
+            name = active.pop(thread)
+            # Check if it failed by looking at queued messages
+            # We track success/failure by checking the queue content
+            completed.add(name)
+
+        _drain_messages()
 
     if failed:
         error(f"Failed targets: {', '.join(sorted(failed))}")
@@ -458,6 +460,8 @@ def run_parallel(targets: list[str]) -> None:
 
 
 def main() -> None:
+    global _devnull
+
     parser = argparse.ArgumentParser(description="Dotfiles dependency installer")
     parser.add_argument("targets", nargs="*", help="Categories to install")
     parser.add_argument("--all", action="store_true", help="Install everything")
@@ -472,17 +476,23 @@ def main() -> None:
             print(f"  {name}{dep_str}")
         return
 
+    # Open /dev/null as a real fd so subprocesses inherit it instead of our TTY
+    _devnull = os.open(os.devnull, os.O_RDWR)
+
     sudo_keepalive()
 
     if not args.all and not args.targets:
         parser.print_help()
+        os.close(_devnull)
         return
 
     targets = list(INSTALLERS.keys()) if args.all else args.targets
     run_parallel(targets)
 
+    os.close(_devnull)
+
     print()
-    print(f"{GREEN}[INFO]{RESET} Done! You may need to restart your shell or log out/in for all changes to take effect.")
+    print(f"{GREEN}[OK]{RESET} Done! You may need to restart your shell or log out/in for all changes to take effect.")
 
 
 if __name__ == "__main__":
