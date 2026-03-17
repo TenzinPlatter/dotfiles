@@ -105,6 +105,10 @@ def install_cargo_tools() -> None:
         "fd-find": "fd",
         "ripgrep": "rg",
         "git-delta": "delta",
+    }
+
+    # yazi needs cargo-binstall
+    binstall_tools = {
         "yazi-fm": "yazi",
     }
 
@@ -119,14 +123,21 @@ def install_cargo_tools() -> None:
         else:
             to_install.append(crate)
 
-    if not to_install:
-        info("All cargo tools already installed")
-        return
+    if to_install:
+        info(f"Installing: {', '.join(to_install)}")
+        run(f"{cargo} install {' '.join(to_install)}")
+    else:
+        info("All cargo install tools already installed")
 
-    # cargo install can't truly run in parallel safely on the same target dir,
-    # but we can batch them in one command
-    info(f"Installing: {', '.join(to_install)}")
-    run(f"{cargo} install {' '.join(to_install)}")
+    # Install cargo-binstall if needed, then binstall tools
+    binstall_needed = [c for c, b in binstall_tools.items() if not has(b)]
+    if binstall_needed:
+        if not has("cargo-binstall"):
+            info("Installing cargo-binstall...")
+            run(f"{cargo} install cargo-binstall")
+        for crate in binstall_needed:
+            info(f"Installing {crate} via cargo binstall...")
+            run(f"{cargo} binstall -y {crate}")
 
 
 def install_zsh() -> None:
