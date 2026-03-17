@@ -29,21 +29,28 @@ YELLOW = "\033[0;33m"
 RED = "\033[0;31m"
 RESET = "\033[0m"
 
+_print_lock = threading.Lock()
+
+
+def _log(msg: str) -> None:
+    with _print_lock:
+        print(msg, flush=True)
+
 
 def info(msg: str) -> None:
-    print(f"{GREEN}[INFO]{RESET} {msg}", flush=True)
+    _log(f"{GREEN}[INFO]{RESET} {msg}")
 
 
 def warn(msg: str) -> None:
-    print(f"{YELLOW}[WARN]{RESET} {msg}", flush=True)
+    _log(f"{YELLOW}[WARN]{RESET} {msg}")
 
 
 def error(msg: str) -> None:
-    print(f"{RED}[ERROR]{RESET} {msg}", flush=True)
+    _log(f"{RED}[ERROR]{RESET} {msg}")
 
 
 def section(msg: str) -> None:
-    print(f"\n{BOLD}=== {msg} ==={RESET}", flush=True)
+    _log(f"\n{BOLD}=== {msg} ==={RESET}")
 
 
 def sudo_keepalive() -> None:
