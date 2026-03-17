@@ -13,8 +13,8 @@ Usage:
 import argparse
 import atexit
 import os
+import queue
 import shutil
-import signal
 import subprocess
 import sys
 import tempfile
@@ -29,28 +29,35 @@ YELLOW = "\033[0;33m"
 RED = "\033[0;31m"
 RESET = "\033[0m"
 
-_print_lock = threading.Lock()
+# All log messages go through this queue; only the main thread prints.
+_msg_queue: queue.Queue[str | None] = queue.Queue()
 
 
-def _log(msg: str) -> None:
-    with _print_lock:
-        print(msg, flush=True)
+def _drain_messages() -> None:
+    """Print all pending messages from the queue (call from main thread only)."""
+    while True:
+        try:
+            msg = _msg_queue.get_nowait()
+            if msg is not None:
+                print(msg, flush=True)
+        except queue.Empty:
+            break
 
 
 def info(msg: str) -> None:
-    _log(f"{GREEN}[INFO]{RESET} {msg}")
+    _msg_queue.put(f"{GREEN}[INFO]{RESET} {msg}")
 
 
 def warn(msg: str) -> None:
-    _log(f"{YELLOW}[WARN]{RESET} {msg}")
+    _msg_queue.put(f"{YELLOW}[WARN]{RESET} {msg}")
 
 
 def error(msg: str) -> None:
-    _log(f"{RED}[ERROR]{RESET} {msg}")
+    _msg_queue.put(f"{RED}[ERROR]{RESET} {msg}")
 
 
 def section(msg: str) -> None:
-    _log(f"\n{BOLD}=== {msg} ==={RESET}")
+    _msg_queue.put(f"\n{BOLD}=== {msg} ==={RESET}")
 
 
 def sudo_keepalive() -> None:
@@ -108,21 +115,18 @@ def install_apt_deps() -> None:
         "wl-clipboard playerctl pavucontrol jq gdb stow "
         "libevent-dev ncurses-dev bison"
     )
-    info("APT base deps installed")
 
 
 def install_rust() -> None:
     section("Rust toolchain")
     if has("rustup"):
-        info("rustup already installed, updating")
         run("rustup update")
     else:
         run("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y")
-    info("Rust toolchain ready")
 
 
 def install_cargo_tools() -> None:
-    section("Cargo tools (parallel)")
+    section("Cargo tools")
 
     tools = {
         "eza": "eza",
@@ -142,27 +146,18 @@ def install_cargo_tools() -> None:
     if not os.path.exists(cargo):
         cargo = "cargo"
 
-    to_install = []
-    for crate, binary in tools.items():
-        if has(binary):
-            info(f"{binary} already installed, skipping")
-        else:
-            to_install.append(crate)
+    to_install = [c for c, b in tools.items() if not has(b)]
 
     if to_install:
         info(f"Installing: {', '.join(to_install)}")
         run(f"{cargo} install {' '.join(to_install)}")
-    else:
-        info("All cargo install tools already installed")
 
     # Install cargo-binstall if needed, then binstall tools
     binstall_needed = [c for c, b in binstall_tools.items() if not has(b)]
     if binstall_needed:
         if not has("cargo-binstall"):
-            info("Installing cargo-binstall...")
             run(f"{cargo} install cargo-binstall")
         for crate in binstall_needed:
-            info(f"Installing {crate} via cargo binstall...")
             run(f"{cargo} binstall -y {crate}")
 
 
@@ -177,17 +172,13 @@ def install_zsh() -> None:
 
     # Antidote
     antidote_dir = HOME / ".config" / "zsh" / ".antidote"
-    if antidote_dir.is_dir():
-        info("antidote already present")
-    else:
+    if not antidote_dir.is_dir():
         run(f"git clone --depth=1 https://github.com/mattmc3/antidote.git {antidote_dir}")
-    info("Zsh + antidote ready")
 
 
 def install_fzf() -> None:
     section("fzf")
     if has("fzf"):
-        info("fzf already installed")
         return
     fzf_dir = HOME / ".fzf"
     if not fzf_dir.is_dir():
@@ -198,7 +189,6 @@ def install_fzf() -> None:
 def install_neovim() -> None:
     section("Neovim")
     if has("nv") or has("nvim"):
-        info("neovim already installed")
         return
     script = Path(__file__).parent / "install-nvim.sh"
     run(f"bash {script}")
@@ -207,7 +197,6 @@ def install_neovim() -> None:
 def install_tmux() -> None:
     section("tmux (from source)")
     if has("tmux"):
-        info("tmux already installed")
         return
     version = "3.5a"
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -227,7 +216,6 @@ def install_tmux() -> None:
 def install_kitty() -> None:
     section("kitty")
     if has("kitty"):
-        info("kitty already installed")
         return
     run("curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin launch=n")
     local_bin = HOME / ".local" / "bin"
@@ -242,7 +230,6 @@ def install_kitty() -> None:
 def install_lazygit() -> None:
     section("lazygit")
     if has("lazygit"):
-        info("lazygit already installed")
         return
     version = github_latest_version_bare("jesseduffield/lazygit")
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -257,25 +244,20 @@ def install_lazygit() -> None:
 def install_gh() -> None:
     section("GitHub CLI (gh)")
     if has("gh"):
-        info("gh already installed")
         return
-    run(
-        "curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg "
-        "| sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg"
-    )
-    run(
-        'echo "deb [arch=$(dpkg --print-architecture) '
-        "signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] "
-        'https://cli.github.com/packages stable main" '
-        "| sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null"
-    )
-    run("sudo apt-get update -qq && sudo apt-get install -y gh")
+    version = github_latest_version_bare("cli/cli")
+    with tempfile.TemporaryDirectory() as tmpdir:
+        run(
+            f"curl -Lo {tmpdir}/gh.tar.gz "
+            f"https://github.com/cli/cli/releases/download/v{version}/gh_{version}_linux_amd64.tar.gz"
+        )
+        run(f"tar xzf {tmpdir}/gh.tar.gz -C {tmpdir}")
+        run(f"sudo install {tmpdir}/gh_{version}_linux_amd64/bin/gh /usr/local/bin/gh")
 
 
 def install_volta() -> None:
     section("Volta (Node version manager)")
     if has("volta"):
-        info("volta already installed")
         return
     run("curl https://get.volta.sh | bash -s -- --skip-setup")
     volta = HOME / ".volta" / "bin" / "volta"
@@ -285,7 +267,6 @@ def install_volta() -> None:
 def install_helix() -> None:
     section("Helix editor")
     if has("hx"):
-        info("helix already installed")
         return
     version = github_latest_version("helix-editor/helix")
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -302,7 +283,6 @@ def install_helix() -> None:
 def install_direnv() -> None:
     section("direnv")
     if has("direnv"):
-        info("direnv already installed")
         return
     run(
         "sudo curl -Lo /usr/local/bin/direnv "
@@ -314,7 +294,6 @@ def install_direnv() -> None:
 def install_fastfetch() -> None:
     section("fastfetch")
     if has("fastfetch"):
-        info("fastfetch already installed")
         return
     version = github_latest_version("fastfetch-cli/fastfetch")
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -328,7 +307,6 @@ def install_fastfetch() -> None:
 def install_docker() -> None:
     section("Docker")
     if has("docker"):
-        info("docker already installed")
         return
     run("curl -fsSL https://get.docker.com | sh")
     run(f"sudo usermod -aG docker {os.environ['USER']}")
@@ -338,7 +316,6 @@ def install_docker() -> None:
 def install_lazydocker() -> None:
     section("lazydocker")
     if has("lazydocker"):
-        info("lazydocker already installed")
         return
     version = github_latest_version_bare("jesseduffield/lazydocker")
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -353,7 +330,6 @@ def install_lazydocker() -> None:
 def install_zellij() -> None:
     section("zellij")
     if has("zellij"):
-        info("zellij already installed")
         return
     version = github_latest_version("zellij-org/zellij")
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -369,7 +345,6 @@ def install_fonts() -> None:
     section("JetBrainsMono Nerd Font")
     font_dir = HOME / ".local" / "share" / "fonts" / "JetBrainsMono"
     if font_dir.is_dir():
-        info("JetBrainsMono Nerd Font already installed")
         return
     with tempfile.TemporaryDirectory() as tmpdir:
         run(
@@ -410,7 +385,12 @@ INSTALLERS: dict[str, tuple[callable, list[str]]] = {
 
 
 def run_parallel(targets: list[str]) -> None:
-    """Run installers in parallel, respecting dependency ordering."""
+    """Run installers in parallel, respecting dependency ordering.
+
+    Only the main thread prints. Worker threads enqueue messages via
+    info()/warn()/error()/section() which write to _msg_queue.
+    The main thread drains the queue after each future completes.
+    """
     completed: set[str] = set()
     failed: set[str] = set()
     pending = set(targets)
@@ -419,16 +399,13 @@ def run_parallel(targets: list[str]) -> None:
     for t in targets:
         if t not in INSTALLERS:
             error(f"Unknown target: {t}")
+            _drain_messages()
             sys.exit(1)
 
     # Ensure dependencies are in the target list
-    to_add = set()
-    for t in targets:
+    for t in list(pending):
         for dep in INSTALLERS[t][1]:
-            if dep not in pending:
-                to_add.add(dep)
-    pending |= to_add
-    targets_full = list(pending)
+            pending.add(dep)
 
     with ThreadPoolExecutor(max_workers=4) as pool:
         futures = {}
@@ -454,12 +431,10 @@ def run_parallel(targets: list[str]) -> None:
             if not futures:
                 if pending:
                     error(f"Deadlock: {pending} can't be scheduled")
-                    break
                 break
 
             # Wait for at least one to finish
-            done_iter = as_completed(futures)
-            future = next(done_iter)
+            future = next(as_completed(futures))
             name = futures.pop(future)
             try:
                 future.result()
@@ -469,10 +444,17 @@ def run_parallel(targets: list[str]) -> None:
                 error(f"{name} failed: {e}")
                 failed.add(name)
 
+            # Main thread drains all queued messages
+            _drain_messages()
+
+    _drain_messages()
+
     if failed:
         error(f"Failed targets: {', '.join(sorted(failed))}")
+        _drain_messages()
     else:
         info("All targets installed successfully!")
+        _drain_messages()
 
 
 def main() -> None:
@@ -500,7 +482,7 @@ def main() -> None:
     run_parallel(targets)
 
     print()
-    info("Done! You may need to restart your shell or log out/in for all changes to take effect.")
+    print(f"{GREEN}[INFO]{RESET} Done! You may need to restart your shell or log out/in for all changes to take effect.")
 
 
 if __name__ == "__main__":
