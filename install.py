@@ -313,19 +313,6 @@ def install_lazydocker() -> None:
         run(f"sudo install {tmpdir}/lazydocker /usr/local/bin/lazydocker")
 
 
-def install_kanata() -> None:
-    section("kanata")
-    if has("kanata"):
-        info("kanata already installed")
-        return
-    version = github_latest_version("jtroo/kanata")
-    run(
-        f"sudo curl -Lo /usr/local/bin/kanata "
-        f"https://github.com/jtroo/kanata/releases/download/{version}/kanata"
-    )
-    run("sudo chmod +x /usr/local/bin/kanata")
-
-
 def install_niri() -> None:
     section("niri (Wayland compositor)")
     if has("niri"):
@@ -342,37 +329,6 @@ def install_niri() -> None:
     if not os.path.exists(cargo):
         cargo = "cargo"
     run(f"{cargo} install niri")
-
-
-def install_waybar() -> None:
-    section("waybar")
-    if has("waybar"):
-        info("waybar already installed")
-        return
-    warn("Building waybar from source...")
-    run(
-        "sudo apt-get install -y "
-        "meson ninja-build libgtkmm-3.0-dev libgtk-layer-shell-dev "
-        "libpulse-dev libnl-3-dev libnl-genl-3-dev libdbusmenu-gtk3-dev "
-        "libsndio-dev libevdev-dev libjsoncpp-dev libmpdclient-dev "
-        "libfmt-dev libspdlog-dev libwayland-dev scdoc"
-    )
-    with tempfile.TemporaryDirectory() as tmpdir:
-        run(f"git clone https://github.com/Alexays/Waybar.git {tmpdir}/waybar")
-        run(
-            f"cd {tmpdir}/waybar && "
-            "meson setup build --prefix=/usr/local && "
-            "ninja -C build && "
-            "sudo ninja -C build install"
-        )
-
-
-def install_distrobox() -> None:
-    section("distrobox")
-    if has("distrobox"):
-        info("distrobox already installed")
-        return
-    run("curl -s https://raw.githubusercontent.com/89luca89/distrobox/main/install | sudo sh")
 
 
 def install_zellij() -> None:
@@ -429,10 +385,7 @@ INSTALLERS: dict[str, tuple[callable, list[str]]] = {
     "fastfetch": (install_fastfetch, []),
     "docker": (install_docker, []),
     "lazydocker": (install_lazydocker, []),
-    "kanata": (install_kanata, []),
     "niri": (install_niri, ["rust", "apt"]),
-    "waybar": (install_waybar, ["apt"]),
-    "distrobox": (install_distrobox, []),
     "zellij": (install_zellij, []),
     "fonts": (install_fonts, []),
 }
