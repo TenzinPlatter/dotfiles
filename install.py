@@ -48,7 +48,7 @@ def section(msg: str) -> None:
 
 def sudo_keepalive() -> None:
     """Prompt for sudo once, then refresh the timestamp every 60s in a daemon thread."""
-    run("sudo -v")
+    subprocess.run("sudo -v", shell=True, check=True)
     stop = threading.Event()
 
     def _refresh():
@@ -61,6 +61,8 @@ def sudo_keepalive() -> None:
 
 
 def run(cmd: str, check: bool = True, **kwargs) -> subprocess.CompletedProcess:
+    kwargs.setdefault("stdout", subprocess.DEVNULL)
+    kwargs.setdefault("stderr", subprocess.DEVNULL)
     return subprocess.run(cmd, shell=True, check=check, **kwargs)
 
 
