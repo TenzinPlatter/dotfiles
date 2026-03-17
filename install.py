@@ -11,11 +11,14 @@ Usage:
 """
 
 import argparse
+import atexit
 import os
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
+import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -41,6 +44,20 @@ def error(msg: str) -> None:
 
 def section(msg: str) -> None:
     print(f"\n{BOLD}=== {msg} ==={RESET}", flush=True)
+
+
+def sudo_keepalive() -> None:
+    """Prompt for sudo once, then refresh the timestamp every 60s in a daemon thread."""
+    run("sudo -v")
+    stop = threading.Event()
+
+    def _refresh():
+        while not stop.wait(60):
+            run("sudo -vn", check=False)
+
+    t = threading.Thread(target=_refresh, daemon=True)
+    t.start()
+    atexit.register(stop.set)
 
 
 def run(cmd: str, check: bool = True, **kwargs) -> subprocess.CompletedProcess:
@@ -482,6 +499,8 @@ def main() -> None:
             dep_str = f" (depends on: {', '.join(deps)})" if deps else ""
             print(f"  {name}{dep_str}")
         return
+
+    sudo_keepalive()
 
     if not args.all and not args.targets:
         parser.print_help()
