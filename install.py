@@ -341,24 +341,6 @@ def install_lazydocker() -> None:
         run(f"sudo install {tmpdir}/lazydocker /usr/local/bin/lazydocker")
 
 
-def install_niri() -> None:
-    section("niri (Wayland compositor)")
-    if has("niri"):
-        info("niri already installed")
-        return
-    warn("Installing niri build deps...")
-    run(
-        "sudo apt-get install -y "
-        "libwayland-dev libseat-dev libudev-dev libinput-dev libgbm-dev "
-        "libxkbcommon-dev libpango1.0-dev libdbus-1-dev libpipewire-0.3-dev "
-        "libsystemd-dev clang"
-    )
-    cargo = str(HOME / ".cargo" / "bin" / "cargo")
-    if not os.path.exists(cargo):
-        cargo = "cargo"
-    run(f"{cargo} install niri")
-
-
 def install_zellij() -> None:
     section("zellij")
     if has("zellij"):
@@ -413,7 +395,6 @@ INSTALLERS: dict[str, tuple[callable, list[str]]] = {
     "fastfetch": (install_fastfetch, []),
     "docker": (install_docker, []),
     "lazydocker": (install_lazydocker, []),
-    "niri": (install_niri, ["rust", "apt"]),
     "zellij": (install_zellij, []),
     "fonts": (install_fonts, []),
 }
