@@ -145,6 +145,7 @@ def install_cargo_tools() -> None:
     # yazi needs cargo-binstall
     binstall_tools = {
         "yazi-fm": "yazi",
+        "yazi-cli": "ya",
     }
 
     cargo = str(HOME / ".cargo" / "bin" / "cargo")
