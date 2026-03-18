@@ -132,6 +132,21 @@ def install_rust() -> None:
         run("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y")
 
 
+def install_go() -> None:
+    if has("go"):
+        return
+    version = run_capture("curl -s 'https://go.dev/dl/?mode=json' | jq -r '.[0].version'")
+    with tempfile.TemporaryDirectory() as tmpdir:
+        run(
+            f"curl -Lo {tmpdir}/go.tar.gz "
+            f"https://go.dev/dl/{version}.linux-amd64.tar.gz"
+        )
+        run(f"sudo rm -rf /usr/local/go")
+        run(f"sudo tar -C /usr/local -xzf {tmpdir}/go.tar.gz")
+        run("sudo ln -sf /usr/local/go/bin/go /usr/local/bin/go")
+        run("sudo ln -sf /usr/local/go/bin/gofmt /usr/local/bin/gofmt")
+
+
 def install_cargo_tools() -> None:
     tools = {
         "eza": "eza",
@@ -367,6 +382,7 @@ INSTALLERS: dict[str, tuple[callable, list[str]]] = {
     "fastfetch": (install_fastfetch, []),
     "docker": (install_docker, []),
     "lazydocker": (install_lazydocker, []),
+    "go": (install_go, []),
     "zellij": (install_zellij, []),
     "fonts": (install_fonts, []),
 }
