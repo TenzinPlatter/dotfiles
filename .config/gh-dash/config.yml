@@ -68,9 +68,9 @@ keybindings:
         - key: C
           name: code review
           command: >
-              tmux new-window -c {{.RepoPath}}
-              'nvim -c
-              ":silent Octo pr edit {{.PrNumber}}"'
+              zellij action new-tab --cwd {{.RepoPath}} --
+              nvim -c
+              ":silent Octo pr edit {{.PrNumber}}"
 
 repoPaths:
     greenroom-robotics/*: ~/Repositories/platform/packages/*
