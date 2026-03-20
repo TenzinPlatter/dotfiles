@@ -1,9 +1,36 @@
 #!/usr/bin/env zsh
 
 container_from_pid() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: container_from_pid <pid>"
+        return 1
+    fi
+
     local pid=$1
-    cat /proc/$pid/cgroup | grep -oP '(?<=docker/)[a-f0-9]{64}' | head -1 | xargs docker inspect --format '{{.Name}}'
-  }
+    local cgroup_file="/proc/$pid/cgroup"
+
+    if [[ ! -f "$cgroup_file" ]]; then
+        echo "No such process: $pid"
+        return 1
+    fi
+
+    local cgroup
+    cgroup=$(<"$cgroup_file")
+
+    # Try cgroup v1 (docker/<id>) and v2 (docker-<id>.scope)
+    local container_id
+    container_id=$(echo "$cgroup" | grep -oP '(?<=docker/)[a-f0-9]{64}' | head -1)
+    if [[ -z "$container_id" ]]; then
+        container_id=$(echo "$cgroup" | grep -oP '(?<=docker-)[a-f0-9]{64}(?=\.scope)' | head -1)
+    fi
+
+    if [[ -z "$container_id" ]]; then
+        echo "PID $pid is not running in a Docker container"
+        return 1
+    fi
+
+    docker inspect --format '{{.Name}}  ({{slice .Id 0 12}})' "$container_id" | sed 's|^/||'
+}
 
 mkdirc() {
     mkdir -p $1
