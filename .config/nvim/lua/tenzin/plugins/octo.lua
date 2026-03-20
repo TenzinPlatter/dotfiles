@@ -1,5 +1,6 @@
 return {
   "pwntester/octo.nvim",
+  cmd = "Octo",
   event = "VeryLazy",
   cond = function()
     return vim.fn.executable("gh") == 1
