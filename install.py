@@ -153,7 +153,6 @@ def install_cargo_tools() -> None:
         "bat": "bat",
         "zoxide": "zoxide",
         "fd-find": "fd",
-        "ripgrep": "rg",
         "git-delta": "delta",
     }
 
@@ -291,6 +290,19 @@ def install_helix() -> None:
         run("sudo ln -sf /opt/helix/hx /usr/local/bin/hx")
 
 
+def install_ripgrep() -> None:
+    if has("rg"):
+        return
+    version = github_latest_version_bare("BurntSushi/ripgrep")
+    with tempfile.TemporaryDirectory() as tmpdir:
+        run(
+            f"curl -Lo {tmpdir}/ripgrep.tar.gz "
+            f"https://github.com/BurntSushi/ripgrep/releases/download/{version}/ripgrep-{version}-x86_64-unknown-linux-musl.tar.gz"
+        )
+        run(f"tar xzf {tmpdir}/ripgrep.tar.gz -C {tmpdir}")
+        run(f"sudo install {tmpdir}/ripgrep-{version}-x86_64-unknown-linux-musl/rg /usr/local/bin/rg")
+
+
 def install_direnv() -> None:
     if has("direnv"):
         return
@@ -378,6 +390,8 @@ INSTALLERS: dict[str, tuple[callable, list[str]]] = {
     "gh": (install_gh, []),
     "volta": (install_volta, []),
     "helix": (install_helix, []),
+    "ripgrep": (install_ripgrep, []),
+    "rg": (install_ripgrep, []),
     "direnv": (install_direnv, []),
     "fastfetch": (install_fastfetch, []),
     "docker": (install_docker, []),
