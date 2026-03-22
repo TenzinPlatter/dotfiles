@@ -10,7 +10,7 @@ sr() {
     fi
 
     local dir_name="${PWD:t}"
-    export PLATFORM_MODULE=dir_name
+    export PLATFORM_MODULE=$dir_name
     if [[ -f /opt/greenroom/$dir_name/setup.zsh ]]; then
         source /opt/greenroom/$dir_name/setup.zsh
     fi
