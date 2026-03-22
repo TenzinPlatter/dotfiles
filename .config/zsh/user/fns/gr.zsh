@@ -114,7 +114,7 @@ gama() {
 
 set_platform_module() {
     local dir_name="${PWD:t}"
-    export PLATFORM_MODULE="$dir_name"
+    export PLATFORM_MODULE="${dir_name}"
 }
 
 autoload -U add-zsh-hook
