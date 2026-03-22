@@ -9,8 +9,7 @@
   default = upstream
 
 [merge]
-  tool = diffview
-  conflictStyle = zdiff3
+  tool = codediff
 
 [mergetool]
   prompt = false
@@ -72,3 +71,6 @@
   context = white
   whtiespace = yellow reverse
   old = red
+
+[mergetool "codediff"]
+  cmd = nvim \"$MERGED\" -c \"CodeDiff merge \\\"$MERGED\\\"\"
