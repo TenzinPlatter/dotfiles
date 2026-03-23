@@ -463,6 +463,7 @@ def run_parallel(targets: list[str]) -> None:
             pending.add(dep)
 
     active: dict[threading.Thread, str] = {}
+    thread_failed: dict[threading.Thread, bool] = {}
 
     while pending or active:
         # Find tasks whose deps are satisfied
@@ -484,12 +485,13 @@ def run_parallel(targets: list[str]) -> None:
             pending.discard(t)
             fn = INSTALLERS[t][0]
 
-            def _worker(func=fn, name=t):
+            def _worker(func=fn, name=t, th_failed=thread_failed):
                 try:
                     func()
                     info(f"{name}")
                 except Exception as e:
                     error(f"{name}: {e}")
+                    th_failed[threading.current_thread()] = True
 
             thread = threading.Thread(target=_worker)
             thread.start()
@@ -510,9 +512,10 @@ def run_parallel(targets: list[str]) -> None:
 
         for thread in finished:
             name = active.pop(thread)
-            # Check if it failed by looking at queued messages
-            # We track success/failure by checking the queue content
-            completed.add(name)
+            if thread_failed.get(thread, False):
+                failed.add(name)
+            else:
+                completed.add(name)
 
         _drain_messages()
 
