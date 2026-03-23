@@ -44,7 +44,7 @@ alias tmuxkill="tmux kill-session"
 alias srtx="tmux source ~/.tmux.conf"
 alias tx="tmux"
 
-alias pkginfo="pacman -Qq | fzf --preview 'pacman -Qil {} | bat -fpl yml' --layout=reverse  --bind 'enter:execute(pacman -Qil {} | less)'"
+alias pkginfo="pacman -Qq | tv --preview-command 'pacman -Qil {0} | bat -fpl yml'"
 
 alias ..='cd ..'
 alias ...='cd ../..'
