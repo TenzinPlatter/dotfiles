@@ -1,3 +1,5 @@
+[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+
 eval "$(tv init zsh)"
 
 tvcd() {
