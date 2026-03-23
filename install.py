@@ -13,6 +13,7 @@ Usage:
 import argparse
 import atexit
 import os
+import platform
 import queue
 import shutil
 import subprocess
@@ -22,6 +23,8 @@ import threading
 from pathlib import Path
 
 HOME = Path.home()
+ARCH = platform.machine()  # "x86_64" or "aarch64"
+IS_ARM = ARCH in ("aarch64", "arm64")
 GREEN = "\033[0;32m"
 YELLOW = "\033[0;33m"
 RED = "\033[0;31m"
@@ -136,10 +139,11 @@ def install_go() -> None:
     if has("go"):
         return
     version = run_capture("curl -s 'https://go.dev/dl/?mode=json' | jq -r '.[0].version'")
+    go_arch = "arm64" if IS_ARM else "amd64"
     with tempfile.TemporaryDirectory() as tmpdir:
         run(
             f"curl -Lo {tmpdir}/go.tar.gz "
-            f"https://go.dev/dl/{version}.linux-amd64.tar.gz"
+            f"https://go.dev/dl/{version}.linux-{go_arch}.tar.gz"
         )
         run(f"sudo rm -rf /usr/local/go")
         run(f"sudo tar -C /usr/local -xzf {tmpdir}/go.tar.gz")
@@ -245,10 +249,11 @@ def install_lazygit() -> None:
     if has("lazygit"):
         return
     version = github_latest_version_bare("jesseduffield/lazygit")
+    lg_arch = "arm64" if IS_ARM else "x86_64"
     with tempfile.TemporaryDirectory() as tmpdir:
         run(
             f"curl -Lo {tmpdir}/lazygit.tar.gz "
-            f"https://github.com/jesseduffield/lazygit/releases/download/v{version}/lazygit_{version}_Linux_x86_64.tar.gz"
+            f"https://github.com/jesseduffield/lazygit/releases/download/v{version}/lazygit_{version}_Linux_{lg_arch}.tar.gz"
         )
         run(f"tar xzf {tmpdir}/lazygit.tar.gz -C {tmpdir}")
         run(f"sudo install {tmpdir}/lazygit /usr/local/bin/lazygit")
@@ -258,13 +263,14 @@ def install_gh() -> None:
     if has("gh"):
         return
     version = github_latest_version_bare("cli/cli")
+    gh_arch = "arm64" if IS_ARM else "amd64"
     with tempfile.TemporaryDirectory() as tmpdir:
         run(
             f"curl -Lo {tmpdir}/gh.tar.gz "
-            f"https://github.com/cli/cli/releases/download/v{version}/gh_{version}_linux_amd64.tar.gz"
+            f"https://github.com/cli/cli/releases/download/v{version}/gh_{version}_linux_{gh_arch}.tar.gz"
         )
         run(f"tar xzf {tmpdir}/gh.tar.gz -C {tmpdir}")
-        run(f"sudo install {tmpdir}/gh_{version}_linux_amd64/bin/gh /usr/local/bin/gh")
+        run(f"sudo install {tmpdir}/gh_{version}_linux_{gh_arch}/bin/gh /usr/local/bin/gh")
 
 
 def install_volta() -> None:
@@ -279,10 +285,11 @@ def install_helix() -> None:
     if has("hx"):
         return
     version = github_latest_version("helix-editor/helix")
+    hx_arch = "aarch64" if IS_ARM else "x86_64"
     with tempfile.TemporaryDirectory() as tmpdir:
         run(
             f"curl -Lo {tmpdir}/helix.tar.xz "
-            f"https://github.com/helix-editor/helix/releases/download/{version}/helix-{version}-x86_64-linux.tar.xz"
+            f"https://github.com/helix-editor/helix/releases/download/{version}/helix-{version}-{hx_arch}-linux.tar.xz"
         )
         run(f"tar xJf {tmpdir}/helix.tar.xz -C {tmpdir}")
         run("sudo mkdir -p /opt/helix")
@@ -294,21 +301,23 @@ def install_ripgrep() -> None:
     if has("rg"):
         return
     version = github_latest_version_bare("BurntSushi/ripgrep")
+    rg_arch = "aarch64" if IS_ARM else "x86_64"
     with tempfile.TemporaryDirectory() as tmpdir:
         run(
             f"curl -Lo {tmpdir}/ripgrep.tar.gz "
-            f"https://github.com/BurntSushi/ripgrep/releases/download/{version}/ripgrep-{version}-x86_64-unknown-linux-musl.tar.gz"
+            f"https://github.com/BurntSushi/ripgrep/releases/download/{version}/ripgrep-{version}-{rg_arch}-unknown-linux-musl.tar.gz"
         )
         run(f"tar xzf {tmpdir}/ripgrep.tar.gz -C {tmpdir}")
-        run(f"sudo install {tmpdir}/ripgrep-{version}-x86_64-unknown-linux-musl/rg /usr/local/bin/rg")
+        run(f"sudo install {tmpdir}/ripgrep-{version}-{rg_arch}-unknown-linux-musl/rg /usr/local/bin/rg")
 
 
 def install_direnv() -> None:
     if has("direnv"):
         return
+    direnv_arch = "arm64" if IS_ARM else "amd64"
     run(
         "sudo curl -Lo /usr/local/bin/direnv "
-        "https://github.com/direnv/direnv/releases/latest/download/direnv.linux-amd64"
+        f"https://github.com/direnv/direnv/releases/latest/download/direnv.linux-{direnv_arch}"
     )
     run("sudo chmod +x /usr/local/bin/direnv")
 
@@ -317,10 +326,11 @@ def install_fastfetch() -> None:
     if has("fastfetch"):
         return
     version = github_latest_version("fastfetch-cli/fastfetch")
+    ff_arch = "aarch64" if IS_ARM else "amd64"
     with tempfile.TemporaryDirectory() as tmpdir:
         run(
             f"curl -Lo {tmpdir}/fastfetch.deb "
-            f"https://github.com/fastfetch-cli/fastfetch/releases/download/{version}/fastfetch-linux-amd64.deb"
+            f"https://github.com/fastfetch-cli/fastfetch/releases/download/{version}/fastfetch-linux-{ff_arch}.deb"
         )
         run(f"sudo dpkg -i {tmpdir}/fastfetch.deb || sudo apt-get install -f -y")
 
@@ -337,10 +347,11 @@ def install_lazydocker() -> None:
     if has("lazydocker"):
         return
     version = github_latest_version_bare("jesseduffield/lazydocker")
+    ld_arch = "arm64" if IS_ARM else "x86_64"
     with tempfile.TemporaryDirectory() as tmpdir:
         run(
             f"curl -Lo {tmpdir}/lazydocker.tar.gz "
-            f"https://github.com/jesseduffield/lazydocker/releases/download/v{version}/lazydocker_{version}_Linux_x86_64.tar.gz"
+            f"https://github.com/jesseduffield/lazydocker/releases/download/v{version}/lazydocker_{version}_Linux_{ld_arch}.tar.gz"
         )
         run(f"tar xzf {tmpdir}/lazydocker.tar.gz -C {tmpdir}")
         run(f"sudo install {tmpdir}/lazydocker /usr/local/bin/lazydocker")
@@ -350,10 +361,11 @@ def install_zellij() -> None:
     if has("zellij"):
         return
     version = github_latest_version("zellij-org/zellij")
+    zj_arch = "aarch64" if IS_ARM else "x86_64"
     with tempfile.TemporaryDirectory() as tmpdir:
         run(
             f"curl -Lo {tmpdir}/zellij.tar.gz "
-            f"https://github.com/zellij-org/zellij/releases/download/{version}/zellij-x86_64-unknown-linux-musl.tar.gz"
+            f"https://github.com/zellij-org/zellij/releases/download/{version}/zellij-{zj_arch}-unknown-linux-musl.tar.gz"
         )
         run(f"tar xzf {tmpdir}/zellij.tar.gz -C {tmpdir}")
         run(f"sudo install {tmpdir}/zellij /usr/local/bin/zellij")
