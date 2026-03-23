@@ -151,37 +151,48 @@ def install_go() -> None:
         run("sudo ln -sf /usr/local/go/bin/gofmt /usr/local/bin/gofmt")
 
 
-def install_cargo_tools() -> None:
-    tools = {
-        "eza": "eza",
-        "bat": "bat",
-        "zoxide": "zoxide",
-        "fd-find": "fd",
-        "git-delta": "delta",
-    }
-
-    # yazi needs cargo-binstall
-    binstall_tools = {
-        "yazi-fm": "yazi",
-        "yazi-cli": "ya",
-    }
-
+def _cargo() -> str:
     cargo = str(HOME / ".cargo" / "bin" / "cargo")
-    if not os.path.exists(cargo):
-        cargo = "cargo"
+    return cargo if os.path.exists(cargo) else "cargo"
 
-    to_install = [c for c, b in tools.items() if not has(b)]
 
-    if to_install:
-        run(f"{cargo} install {' '.join(to_install)}")
+def _cargo_install(crate: str, binary: str) -> None:
+    if has(binary):
+        return
+    run(f"{_cargo()} install {crate}")
 
-    # Install cargo-binstall if needed, then binstall tools
-    binstall_needed = [c for c, b in binstall_tools.items() if not has(b)]
-    if binstall_needed:
-        if not has("cargo-binstall"):
-            run(f"{cargo} install cargo-binstall")
-        for crate in binstall_needed:
-            run(f"{cargo} binstall -y {crate}")
+
+def _cargo_binstall(crate: str, binary: str) -> None:
+    if has(binary):
+        return
+    if not has("cargo-binstall"):
+        run(f"{_cargo()} install cargo-binstall")
+    run(f"{_cargo()} binstall -y {crate}")
+
+
+def install_eza() -> None:
+    _cargo_install("eza", "eza")
+
+
+def install_bat() -> None:
+    _cargo_install("bat", "bat")
+
+
+def install_zoxide() -> None:
+    _cargo_install("zoxide", "zoxide")
+
+
+def install_fd() -> None:
+    _cargo_install("fd-find", "fd")
+
+
+def install_delta() -> None:
+    _cargo_install("git-delta", "delta")
+
+
+def install_yazi() -> None:
+    _cargo_binstall("yazi-fm", "yazi")
+    _cargo_binstall("yazi-cli", "ya")
 
 
 def install_zsh() -> None:
@@ -392,7 +403,12 @@ def install_fonts() -> None:
 INSTALLERS: dict[str, tuple[callable, list[str]]] = {
     "apt": (install_apt_deps, []),
     "rust": (install_rust, []),
-    "cargo": (install_cargo_tools, ["rust"]),
+    "eza": (install_eza, ["rust"]),
+    "bat": (install_bat, ["rust"]),
+    "zoxide": (install_zoxide, ["rust"]),
+    "fd": (install_fd, ["rust"]),
+    "delta": (install_delta, ["rust"]),
+    "yazi": (install_yazi, ["rust"]),
     "zsh": (install_zsh, []),
     "fzf": (install_fzf, []),
     "neovim": (install_neovim, ["apt"]),
