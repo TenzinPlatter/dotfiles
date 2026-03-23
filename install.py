@@ -221,8 +221,17 @@ def install_fzf() -> None:
 def install_neovim() -> None:
     if has("nv") or has("nvim"):
         return
-    script = Path(__file__).parent / "install-nvim.sh"
-    run(f"bash {script}")
+    nvim_arch = "aarch64" if IS_ARM else "x86_64"
+    version = github_latest_version_bare("neovim/neovim")
+    install_dir = "/opt/nvim"
+    with tempfile.TemporaryDirectory() as tmpdir:
+        run(
+            f"curl -Lo {tmpdir}/nvim.tar.gz "
+            f"https://github.com/neovim/neovim/releases/download/v{version}/nvim-linux-{nvim_arch}.tar.gz"
+        )
+        run(f"sudo mkdir -p {install_dir}")
+        run(f"sudo tar -xzf {tmpdir}/nvim.tar.gz -C {install_dir} --strip-components=1")
+    run(f"sudo ln -sf {install_dir}/bin/nvim /usr/local/bin/nv")
 
 
 def install_tmux() -> None:
