@@ -1,11 +1,11 @@
 [opener]
-imgopen = [
-  { run = 'zen-browser "$@"', orphan = true, for = "unix" },
-]
+imgopen = [{ run = 'zen-browser "$@"', orphan = true, for = "unix" }]
+edit = [{ run = "$EDITOR %s", block = true, for = "unix" }]
 
 [open]
 rules = [
-  { mime = "image/*", use = "imgopen" }
+	{ mime = "image/*", use = "imgopen" },
+	{ mime = "text/*", use = "edit" },
 ]
 
 [mgr]
