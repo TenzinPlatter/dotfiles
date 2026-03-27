@@ -68,7 +68,7 @@ keybindings:
         - key: C
           name: code review
           command: >
-              zellij run --cwd {{.RepoPath}} --
+              zellij run -c --cwd {{.RepoPath}} --
               nvim -c
               ":silent Octo pr edit {{.PrNumber}}"
 
