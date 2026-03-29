@@ -156,6 +156,7 @@ keybinds clear-defaults=true {
         bind "Alt Shift p" { ToggleGroupMarking; }
         bind "Ctrl Alt q" { Quit; }
         bind "Alt z" { ToggleFocusFullscreen; }
+        bind "Ctrl Alt ;" { ToggleTab; }
     }
     shared_except "locked" "move" {
         bind "Ctrl Alt h" { SwitchToMode "move"; }
