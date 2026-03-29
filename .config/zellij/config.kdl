@@ -157,6 +157,16 @@ keybinds clear-defaults=true {
         bind "Ctrl Alt q" { Quit; }
         bind "Alt z" { ToggleFocusFullscreen; }
         bind "Ctrl Alt ;" { ToggleTab; }
+        bind "Ctrl Alt 1" { GoToTab 1; }
+        bind "Ctrl Alt 2" { GoToTab 2; }
+        bind "Ctrl Alt 3" { GoToTab 3; }
+        bind "Ctrl Alt 4" { GoToTab 4; }
+        bind "Ctrl Alt 5" { GoToTab 5; }
+        bind "Ctrl Alt 6" { GoToTab 6; }
+        bind "Ctrl Alt 7" { GoToTab 7; }
+        bind "Ctrl Alt 8" { GoToTab 8; }
+        bind "Ctrl Alt 9" { GoToTab 9; }
+        bind "Ctrl Alt 0" { GoToTab 10; }
     }
     shared_except "locked" "move" {
         bind "Ctrl Alt h" { SwitchToMode "move"; }
