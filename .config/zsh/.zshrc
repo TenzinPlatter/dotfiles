@@ -51,6 +51,7 @@ chpwd() {
   set_platform_module
 }
 
+# disable CTRL+S and CTRL+Q XON/XOFF
 stty -ixon
 eval "$(tv init zsh)"
 [[ -f  "$HOME/.local/share/../bin/env" ]] && . "$HOME/.local/share/../bin/env"
