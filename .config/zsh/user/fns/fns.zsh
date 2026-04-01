@@ -279,3 +279,7 @@ swap() {
 nvl() {
     eval "$(fc -ln -1)" | nvim -
 }
+
+newest() {
+    ls -snew | tail -1
+}
