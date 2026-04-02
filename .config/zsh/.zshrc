@@ -33,6 +33,7 @@ export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/cuda-13.0/lib64
 export LD_FLAGS="-fuse-ld=mold"
 
 export MANPAGER='nvim +Man!'   
+export CLAUDE_CODE_NO_FLICKER=1
 
 setopt NO_AUTO_CD
 setopt hist_ignore_all_dups
