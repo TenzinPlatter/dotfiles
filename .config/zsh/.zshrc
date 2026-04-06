@@ -44,6 +44,7 @@ zle -N menu-search
 zle -N recent-paths
 zle -N edit-command-line
 
+bindkey '\e\x7f' backward-kill-word
 bindkey '^ ' autosuggest-accept
 bindkey '' edit-command-line
 
