@@ -39,11 +39,11 @@ return {
             { prose.word_count, cond = prose.is_available },
             {
               function()
-                local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+                local clients = vim.lsp.get_clients({ bufnr = 0 })
                 return "LSP:" .. #clients
               end,
               cond = function()
-                return #vim.lsp.get_active_clients({ bufnr = 0 }) > 0
+                return #vim.lsp.get_clients({ bufnr = 0 }) > 0
               end,
             },
           },
