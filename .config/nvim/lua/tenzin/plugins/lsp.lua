@@ -42,6 +42,10 @@ return {
           if preference ~= nil then
             vim.lsp.inlay_hint.enable(preference, { bufnr = args.buf })
           end
+
+          vim.keymap.set("n", "K", function()
+            vim.lsp.buf.hover({ silent = true })
+          end, { buffer = args.buf })
         end,
       })
     end,
