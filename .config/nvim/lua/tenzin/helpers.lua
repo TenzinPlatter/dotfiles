@@ -5,7 +5,7 @@ vim.api.nvim_create_augroup("CursorLineOnlyInActiveWindow", { clear = true })
 vim.api.nvim_create_autocmd({ "VimEnter", "WinEnter", "BufWinEnter" }, {
   group = "CursorLineOnlyInActiveWindow",
   callback = function()
-    if vim.bo.filetype == "markdown" and vim.api.nvim_win_get_config(0).relative ~= "" then
+    if vim.bo.filetype == "noice" then
       vim.opt_local.cursorline = false
       return
     end
