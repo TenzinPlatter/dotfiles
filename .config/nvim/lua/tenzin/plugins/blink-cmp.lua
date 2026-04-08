@@ -4,7 +4,7 @@ return {
   version = "1.*",
   opts = {
     keymap = {
-      preset = "default",
+      preset = "super-tab",
       ["<C-Space>"] = false,
       ["<C-e>"] = { "show", "hide", "fallback"},
       ["<C-L>"] = { "snippet_forward", "fallback" },
