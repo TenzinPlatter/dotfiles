@@ -6,6 +6,7 @@ return {
     keymap = {
       preset = "default",
       ["<C-Space>"] = false,
+      ["<C-e>"] = { "show", "hide", "fallback"},
       ["<C-L>"] = { "snippet_forward", "fallback" },
       ["<C-H>"] = { "snippet_backward", "fallback" },
       ["<C-D>"] = { "scroll_documentation_down", "fallback" },
