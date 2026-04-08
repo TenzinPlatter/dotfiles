@@ -1,5 +1,6 @@
 -- disable deprecated messages on startup
-vim.deprecate = function() end
+-- vim.deprecate = function() end
+
 -- Diagnostics: inline virtual text + circle signs in the gutter
 vim.diagnostic.config({
   virtual_text = {
@@ -71,6 +72,13 @@ vim.opt.nu = true
 vim.opt.ignorecase = true
 vim.opt.wrap = true
 
--- disables netrw
--- vim.g.loaded_netrw = 1
--- vim.g.loaded_netrwPlugin = 1
+vim.o.mouse = "a"
+
+-- set highlight colours
+vim.api.nvim_set_hl(0, "Visual", { bg = "#666666" })
+vim.cmd("hi Search guibg=#FEFFA7")
+vim.cmd("hi ColorColumn guibg=Black")
+vim.api.nvim_set_hl(0, "@lsp.mod.mutable", { underline = true })
+vim.api.nvim_set_hl(0, "@lsp.mod.usedAsMutableReference.cpp", { underline = true })
+
+vim.cmd("hi SnippetTabstop guibg=None")

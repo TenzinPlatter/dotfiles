@@ -25,18 +25,4 @@ end
 -- colorizer has to be setup after other plugins
 require("colorizer").setup()
 
--- set highlight colours
-vim.api.nvim_set_hl(0, "Visual", { bg = "#666666" })
--- vim.cmd('hi MatchParen guibg=White')
-vim.cmd("hi Search guibg=#FEFFA7")
--- vim.cmd('hi CursorLineNr guibg=White')
-vim.cmd("hi ColorColumn guibg=Black")
-vim.api.nvim_set_hl(0, "@lsp.mod.mutable", { underline = true })
-vim.api.nvim_set_hl(0, "@lsp.mod.usedAsMutableReference.cpp", { underline = true })
-
-vim.cmd("hi SnippetTabstop guibg=None")
-
--- set nvim tree background transparent
--- vim.cmd("hi NvimTreeNormal guibg=None ctermbg=None")
-
-vim.cmd("set mouse=a")
+require("vim_core.ui2").enable()
