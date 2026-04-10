@@ -6,11 +6,11 @@ end, { desc = "Save all buffers" })
 
 vim.keymap.set("n", "ZZ", function()
   -- Close all sidekick terminals if any are open
-  local Terminal = require("sidekick.cli.terminal")
+  -- local Terminal = require("sidekick.cli.terminal")
   require("persistence").save()
-  for _, term in pairs(Terminal.terminals) do
-    term:close()
-  end
+  -- for _, term in pairs(Terminal.terminals) do
+  --   term:close()
+  -- end
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype ~= "terminal" then
       if vim.bo[buf].modified then
