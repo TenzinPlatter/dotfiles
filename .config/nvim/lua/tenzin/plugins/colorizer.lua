@@ -1,3 +1,5 @@
 return {
-  "https://github.com/norcalli/nvim-colorizer.lua",
+  "catgoose/nvim-colorizer.lua",
+  event = "BufReadPre",
+  opts = {},
 }

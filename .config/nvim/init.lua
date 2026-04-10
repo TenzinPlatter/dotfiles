@@ -21,6 +21,3 @@ for _, file_path in ipairs(lua_files) do
   local file_name = vim.fn.fnamemodify(file_path, ":t:r")
   require("tenzin." .. file_name)
 end
-
--- colorizer has to be setup after other plugins
-require("colorizer").setup()
