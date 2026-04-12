@@ -100,20 +100,20 @@ return {
       desc = "File Explorer",
     },
     -- find
-    {
-      "<leader>ff",
-      function()
-        Snacks.picker.files({ ignored = false, follow = true })
-      end,
-      desc = "Find Files",
-    },
-    {
-      "<leader>fg",
-      function()
-        Snacks.picker.git_files()
-      end,
-      desc = "Find Git Files",
-    },
+    -- {
+    --   "<leader>ff",
+    --   function()
+    --     Snacks.picker.files({ ignored = false, follow = true })
+    --   end,
+    --   desc = "Find Files",
+    -- },
+    -- {
+    --   "<leader>fg",
+    --   function()
+    --     Snacks.picker.git_files()
+    --   end,
+    --   desc = "Find Git Files",
+    -- },
     {
       "<leader>fp",
       function()
