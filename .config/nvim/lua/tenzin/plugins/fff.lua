@@ -38,6 +38,13 @@ return {
       end,
       desc = "Live fffuzy grep",
     },
+    {
+      "<leader>fc",
+      function()
+        require("fff").find_files({ cwd = vim.fn.stdpath("config") })
+      end,
+      desc = "Live fffuzy grep",
+    },
     -- {
     --   "fc",
     --   function()
