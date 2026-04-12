@@ -15,6 +15,16 @@ return {
   ==(o)-----(o)==J   `(o)-------(o)=   `(o)------(o)'   `--(o)(o)--------------(o)--'
 `````````````````````````````````````````````````````````````````````````````````````
         ]],
+        keys = {
+          { icon = " ", key = "f", desc = "Find File", action = ":lua require('fff').find_files()" },
+          { icon = " ", key = "g", desc = "Find Text", action = ":lua require('fff').live_grep()" },
+          { icon = " ", key = "c", desc = "Config", action = ":lua require('fff').find_files({ cwd = vim.fn.stdpath('config') })" },
+          { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.picker.recent()" },
+          { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+          { icon = " ", key = "s", desc = "Restore Session", section = "session" },
+          { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
+          { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+        },
       },
     },
     explorer = {
