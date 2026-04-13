@@ -75,14 +75,6 @@ return {
         function(server_name)
           vim.lsp.config(server_name).setup({})
         end,
-        -- Ruff: disable diagnostics, use only for formatting
-        ["ruff"] = function()
-          vim.lsp.config("ruff").setup({
-            on_attach = function(client)
-              client.server_capabilities.diagnosticProvider = false
-            end,
-          })
-        end,
       },
     },
   },
