@@ -6,8 +6,12 @@ import sys
 import argparse
 
 
-def build_command(container: str, follow: bool) -> str:
-    return " ".join(["docker logs", "-f" if follow else "", f"{container}"])
+def build_command(container: str, follow: bool, reverse: bool) -> str:
+    cmd = ["docker logs", "-f" if follow and not reverse else "", f"{container}"]
+    if reverse:
+        cmd.append("|")
+        cmd.append("tac")
+    return " ".join(cmd)
 
 
 def main():
@@ -17,6 +21,7 @@ def main():
     parser.add_argument("-g", "--gama", help="Use a gama container", action="store_true")
     parser.add_argument("-m", "--missim", help="Use a missim container", action="store_true")
     parser.add_argument("-n", "--no-follow", help="Don't tail the logs", action="store_true")
+    parser.add_argument("-r", "--reverse", help="View logs in reverse", action="store_true")
     parser.add_argument("container", help="Container name")
 
     args = parser.parse_args()
@@ -32,7 +37,7 @@ def main():
 
     container_name += args.container
 
-    exec_cmd = build_command(container_name, not args.no_follow)
+    exec_cmd = build_command(container_name, not args.no_follow, args.reverse)
     exit_code = os.system(exec_cmd)
     sys.exit(exit_code >> 8)  # Convert to normal exit code  # noqa: F821
 
