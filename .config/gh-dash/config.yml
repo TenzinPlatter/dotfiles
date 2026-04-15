@@ -68,7 +68,7 @@ keybindings:
         - key: C
           name: code review
           command: >
-              zellij run -c --cwd {{.RepoPath}} --
+              tmux new-window -c {{.RepoPath}}
               nvim -c
               ":silent Octo pr edit {{.PrNumber}}"
 
