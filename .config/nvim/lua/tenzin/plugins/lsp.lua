@@ -1,6 +1,32 @@
 return {
   {
     "neovim/nvim-lspconfig",
+    init = function()
+      -- Auto-load inlay hint preferences on LSP attach
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args)
+          local helpers = require("tenzin.helpers")
+          local filetype = vim.bo[args.buf].filetype
+          local preference = helpers.get_inlay_hint_preference(filetype)
+
+          if preference ~= nil then
+            vim.lsp.inlay_hint.enable(preference, { bufnr = args.buf })
+          end
+
+          vim.keymap.set("n", "K", function()
+            vim.lsp.buf.hover({ silent = true })
+          end, { buffer = args.buf })
+        end,
+      })
+
+      -- this needs to be installed manually outside of mason
+      vim.lsp.config["crates"] = {
+        cmd = { "crates-lsp" },
+        filetypes = { "toml" },
+        root_markers = { "Cargo.toml", ".git" },
+        init_options = {},
+      }
+    end,
     keys = {
       {
         "<C-S>",
@@ -31,24 +57,6 @@ return {
         end,
       },
     },
-    init = function()
-      -- Auto-load inlay hint preferences on LSP attach
-      vim.api.nvim_create_autocmd("LspAttach", {
-        callback = function(args)
-          local helpers = require("tenzin.helpers")
-          local filetype = vim.bo[args.buf].filetype
-          local preference = helpers.get_inlay_hint_preference(filetype)
-
-          if preference ~= nil then
-            vim.lsp.inlay_hint.enable(preference, { bufnr = args.buf })
-          end
-
-          vim.keymap.set("n", "K", function()
-            vim.lsp.buf.hover({ silent = true })
-          end, { buffer = args.buf })
-        end,
-      })
-    end,
   },
   {
     "mason-org/mason.nvim",
