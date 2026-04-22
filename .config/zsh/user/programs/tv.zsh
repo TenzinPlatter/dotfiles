@@ -35,4 +35,6 @@ tvec() {
     fi
 }
 
+bindkey '' tv-file-widget
+
 alias tvd='tv dirs'
