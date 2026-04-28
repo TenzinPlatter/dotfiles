@@ -1,11 +1,20 @@
 return {
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.icons" },
+    dependencies = { "nvim-treesitter/nvim-treesitter", "https://github.com/nvim-tree/nvim-web-devicons" },
     opts = {},
-    enabled = false,
   },
   {
-    "https://github.com/delphinus/md-render.nvim",
-  }
+    "delphinus/md-render.nvim",
+    version = "*",
+    dependencies = {
+      { "nvim-tree/nvim-web-devicons", version = "*" }, -- optional: file type icons in code blocks
+      { "delphinus/budoux.lua", version = "*" }, -- optional: CJK phrase-level line breaking
+    },
+    keys = {
+      { "<leader>mp", "<Plug>(md-render-preview)", desc = "Markdown preview (toggle)" },
+      { "<leader>mt", "<Plug>(md-render-preview-tab)", desc = "Markdown preview in tab (toggle)" },
+      { "<leader>md", "<Plug>(md-render-demo)", desc = "Markdown render demo" },
+    },
+  },
 }
