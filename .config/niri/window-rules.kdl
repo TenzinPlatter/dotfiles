@@ -28,6 +28,10 @@ window-rule {
     open-floating true
 }
 
+window-rule {
+    match app-id="org.gnome.Loupe"
+    open-floating true
+}
 
 window-rule {
     geometry-corner-radius 12
