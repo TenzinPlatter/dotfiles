@@ -6,7 +6,7 @@
 
 [push]
   autoSetupRemote = true
-  default = upstream
+	default = current
 
 [merge]
   tool = codediff
