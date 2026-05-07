@@ -44,7 +44,7 @@
 [url "git@github.sydney.edu.au:tpla0149/"]
   insteadOf = "syd:"
 
-[url "git@github.com:Greenroom-Robotics/"]
+[url "git@github.com:greenroom-robotics/"]
   insteadOf = "gr:"
 
 [url "git@github.com:"]
