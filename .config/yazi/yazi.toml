@@ -7,7 +7,6 @@ fallback = [{ run = "xdg-open \"$@\"", orphan = true, for = "unix" }]
 rules = [
 	{ mime = "image/*", use = "imgopen" },
 	{ mime = "text/*", use = "edit" },
-	{ name = "*", use = "fallback" },
 	{ mime = "*", use = "fallback" },
 ]
 
