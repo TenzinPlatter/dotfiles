@@ -5,3 +5,4 @@
 .config/niri/monitors.kdl
 .config/niri/monitors.kdl
 .config/tmux/plugins
+.config/niri/machine.kdl
