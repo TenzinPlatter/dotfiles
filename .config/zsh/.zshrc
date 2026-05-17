@@ -15,8 +15,8 @@ path=(
     /usr/local/bin
     /usr/local/cuda-13.0/bin
     /home/tenzin/bin
-    /home/tenzin/.config/superpowers/skills/skills/using-skills
     /home/tenzin/go/bin
+    /home/tenzin/.local/xonsh-env/xbin
 )
 
 export ZSH="$HOME/.oh-my-zsh"
