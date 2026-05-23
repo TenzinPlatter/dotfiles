@@ -38,7 +38,7 @@ return {
         winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder",
       },
       ghost_text = {
-        enabled = false,
+        enabled = true,
       },
     },
 
