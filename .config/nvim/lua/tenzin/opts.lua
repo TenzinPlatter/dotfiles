@@ -82,3 +82,20 @@ vim.api.nvim_set_hl(0, "@lsp.mod.mutable", { underline = true })
 vim.api.nvim_set_hl(0, "@lsp.mod.usedAsMutableReference.cpp", { underline = true })
 
 vim.cmd("hi SnippetTabstop guibg=None")
+
+-- Route the system clipboard through OSC 52 when on a remote host so yanks
+-- reach the local machine's clipboard via the terminal.
+if os.getenv("SSH_TTY") then
+  local osc52 = require("vim.ui.clipboard.osc52")
+  vim.g.clipboard = {
+    name = "OSC 52",
+    copy = {
+      ["+"] = osc52.copy("+"),
+      ["*"] = osc52.copy("*"),
+    },
+    paste = {
+      ["+"] = osc52.paste("+"),
+      ["*"] = osc52.paste("*"),
+    },
+  }
+end
