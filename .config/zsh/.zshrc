@@ -16,7 +16,11 @@ path=(
     /usr/local/cuda-13.0/bin
     /home/tenzin/bin
     /home/tenzin/go/bin
+<<<<<<< HEAD
     /home/tenzin/.local/xonsh-env/xbin
+=======
+    /home/tenzin/.pixi/bin
+>>>>>>> 95704b9 (Modified 1)
 )
 
 export ZSH="$HOME/.oh-my-zsh"
