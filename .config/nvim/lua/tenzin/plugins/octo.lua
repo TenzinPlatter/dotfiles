@@ -22,6 +22,9 @@ return {
           merge_pr = { "<C-m>", "Merge pull request" },
           close_pr = { "<C-c>", "Close pull request" },
         },
+        review_diff = {
+          toggle_viewed = { lhs = "<leader>v", desc = "toggle viewed" },
+        },
       },
     })
   end,
