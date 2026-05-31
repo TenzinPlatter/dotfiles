@@ -23,7 +23,7 @@ return {
           close_pr = { "<C-c>", "Close pull request" },
         },
         review_diff = {
-          toggle_viewed = { lhs = "<leader>v", desc = "toggle viewed" },
+          toggle_viewed = { lhs = "<leader>vv", desc = "toggle viewed" },
         },
       },
     })
