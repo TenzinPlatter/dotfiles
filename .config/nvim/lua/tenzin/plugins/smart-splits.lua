@@ -4,7 +4,26 @@ return {
   -- so do NOT lazy-load this plugin.
   lazy = false,
   opts = {
-    at_edge = "stop"
+    -- At a nvim window edge, hand off to the neighbouring kitty window.
+    -- smart-splits' built-in kitty backend relies on the (uninstalled)
+    -- neighboring_window.py kitten, so it can't make this move itself; this
+    -- callback fires once the backend gives up and drives kitty natively.
+    at_edge = function(ctx)
+      -- Only hand off locally. Over SSH there's no KITTY_LISTEN_ON, so this
+      -- no-ops and behaves like "stop" while the tmux backend owns the edge.
+      local listen = vim.env.KITTY_LISTEN_ON
+      if not listen or #listen == 0 then
+        return
+      end
+      -- SmartSplitsDirection is 'left'|'right'|'up'|'down'; kitty wants top/bottom.
+      local neighbor = ({ left = "left", right = "right", up = "top", down = "bottom" })[ctx.direction]
+      if not neighbor then
+        return
+      end
+      -- Focuses the neighbour if one exists (exit 0); errors harmlessly at the
+      -- outer edge (exit 1, "no matching windows") so the cursor just stays put.
+      vim.system({ "kitty", "@", "focus-window", "--match", "neighbor:" .. neighbor })
+    end,
   },
   config = function(_, opts)
     local ss = require("smart-splits")
