@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# kitty project/session picker — the tmux+sesh analog for kitty.
+# Pick a directory (from zoxide history); open it as a new kitty tab rooted
+# there, titled after the directory. New splits in that tab inherit the cwd,
+# giving each project its own "session root". Meant to run in a kitty overlay.
+set -euo pipefail
+
+dir=$(
+  zoxide query -l 2>/dev/null \
+    | awk '!seen[$0]++' \
+    | fzf --prompt='session ❯ ' \
+          --height=100% --layout=reverse --border \
+          --preview 'ls -la --color=always {} 2>/dev/null | head -50'
+) || exit 0
+
+[ -z "${dir:-}" ] && exit 0
+
+kitty @ launch --type=tab --cwd "$dir" --tab-title "$(basename "$dir")"
