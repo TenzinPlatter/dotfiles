@@ -33,4 +33,5 @@ end
 vim.keymap.set("n", "<M-L>", function()
   vim.notify("In session: " .. tostring(mux.is_in_session()))
   vim.notify("Pane at edge in right direction: " .. tostring(mux.current_pane_at_edge("right")))
+  mux.next_pane("right")
 end)
