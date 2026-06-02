@@ -1,6 +1,7 @@
 vim.g.mapleader = " "
 vim.opt.termguicolors = true
-vim.deprecate = function () end
+---@diagnostic disable-next-line: duplicate-set-field
+vim.deprecate = function() end
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -22,3 +23,14 @@ for _, file_path in ipairs(lua_files) do
   local file_name = vim.fn.fnamemodify(file_path, ":t:r")
   require("tenzin." .. file_name)
 end
+
+local mux = require("smart-splits.mux").get()
+if mux == nil then
+  vim.notify("holy death")
+  return
+end
+
+vim.keymap.set("n", "<M-L>", function()
+  vim.notify("In session: " .. tostring(mux.is_in_session()))
+  vim.notify("Pane at edge in right direction: " .. tostring(mux.current_pane_at_edge("right")))
+end)
