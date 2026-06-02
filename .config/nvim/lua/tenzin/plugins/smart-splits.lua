@@ -3,7 +3,9 @@ return {
   -- Must load at startup: the kitty integration sets the IS_NVIM user-var then,
   -- so do NOT lazy-load this plugin.
   lazy = false,
-  opts = {},
+  opts = {
+    at_edge = "stop"
+  },
   config = function(_, opts)
     local ss = require("smart-splits")
     ss.setup(opts)
