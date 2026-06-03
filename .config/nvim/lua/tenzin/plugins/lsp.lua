@@ -32,6 +32,12 @@ return {
           client.server_capabilities.hoverProvider = false
         end,
       })
+
+      vim.lsp.config("taplo", {
+        on_attach = function(client, _bufnr)
+        end
+      })
+
     end,
     keys = {
       {
