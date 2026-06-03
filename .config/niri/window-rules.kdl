@@ -102,3 +102,13 @@ window-rule {
     match app-id="kitty" is-focused=false
     opacity 0.80
 }
+
+window-rule {
+    match app-id="org.wezfurlong.wezterm" is-active=true
+    opacity 0.90
+}
+
+window-rule {
+    match app-id="org.wezfurlong.wezterm" is-focused=false
+    opacity 0.80
+}
