@@ -8,5 +8,6 @@ require("lua.appearance").apply(config)
 require("lua.behavior").apply(config)
 require("lua.plugins").apply(config)
 require("lua.keys").apply(config)
+require("lua.machine").apply(config)
 
 return config
