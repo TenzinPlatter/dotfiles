@@ -5,5 +5,6 @@ local config = wezterm.config_builder()
 package.path = wezterm.config_dir .. "/?.lua;" .. package.path
 
 require("lua.appearance").apply(config)
+require("lua.behavior").apply(config)
 
 return config
