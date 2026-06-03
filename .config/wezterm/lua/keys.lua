@@ -4,9 +4,9 @@ local act = wezterm.action
 local M = {}
 
 function M.apply(config)
-  -- Same plugin handle as plugins.lua; wezterm.plugin.require is cached, so this
-  -- returns the already-loaded module. We bind the picker to our own chord
-  -- instead of the plugin's default.
+  -- The workspace switcher lives here (not plugins.lua) because we only need it
+  -- to bind our own chord; wezterm.plugin.require is cached by URL, so requiring
+  -- it here is cheap. We bind the picker to our chord instead of its default.
   local workspace_switcher =
     wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
 
