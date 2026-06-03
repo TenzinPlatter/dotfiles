@@ -6,5 +6,6 @@ package.path = wezterm.config_dir .. "/?.lua;" .. package.path
 
 require("lua.appearance").apply(config)
 require("lua.behavior").apply(config)
+require("lua.plugins").apply(config)
 
 return config
