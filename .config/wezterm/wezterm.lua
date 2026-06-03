@@ -1,0 +1,9 @@
+local wezterm = require("wezterm")
+local config = wezterm.config_builder()
+
+-- Ensure the config directory is on the path for subcommands like ls-fonts
+package.path = wezterm.config_dir .. "/?.lua;" .. package.path
+
+require("lua.appearance").apply(config)
+
+return config
