@@ -54,5 +54,6 @@ alias .5='cd ../../../../..'
 
 alias zb="zen-browser"
 alias icat="kitten icat"
+alias ks="kitten ssh"
 
 alias cw="y .worktrees "
