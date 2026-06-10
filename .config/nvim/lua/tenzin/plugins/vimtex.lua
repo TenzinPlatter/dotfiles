@@ -3,6 +3,7 @@ return {
   lazy = false,
   init = function()
     vim.g.vimtex_view_method = "zathura"
-    vim.g.vimtex_syntax_enabled = 0
+    -- Uninstall latex treesitter parser to not conflict with this
+    vim.g.vimtex_syntax_enabled = 1
   end
 }
