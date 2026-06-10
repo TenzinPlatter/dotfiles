@@ -68,7 +68,7 @@ keybindings:
         - key: C
           name: code review
           command: >
-              tmux new-window -c {{.RepoPath}}
+              kitty @ launch --type=window --cwd {{.RepoPath}}
               nvim -c
               ":silent Octo pr edit {{.PrNumber}}"
 
