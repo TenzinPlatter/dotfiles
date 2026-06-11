@@ -20,6 +20,7 @@ return {
       zsh = { "beautysh" },
       sh = { "beautysh" },
       html = { "prettier" },
+      toml = { "taplo" },
     },
     formatters = {
       ruff_format = {
