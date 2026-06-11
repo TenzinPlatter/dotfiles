@@ -15,23 +15,26 @@
   lctl lmet lalt           spc            ralt rmet rctl
 )
 
+(defhands
+  (left  q w e r t a s d f g z x c v b)
+  (right y u i o p h j k l ; n m , . /))
+
 (defalias
   ;; Caps lock → Esc (tap) / Ctrl (hold)
   cec (tap-hold $tap-time $hold-time esc lctl)
 
-  ;; Home row mods - Left hand (GACS: Super, Alt, Ctrl, Shift)
-  ;; The same-hand key list forces an early TAP, so same-hand rolls
-  ;; (e.g. "as", "df") never fire a modifier. Cross-hand chords still work.
-  a (tap-hold-release-keys $tap-time $hold-time a lmet (q w e r t s d f g z x c v b))
-  s (tap-hold-release-keys $tap-time $hold-time s lalt (q w e r t a d f g z x c v b))
-  d (tap-hold-release-keys $tap-time $hold-time d lctl (q w e r t a s f g z x c v b))
-  f (tap-hold-release-keys $tap-time $hold-time f lsft (q w e r t a s d g z x c v b))
-
-  ;; Home row mods - Right hand (mirrored)
-  j (tap-hold-release-keys $tap-time $hold-time j rsft (y u i o p h k l ; n m , . /))
-  k (tap-hold-release-keys $tap-time $hold-time k rctl (y u i o p h j l ; n m , . /))
-  l (tap-hold-release-keys $tap-time $hold-time l ralt (y u i o p h j k ; n m , . /))
-  ; (tap-hold-release-keys $tap-time $hold-time ; rmet (y u i o p h j k l n m , . /))
+  ;; Home row mods - opposite-hand chordal hold (GACS: Super, Alt, Ctrl, Shift)
+  ;; A mod resolves to its modifier only when the next key is on the OTHER
+  ;; hand (see defhands), so same-hand rolls never misfire. spc/tab are
+  ;; neutral, so resting on a mod while reaching for them just types the letter.
+  a (tap-hold-opposite-hand $hold-time a lmet (neutral-keys spc tab) (neutral tap))
+  s (tap-hold-opposite-hand $hold-time s lalt (neutral-keys spc tab) (neutral tap))
+  d (tap-hold-opposite-hand $hold-time d lctl (neutral-keys spc tab) (neutral tap))
+  f (tap-hold-opposite-hand $hold-time f lsft (neutral-keys spc tab) (neutral tap))
+  j (tap-hold-opposite-hand $hold-time j rsft (neutral-keys spc tab) (neutral tap))
+  k (tap-hold-opposite-hand $hold-time k rctl (neutral-keys spc tab) (neutral tap))
+  l (tap-hold-opposite-hand $hold-time l ralt (neutral-keys spc tab) (neutral tap))
+  ; (tap-hold-opposite-hand $hold-time ; rmet (neutral-keys spc tab) (neutral tap))
 
   ;; Space → Nav layer (hold) / Space (tap)
   spc (tap-hold $tap-time $hold-time spc (layer-toggle nav))
