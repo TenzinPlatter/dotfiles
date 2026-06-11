@@ -1,8 +1,10 @@
-;; Kanata configuration with home row mods and caps as ctrl/esc
-
 (defcfg
   process-unmapped-keys yes
-  danger-enable-cmd no
+)
+
+(defvar
+  tap-time 150
+  hold-time 200
 )
 
 (defsrc
@@ -14,31 +16,23 @@
 )
 
 (defalias
-  ;; Caps lock: Ctrl when held, Esc when tapped
-  ;; cec (tap-hold 200 200 esc lctl)
+  ;; Caps lock → Esc (tap) / Ctrl (hold)
+  cec (tap-hold $tap-time $hold-time esc lctl)
 
-  ;; Space: Nav layer when held, Space when tapped
-  ;; spc (tap-hold 200 200 spc (layer-toggle nav))
+  ;; Home row mods - Left hand (GACS: Super, Alt, Ctrl, Shift)
+  a (tap-hold-release $tap-time $hold-time a lmet)
+  s (tap-hold-release $tap-time $hold-time s lalt)
+  d (tap-hold-release $tap-time $hold-time d lctl)
+  f (tap-hold-release $tap-time $hold-time f lsft)
 
-  ;; Home row mods - Left hand
-  ;; a: Super when held with another key, a when tapped, repeats when held alone
-  ;; a (tap-hold-release 200 200 a lmet)
-  ;; s: Alt when held with another key, s when tapped, repeats when held alone
-  ;; s (tap-hold-release 200 200 s lalt)
-  ;; d: Ctrl when held with another key, d when tapped, repeats when held alone
-  ;; d (tap-hold-release 200 200 d lctl)
-  ;; f: Shift when held with another key, f when tapped, repeats when held alone
-  ;; f (tap-hold-release 200 200 f lsft)
+  ;; Home row mods - Right hand (mirrored)
+  j (tap-hold-release $tap-time $hold-time j rsft)
+  k (tap-hold-release $tap-time $hold-time k rctl)
+  l (tap-hold-release $tap-time $hold-time l ralt)
+  ; (tap-hold-release $tap-time $hold-time ; rmet)
 
-  ;; Home row mods - Right hand
-  ;; j: Shift when held with another key, j when tapped, repeats when held alone
-  ;; j (tap-hold-release 200 200 j rsft)
-  ;; k: Ctrl when held with another key, k when tapped, repeats when held alone
-  ;; k (tap-hold-release 200 200 k rctl)
-  ;; l: Alt when held with another key, l when tapped, repeats when held alone
-  ;; l (tap-hold-release 200 200 l ralt)
-  ;; ;: Super when held with another key, ; when tapped, repeats when held alone
-  ;; (tap-hold-release 200 200 ; rmet)
+  ;; Space → Nav layer (hold) / Space (tap)
+  spc (tap-hold $tap-time $hold-time spc (layer-toggle nav))
 )
 
 (deflayer base
