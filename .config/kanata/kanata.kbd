@@ -20,16 +20,18 @@
   cec (tap-hold $tap-time $hold-time esc lctl)
 
   ;; Home row mods - Left hand (GACS: Super, Alt, Ctrl, Shift)
-  a (tap-hold-release $tap-time $hold-time a lmet)
-  s (tap-hold-release $tap-time $hold-time s lalt)
-  d (tap-hold-release $tap-time $hold-time d lctl)
-  f (tap-hold-release $tap-time $hold-time f lsft)
+  ;; The same-hand key list forces an early TAP, so same-hand rolls
+  ;; (e.g. "as", "df") never fire a modifier. Cross-hand chords still work.
+  a (tap-hold-release-keys $tap-time $hold-time a lmet (q w e r t s d f g z x c v b))
+  s (tap-hold-release-keys $tap-time $hold-time s lalt (q w e r t a d f g z x c v b))
+  d (tap-hold-release-keys $tap-time $hold-time d lctl (q w e r t a s f g z x c v b))
+  f (tap-hold-release-keys $tap-time $hold-time f lsft (q w e r t a s d g z x c v b))
 
   ;; Home row mods - Right hand (mirrored)
-  j (tap-hold-release $tap-time $hold-time j rsft)
-  k (tap-hold-release $tap-time $hold-time k rctl)
-  l (tap-hold-release $tap-time $hold-time l ralt)
-  ; (tap-hold-release $tap-time $hold-time ; rmet)
+  j (tap-hold-release-keys $tap-time $hold-time j rsft (y u i o p h k l ; n m , . /))
+  k (tap-hold-release-keys $tap-time $hold-time k rctl (y u i o p h j l ; n m , . /))
+  l (tap-hold-release-keys $tap-time $hold-time l ralt (y u i o p h j k ; n m , . /))
+  ; (tap-hold-release-keys $tap-time $hold-time ; rmet (y u i o p h j k l n m , . /))
 
   ;; Space → Nav layer (hold) / Space (tap)
   spc (tap-hold $tap-time $hold-time spc (layer-toggle nav))
