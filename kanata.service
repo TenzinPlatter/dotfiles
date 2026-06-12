@@ -4,7 +4,7 @@ Documentation=https://github.com/jtroo/kanata
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/kanata -c /home/tenzin/.dotfiles/.config/kanata/kanata.kbd --nodelay --port 9999
+ExecStart=/home/tenzin/.cargo/bin/kanata -c /home/tenzin/.dotfiles/.config/kanata/kanata.kbd --nodelay --port 9999
 Restart=on-failure
 RestartSec=3
 
