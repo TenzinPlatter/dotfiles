@@ -5,6 +5,7 @@
 (defvar
   tap-time 150
   hold-time 200
+  idle-time 150
 )
 
 (defsrc
@@ -27,17 +28,16 @@
   ;; A mod resolves to its modifier only when the next key is on the OTHER
   ;; hand (see defhands), so same-hand rolls never misfire. spc/tab are
   ;; neutral, so resting on a mod while reaching for them just types the letter.
-  a (tap-hold-opposite-hand $hold-time a lmet (neutral-keys spc tab) (neutral tap))
-  s (tap-hold-opposite-hand $hold-time s lalt (neutral-keys spc tab) (neutral tap))
-  d (tap-hold-opposite-hand $hold-time d lctl (neutral-keys spc tab) (neutral tap))
-  f (tap-hold-opposite-hand $hold-time f lsft (neutral-keys spc tab) (neutral tap))
-  j (tap-hold-opposite-hand $hold-time j rsft (neutral-keys spc tab) (neutral tap))
-  k (tap-hold-opposite-hand $hold-time k rctl (neutral-keys spc tab) (neutral tap))
-  l (tap-hold-opposite-hand $hold-time l ralt (neutral-keys spc tab) (neutral tap))
-  ; (tap-hold-opposite-hand $hold-time ; rmet (neutral-keys spc tab) (neutral tap))
-
-  ;; Space → Nav layer (hold) / Space (tap)
-  spc (tap-hold $tap-time $hold-time spc (layer-toggle nav))
+  ;; require-prior-idle: if a key was pressed within $idle-time before the mod,
+  ;; resolve as a tap immediately (prevents misfires mid-word during fast typing).
+  a (tap-hold-opposite-hand $hold-time a lmet (neutral-keys spc tab) (neutral tap) (require-prior-idle $idle-time))
+  s (tap-hold-opposite-hand $hold-time s lalt (neutral-keys spc tab) (neutral tap) (require-prior-idle $idle-time))
+  d (tap-hold-opposite-hand $hold-time d lctl (neutral-keys spc tab) (neutral tap) (require-prior-idle $idle-time))
+  f (tap-hold-opposite-hand $hold-time f lsft (neutral-keys spc tab) (neutral tap) (require-prior-idle $idle-time))
+  j (tap-hold-opposite-hand $hold-time j rsft (neutral-keys spc tab) (neutral tap) (require-prior-idle $idle-time))
+  k (tap-hold-opposite-hand $hold-time k rctl (neutral-keys spc tab) (neutral tap) (require-prior-idle $idle-time))
+  l (tap-hold-opposite-hand $hold-time l ralt (neutral-keys spc tab) (neutral tap) (require-prior-idle $idle-time))
+  ; (tap-hold-opposite-hand $hold-time ; rmet (neutral-keys spc tab) (neutral tap) (require-prior-idle $idle-time))
 )
 
 (deflayer base
@@ -45,7 +45,7 @@
   tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
   @cec @a   @s   @d   @f   g    h    @j   @k   @l   @;   '    ret
   lsft z    x    c    v    b    n    m    ,    .    /    rsft
-  lctl lmet lalt           @spc           ralt rmet rctl
+  lctl lmet lalt           spc            ralt rmet rctl
 )
 
 (deflayer gaming
@@ -54,12 +54,4 @@
   caps a    s    d    f    g    h    j    k    l    ;    '    ret
   lsft z    x    c    v    b    n    m    ,    .    /    rsft
   lctl lmet lalt           spc            ralt rmet rctl
-)
-
-(deflayer nav
-  _    _    _    _    _    _    _    _    _    _    _    _    _    _
-  _    _    _    _    _    _    _    _    _    _    _    _    _    _
-  _    _    _    _    _    _    left down up   rght _    _    _
-  _    1    2    3    4    5    6    7    8    9    0    _
-  _    _    _              _              _    _    _
 )
