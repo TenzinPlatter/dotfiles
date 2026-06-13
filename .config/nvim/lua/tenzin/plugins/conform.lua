@@ -21,6 +21,7 @@ return {
       sh = { "beautysh" },
       html = { "prettier" },
       toml = { "taplo" },
+      go = { "gofmt" }
     },
     formatters = {
       ruff_format = {
