@@ -1,0 +1,29 @@
+{
+  "if err != nil": {
+    "prefix": "iferr",
+    "body": [
+      "if err != nil {",
+      "\t${0}",
+      "}"
+    ],
+    "description": "if err != nil { ... }"
+  },
+  "if err != nil return": {
+    "prefix": "iferrf",
+    "body": [
+      "if err != nil {",
+      "\treturn ${1:err}",
+      "}"
+    ],
+    "description": "if err != nil { return err }"
+  },
+  "if err != nil return fmt": {
+    "prefix": "iferrw",
+    "body": [
+      "if err != nil {",
+      "\treturn fmt.Errorf(\"${1:failed to do something}: %w\", err)",
+      "}"
+    ],
+    "description": "if err != nil { return fmt.Errorf(...) }"
+  }
+}
