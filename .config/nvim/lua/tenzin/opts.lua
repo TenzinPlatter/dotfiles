@@ -25,7 +25,7 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     vim.api.nvim_set_hl(0, "NoiceMini", { bg = "none" })
   end,
 })
-vim.api.nvim_set_hl(0, "CursorLine", { bg = "Black" })
+vim.api.nvim_set_hl(0, "CursorLine", { update = true })
 -- vim.api.nvim_set_hl(0, 'Cursor', { bg = '#666666', fg = '#ffffff' })
 
 -- for obsidian.nvim
