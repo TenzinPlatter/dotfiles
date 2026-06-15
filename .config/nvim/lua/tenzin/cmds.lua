@@ -51,6 +51,13 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
 })
 
+-- Set filetype to kitty for any .conf file in ~/.config/kitty
+vim.filetype.add({
+  pattern = {
+    [vim.fn.expand("~") .. "/.config/kitty/.*%.conf"] = "kitty",
+  },
+})
+
 -- Tmux window renaming on Vim enter/leave
 local uv = vim.uv
 vim.api.nvim_create_autocmd({ "VimEnter", "VimLeave" }, {
