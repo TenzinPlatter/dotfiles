@@ -54,7 +54,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 -- Set filetype to kitty for any .conf file in ~/.config/kitty
 vim.filetype.add({
   pattern = {
-    [vim.fn.expand("~") .. "/.config/kitty/.*%.conf"] = "kitty",
+    [".*/kitty/.*%.conf"] = "kitty",
   },
 })
 
