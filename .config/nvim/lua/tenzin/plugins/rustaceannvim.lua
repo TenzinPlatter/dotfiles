@@ -10,6 +10,9 @@ return {
           ["rust-analyzer"] = {
             rust = {
               analyzerTargetDir = true,
+              files = {
+                excludeDirs = { ".pixi", "target" },
+              },
             },
           },
         },
