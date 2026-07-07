@@ -3,14 +3,12 @@ return {
   keys = {
     {
       "<leader>cr",
-      function ()
+      function()
         vim.cmd("CodeRunner")
-      end
-    }
+      end,
+    },
   },
-  -- opts = {
-  --   window = {
-  --     split = "right"
-  --   }
-  -- },
+  opts = {
+    shell = "zsh",
+  },
 }
