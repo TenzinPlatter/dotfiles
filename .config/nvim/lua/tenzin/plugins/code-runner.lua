@@ -10,5 +10,8 @@ return {
   },
   opts = {
     shell = "zsh",
+    window = {
+      width = 80,
+    }
   },
 }
