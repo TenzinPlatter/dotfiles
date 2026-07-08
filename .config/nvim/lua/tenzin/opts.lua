@@ -72,7 +72,7 @@ vim.opt.nu = true
 vim.opt.ignorecase = true
 vim.opt.wrap = true
 
-vim.o.mouse = "a"
+vim.o.mouse = "n"
 
 -- set highlight colours
 vim.api.nvim_set_hl(0, "Visual", { bg = "#666666" })
