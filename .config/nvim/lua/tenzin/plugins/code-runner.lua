@@ -1,5 +1,5 @@
 return {
-  dir = "/home/tenzin/code/code-runner.nvim/",
+  "TenzinPlatter/code-runner.nvim",
   keys = {
     {
       "<leader>cr",

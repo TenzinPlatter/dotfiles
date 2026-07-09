@@ -3,6 +3,7 @@
   "budoux.lua": { "branch": "main", "commit": "7f23658b127b9a74aae5b388fefcd997be30cbfc" },
   "bufferline.nvim": { "branch": "main", "commit": "655133c3b4c3e5e05ec549b9f8cc2894ac6f51b3" },
   "catppuccin": { "branch": "main", "commit": "50c34a2cf18776a77f770fcf5df777de6fe69e08" },
+  "code-runner.nvim": { "branch": "main", "commit": "8e602b1db213664626a4114e2820f1a34bec8388" },
   "codecompanion.nvim": { "branch": "main", "commit": "d5551b1aac60e164fb569eba422ea9b65cd2d6f4" },
   "codediff.nvim": { "branch": "main", "commit": "93cd80c56f71af4671388c568a37d4c84c3ddefa" },
   "conform.nvim": { "branch": "master", "commit": "086a40dc7ed8242c03be9f47fbcee68699cc2395" },
