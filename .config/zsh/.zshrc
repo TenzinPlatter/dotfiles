@@ -17,6 +17,7 @@ path=(
     /home/tenzin/bin
     /home/tenzin/go/bin
     /home/tenzin/.pixi/bin
+    /home/tenzin/.sdocs/bin
 )
 
 export ZSH="$HOME/.oh-my-zsh"
