@@ -34,6 +34,9 @@ if [[ -n "${{GR_SSH_REAL_USER:-}}" ]]; then
         # resets PS1 to "$ " for non-bash shells (clobbering starship). It only does so when
         # PS1 is already set, so clearing it here (before zprofile) makes /etc/profile skip it.
         unset PS1
+        # The gr-ssh wrapper's `sudo -iu gr` strips SSH_* from the session, so starship's
+        # ssh_only hostname module can't tell this is remote. It is — re-assert it.
+        export SSH_CONNECTION="${{SSH_CONNECTION:-gr-ssh 0 gr-ssh 0}}"
         export XDG_CONFIG_HOME="$_grbase/.config"
         export XDG_DATA_HOME="$_grbase/.local/share"
         export XDG_STATE_HOME="$_grbase/.local/state"
