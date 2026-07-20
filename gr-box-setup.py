@@ -79,8 +79,9 @@ def main() -> int:
         (base / sub).mkdir(parents=True, exist_ok=True)
     if repo.exists():
         run("git", "-C", str(repo), "pull", "--ff-only")
+        run("git", "-C", str(repo), "submodule", "update", "--init", "--recursive")
     else:
-        run("git", "clone", REPO_URL, str(repo))
+        run("git", "clone", "--recurse-submodules", REPO_URL, str(repo))
 
     # 3. Stow the repo (root-as-package, respects .stow-local-ignore) into the private base.
     run("stow", "-R", "-d", str(base), "-t", str(base), "dotfiles")
