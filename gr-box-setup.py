@@ -99,6 +99,12 @@ def main() -> int:
         link.symlink_to(target)
         print(f"linked {link} -> {target}")
 
+    # 4. Antidote (zsh plugin manager) is .gitignored, so it's never in the clone.
+    #    plugin.zsh sources $ZDOTDIR/.antidote/antidote.zsh — install it if missing.
+    antidote = base / ".config" / "zsh" / ".antidote"
+    if not antidote.exists():
+        run("git", "clone", "--depth=1", "https://github.com/mattmc3/antidote.git", str(antidote))
+
     print("done — exit and ssh back in to pick up your ZDOTDIR")
     return 0
 
