@@ -42,6 +42,8 @@ if [[ -n "${{GR_SSH_REAL_USER:-}}" ]]; then
         export XDG_STATE_HOME="$_grbase/.local/state"
         export XDG_CACHE_HOME="$_grbase/.cache"
         export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+        # $HOME is /home/gr here, so .zshrc's $HOME/bin misses our private bin. Add it.
+        [[ -d "$_grbase/bin" ]] && export PATH="$_grbase/bin:$PATH"
     fi
     unset _grbase
 fi
