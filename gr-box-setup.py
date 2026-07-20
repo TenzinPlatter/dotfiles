@@ -83,8 +83,21 @@ def main() -> int:
     else:
         run("git", "clone", "--recurse-submodules", REPO_URL, str(repo))
 
-    # 3. Stow the repo (root-as-package, respects .stow-local-ignore) into the private base.
-    run("stow", "-R", "-d", str(base), "-t", str(base), "dotfiles")
+    # 3. Point the private XDG config + bin at the repo (whole-dir symlinks; no stow needed).
+    #    .local/.cache stay as real dirs above so runtime state never dirties the repo.
+    for name in (".config", "bin"):
+        link = base / name
+        target = repo / name
+        if not target.is_dir():
+            continue
+        if link.is_symlink():
+            if link.resolve() == target.resolve():
+                continue
+            link.unlink()
+        elif link.exists():
+            raise SystemExit(f"{link} exists and is not a symlink — refusing to clobber")
+        link.symlink_to(target)
+        print(f"linked {link} -> {target}")
 
     print("done — exit and ssh back in to pick up your ZDOTDIR")
     return 0
