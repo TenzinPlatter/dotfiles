@@ -30,6 +30,10 @@ if [[ -n "${{GR_SSH_REAL_USER:-}}" ]]; then
         # so group-writable completion dirs trip zsh compinit's security check. 022 keeps
         # anything we create (e.g. antidote plugin dirs) private to us.
         umask 022
+        # Part B force-sources /etc/profile from /etc/zsh/zprofile, and Ubuntu's /etc/profile
+        # resets PS1 to "$ " for non-bash shells (clobbering starship). It only does so when
+        # PS1 is already set, so clearing it here (before zprofile) makes /etc/profile skip it.
+        unset PS1
         export XDG_CONFIG_HOME="$_grbase/.config"
         export XDG_DATA_HOME="$_grbase/.local/share"
         export XDG_STATE_HOME="$_grbase/.local/state"
