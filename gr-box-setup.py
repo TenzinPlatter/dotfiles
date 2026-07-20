@@ -26,6 +26,10 @@ BLOCK = f"""{START}
 if [[ -n "${{GR_SSH_REAL_USER:-}}" ]]; then
     _grbase="/home/gr/.gr-users/${{GR_SSH_REAL_USER%@*}}"
     if [[ -d "$_grbase/.config/zsh" ]]; then
+        # gr's default umask is 002 (group-writable); the gr group has multiple members,
+        # so group-writable completion dirs trip zsh compinit's security check. 022 keeps
+        # anything we create (e.g. antidote plugin dirs) private to us.
+        umask 022
         export XDG_CONFIG_HOME="$_grbase/.config"
         export XDG_DATA_HOME="$_grbase/.local/share"
         export XDG_STATE_HOME="$_grbase/.local/state"
@@ -66,6 +70,9 @@ def main() -> int:
     user = real.split("@", 1)[0]
     base = Path("/home/gr/.gr-users") / user
     repo = base / "dotfiles"
+
+    # gr's login umask is 002; create everything non-group-writable so compinit is happy.
+    os.umask(0o022)
 
     # 1. Idempotently install the zshenv redirect, keeping any existing content.
     existing = ZSHENV.read_text() if ZSHENV.exists() else ""
