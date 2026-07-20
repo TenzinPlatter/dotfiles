@@ -19,9 +19,9 @@ alias dkc="docker compose"
 alias srz="source $ZDOTDIR/.zshrc"
 alias new="exec zsh"
 
-alias killpgad="kill $(pidof /home/tenzin/.scripts/open_pgadmin.sh)"
+alias killpgad="kill $(pidof $HOME/.scripts/open_pgadmin.sh)"
 alias workoff="deactivate"
-alias cinit='eval "$(/home/tenzin/anaconda3/bin/conda shell.zsh hook)" && conda init'
+alias cinit='eval "$($HOME/anaconda3/bin/conda shell.zsh hook)" && conda init'
 alias pgres="sudo -u postgres -i /bin/bash"
 
 alias gdb="gdb --tui"

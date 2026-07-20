@@ -1,1 +1,1 @@
-export PATH="/home/tenzin/.pixi/bin:$PATH"
+export PATH="$HOME/.pixi/bin:$PATH"

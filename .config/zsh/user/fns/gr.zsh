@@ -1,7 +1,7 @@
 unalias gama 2>/dev/null
 
 cdp() {
-    cd /home/tenzin/Repositories/platform/packages/platform_$1
+    cd $HOME/Repositories/platform/packages/platform_$1
 }
 
 missim() {

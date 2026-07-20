@@ -4,9 +4,9 @@ sr() {
         echo "Sourced global overlay at /opt/ros/kilted"
     fi
 
-    if [[ ! "$(which rosdep)" = "/home/tenzin/Repositories/rosdep/install/rosdep/bin/rosdep" ]]; then
-        source /home/tenzin/Repositories/rosdep/install/setup.zsh
-        echo "Sourced rosdep fork at /home/tenzin/Repositories/rosdep"
+    if [[ ! "$(which rosdep)" = "$HOME/Repositories/rosdep/install/rosdep/bin/rosdep" ]]; then
+        source $HOME/Repositories/rosdep/install/setup.zsh
+        echo "Sourced rosdep fork at $HOME/Repositories/rosdep"
     fi
 
     local dir_name="${PWD:t}"

@@ -9,15 +9,15 @@ path=(
     ~/.cargo/bin
     ~/.npm-packages
     ~/scripts
-    /home/tenzin/.spicetify
-    /home/tenzin/.local/bin
+    $HOME/.spicetify
+    $HOME/.local/bin
     /usr/bin
     /usr/local/bin
     /usr/local/cuda-13.0/bin
-    /home/tenzin/bin
-    /home/tenzin/go/bin
-    /home/tenzin/.pixi/bin
-    /home/tenzin/.sdocs/bin
+    $HOME/bin
+    $HOME/go/bin
+    $HOME/.pixi/bin
+    $HOME/.sdocs/bin
 )
 
 export ZSH="$HOME/.oh-my-zsh"
