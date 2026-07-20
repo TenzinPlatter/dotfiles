@@ -26,7 +26,6 @@ end
 
 local mux = require("smart-splits.mux").get()
 if mux == nil then
-  vim.notify("holy death")
   return
 end
 
