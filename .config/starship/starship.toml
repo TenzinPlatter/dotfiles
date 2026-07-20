@@ -3,3 +3,7 @@
 [status]
 disabled = false
 format = '[\[$status\]]($style) '
+
+[hostname]
+ssh_only = true
+format = '[$hostname](bold red) '
