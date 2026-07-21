@@ -1,3 +1,1 @@
-if command -v lacy &> /dev/null; then
-    eval "$(lacy init zsh)"
-fi
+eval "$(lacy init zsh)"
