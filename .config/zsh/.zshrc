@@ -2,8 +2,6 @@ bindkey -e
 
 export EDITOR=nvim
 
-source "${ZDOTDIR:-$HOME}/load-modules.zsh"
-
 path=(
     $PATH
     ~/.cargo/bin
@@ -19,6 +17,9 @@ path=(
     $HOME/.pixi/bin
     $HOME/.sdocs/bin
 )
+export PATH="${(j/:/)path}"
+
+source "${ZDOTDIR:-$HOME}/load-modules.zsh"
 
 export ZSH="$HOME/.oh-my-zsh"
 export ZSH_THEME=""
@@ -28,7 +29,6 @@ export TERMINAL="kitty"
 export NIXPKGS_ALLOW_UNFREE=1
 
 export POKEGO_CACHE_AGE=300
-export PATH="${(j/:/)path}"
 
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/cuda-13.0/lib64
 export LD_FLAGS="-fuse-ld=mold"
