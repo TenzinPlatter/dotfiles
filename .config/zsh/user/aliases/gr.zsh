@@ -18,5 +18,3 @@ alias cb="colcon build"
 alias cbuild="colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
 alias cbuilds="colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
 alias pbuild="platform ros build -- --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
-
-alias pup="find . -name pixi.toml -not -path '*/.pixi/*' -execdir pixi update \\;"
