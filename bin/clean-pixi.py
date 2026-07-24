@@ -7,6 +7,7 @@ import os
 import shutil
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 
@@ -40,19 +41,22 @@ def main() -> None:
         capture_output=True, text=True, check=True,
     ).stdout
 
-    count = 0
-    freed = 0
-    for line in out.splitlines():
-        target = Path(line)
-        if target == installation:
-            continue
+    targets = [
+        p for line in out.splitlines()
+        if (p := Path(line)) != installation
+    ]
+    for target in targets:
+        print(target)
+
+    def clean(target: Path) -> int:
         size = dir_size(target)
         shutil.rmtree(target, ignore_errors=True)
-        count += 1
-        freed += size
-        print(f"removed {target} ({human(size)})")
+        return size
 
-    print(f"\n{count} env dir(s) removed, {human(freed)} freed")
+    with ThreadPoolExecutor() as pool:
+        freed = sum(pool.map(clean, targets))
+
+    print(f"\n{len(targets)} env dir(s) removed, {human(freed)} freed")
 
 
 if __name__ == "__main__":
