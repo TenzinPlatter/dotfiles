@@ -107,7 +107,7 @@ return {
   keys = {
     {
       "<leader>cd",
-      ":CodeDiff",
+      ":CodeDiff ",
       desc = "Open prompt for VSCode-diff view",
     },
     {
